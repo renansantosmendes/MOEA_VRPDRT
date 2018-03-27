@@ -27,10 +27,5 @@ public class Main {
         //display the results
         System.out.format("Objective1  Objective2%n");
 
-        for (Solution solution : result) {
-            System.out.format("%.4f      %.4f%n",
-                    solution.getObjective(0),
-                    solution.getObjective(1));
-        }
-    }
+            }
 }
