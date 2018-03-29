@@ -4,8 +4,6 @@ import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
 
-
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,9 +21,6 @@ public class Main {
                 .withAlgorithm("MOEAD")
                 .withMaxEvaluations(10000)
                 .run();
+    }
 
-        //display the results
-        System.out.format("Objective1  Objective2%n");
-
-            }
 }
