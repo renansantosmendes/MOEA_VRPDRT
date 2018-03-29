@@ -31,16 +31,24 @@ public class Instance {
         return this;
     }
 
-    public void setVehicleCapacity(Integer vehicleCapacity) {
+    public Instance setVehicleCapacity(Integer vehicleCapacity) {
         this.vehicleCapacity = vehicleCapacity;
+        return this;
     }
 
-    public void setInstanceSize(String instanceSize) {
+    public Instance setInstanceSize(String instanceSize) {
         this.instanceSize = instanceSize;
+        return this;
     }
 
-    public void setNumberOfNodes(int numberOfNodes) {
+    public Instance setNumberOfNodes(int numberOfNodes) {
         this.numberOfNodes = numberOfNodes;
+        return this;
+    }
+
+    public Instance setNumberOfVehicles(int numberOfVehicles) {
+        this.numberOfVehicles = numberOfVehicles;
+        return this;
     }
 
     public void setNodesData(String nodesData) {
@@ -53,10 +61,6 @@ public class Instance {
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
-    }
-
-    public void setNumberOfVehicles(int numberOfVehicles) {
-        this.numberOfVehicles = numberOfVehicles;
     }
 
     public int getNumberOfRequests() {
@@ -88,6 +92,7 @@ public class Instance {
     }
 
     public String getInstanceName() {
+        this.instanceName = this.buildInstaceNames();
         return instanceName;
     }
 
