@@ -147,11 +147,11 @@ public class ProblemData {
 
     public void readExcelInstance()  {
         ReadDataInExcelFile reader = new ReadDataInExcelFile(this.excelDataFilesPath, instance);
-        this.numberOfNodes = reader.getNumberOfNodes();
-        //this.nodes = reader.getListOfNodes();
-        //this.requests = reader.getRequests(nodes);
-        //this.duration = reader.getDurationBetweenNodes(numberOfNodes);
-        //this.distance = reader.getDistanceBetweenNodes(numberOfNodes);
+        this.numberOfNodes = reader.getNumberOfNodes();//<-- erro está aqui
+//        this.nodes = reader.getListOfNodes();
+        this.requests = reader.getRequests();
+        this.timeBetweenNodes = reader.getAdjacenciesListOfTimes();
+        this.distanceBetweenNodes = reader.getAdjacenciesListOfDistances();
         this.instanceRequests.addAll(this.requests);
     }
 

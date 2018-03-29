@@ -60,10 +60,17 @@ public class ReadDataInExcelFile {
         requests.forEach(r -> System.out.println(r.getStringToFile()));
     }
 
-    public List<Request> getRequests() throws IOException, BiffException {
+    public List<Request> getRequests(){
         WorkbookSettings conf = new WorkbookSettings();
         conf.setEncoding("ISO-8859-1");
-        Workbook workbook = Workbook.getWorkbook(new File(this.filePath + this.requestsFile), conf);
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(new File(this.filePath + this.requestsFile), conf);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (BiffException ex) {
+            ex.printStackTrace();
+        }
         Sheet sheet = workbook.getSheet(requestsData);
         int rows = sheet.getRows();
         int columns = sheet.getColumns();
@@ -93,12 +100,19 @@ public class ReadDataInExcelFile {
         return requests;
     }
 
-    public Set<Integer> getSetOfNodes() throws IOException, BiffException {
+    public Set<Integer> getSetOfNodes() {
         Set<Integer> nodesSet = new HashSet<>();
 
         WorkbookSettings conf = new WorkbookSettings();
         conf.setEncoding("ISO-8859-1");
-        Workbook workbook = Workbook.getWorkbook(new File(this.filePath + this.nodesFile), conf);
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(new File(this.filePath + this.nodesFile), conf);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (BiffException ex) {
+            ex.printStackTrace();
+        }
         Sheet sheet = workbook.getSheet(nodesData);
         int rows = sheet.getRows();
         int columns = sheet.getColumns();
@@ -117,13 +131,7 @@ public class ReadDataInExcelFile {
         WorkbookSettings conf = new WorkbookSettings();
         conf.setEncoding("ISO-8859-1");
         Workbook workbook = null;
-        try {
-            workbook = Workbook.getWorkbook(new File(this.filePath + this.nodesFile), conf);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (BiffException ex) {
-            ex.printStackTrace();
-        }
+        workbook = tryToReadWorkbook(workbook, conf);
         Sheet sheet = workbook.getSheet(nodesData);
         int rows = sheet.getRows();
         int columns = sheet.getColumns();
@@ -221,7 +229,7 @@ public class ReadDataInExcelFile {
     }
 
     public int getNumberOfNodes(){
-        return this.getListOfNodes().size();
+        return this.getSetOfNodes().size();
     }
 
 }

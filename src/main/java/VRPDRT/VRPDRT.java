@@ -45,6 +45,8 @@ public class VRPDRT {
     private Integer lastNode;
     private List<Integer> loadIndex;
     private boolean feasibleNodeIsFound;
+    private Set<Integer> feasibleNodes;
+    private Route currentRoute;
     private double max, min;
 
     public VRPDRT(Instance instance) {
@@ -96,7 +98,7 @@ public class VRPDRT {
         this.solution.setSolution(solution);
     }
 
-    public ProblemSolution greedyConstructive(Double alphaD, Double alphaP, Double alphaV, Double alphaT) {
+    public ProblemSolution buildGreedySolution(Double alphaD, Double alphaP, Double alphaV, Double alphaT) {
 
         requestList.clear();
         listOfNonAttendedRequests.clear();
@@ -120,15 +122,15 @@ public class VRPDRT {
             separateOriginFromDestination();
 
             //Step 2
-            Route route = new Route();
+            currentRoute = new Route();
             currentVehicle = vehicleIterator.next();
             log += "\tGROute " + (currentVehicle + 1) + " ";
 
             //Step 3
-            route.addVisitedNodes(0);
+            currentRoute.addVisitedNodes(0);
             currentTime = (long) 0;
            
-            lastNode = route.getLastNode();
+            lastNode = currentRoute.getLastNode();
 
             while (hasRequestToAttend()) {
                 feasibleNodeIsFound = false;
@@ -138,12 +140,10 @@ public class VRPDRT {
                 }
 
                 //Step 4
-                Set<Integer> feasibleNode = new HashSet<>();
+                feasibleNodes = new HashSet<>();
                 List<Long> earliestTime = new ArrayList<>();
 
-                findFeasibleNodes(numberOfNodes, lastNode, feasibleNodeIsFound, vehicleCapacity, route,
-                        requestsWhichBoardsInNode, requestsWhichLeavesInNode, feasibleNode, timeBetweenNodes,
-                        currentTime, timeWindows);
+                findFeasibleNodes();
 
 //                //System.out.println("FEASIBLE NODES = "+ FeasibleNode);			
 //                if (feasibleNode.size() > 1) {
@@ -252,41 +252,37 @@ public class VRPDRT {
         }
     }
     
-    public void findFeasibleNodes( Integer lastNode, boolean feasibleNodeIsFound, Route route,  Set<Integer> feasibleNode, List<List<Long>> timeBetweenNodes,
-            Long currentTime, Long timeWindows) {
-
+    public void findFeasibleNodes() {
         for (int i = 1; i < numberOfNodes; i++) {
-            feasibilityConstraints(i, lastNode, feasibleNodeIsFound, route, vehicleCapacity, requestsWhichBoardsInNode,
-                    requestsWhichLeavesInNode, feasibleNode, timeBetweenNodes, currentTime, timeWindows);
+            evaluateFeasibilityForNode(i);
         }
     }
     
-    public void feasibilityConstraints(Integer currentNode, Integer lastNode, boolean feasibleNodeFound, Route currentRoute, Integer Qmax, Map<Integer, List<Request>> requestsWhichBoardsInNode,
-            Map<Integer, List<Request>> requestsWhichLeavesInNode, Set<Integer> FeasibleNode, List<List<Long>> d, Long currentTime, Long timeWindows) {
+    public void evaluateFeasibilityForNode(Integer currentNode) {
         if (currentNode != lastNode) {
-            feasibleNodeFound = false;
-            if (currentRoute.getActualOccupation() < Qmax) {
+            feasibleNodeIsFound = false;
+            if (currentRoute.getActualOccupation() < vehicleCapacity) {
                 for (Request request : requestsWhichBoardsInNode.get(currentNode)) {//retorna uma lista com as requisições que embarcam em i
-                    if (lastNode == 0 && d.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) { //d.get(lastNode).get(i) � o tempo de chegar de lastNode ate o no i?
-                        FeasibleNode.add(currentNode);
-                        feasibleNodeFound = true;
+                    if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) { //d.get(lastNode).get(i) � o tempo de chegar de lastNode ate o no i?
+                        feasibleNodes.add(currentNode);
+                        feasibleNodeIsFound = true;
                         break;
                     }
 
-                    if (!feasibleNodeFound && currentTime + d.get(lastNode).get(currentNode) >= request.getPickupTimeWIndowLower() - timeWindows
-                            && currentTime + d.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) {
-                        FeasibleNode.add(currentNode);
-                        feasibleNodeFound = true;
+                    if (!feasibleNodeIsFound && currentTime + timeBetweenNodes.get(lastNode).get(currentNode) >= request.getPickupTimeWIndowLower() - timeWindows
+                            && currentTime + timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) {
+                        feasibleNodes.add(currentNode);
+                        feasibleNodeIsFound = true;
                         break;
                     }
                 }
             }
 
           
-            if (!feasibleNodeFound && currentRoute.getActualOccupation() > 0) {
+            if (!feasibleNodeIsFound && currentRoute.getActualOccupation() > 0) {
                 for (Request request : requestsWhichLeavesInNode.get(currentNode)) {
                     if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
-                        FeasibleNode.add(currentNode);
+                        feasibleNodes.add(currentNode);
                         break;
                     }
                 }
