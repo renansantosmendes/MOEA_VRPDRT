@@ -5,7 +5,7 @@
  */
 package AlgorithmsResults;
 
-import ProblemRepresentation.Solution;
+import ProblemRepresentation.ProblemSolution;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;

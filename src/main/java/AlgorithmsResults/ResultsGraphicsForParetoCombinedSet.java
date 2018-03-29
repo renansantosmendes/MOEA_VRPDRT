@@ -6,7 +6,7 @@
 package AlgorithmsResults;
 
 import InstanceReader.NodeDAO;
-import ProblemRepresentation.Solution;
+import ProblemRepresentation.ProblemSolution;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.event.FocusEvent;
@@ -59,13 +59,13 @@ import org.jfree.util.ShapeUtilities;
  */
 public class ResultsGraphicsForParetoCombinedSet {
 
-    private List<Solution> population;
+    private List<ProblemSolution> population;
     private JFreeChart paretoCombined;
     private String folder;
     private String paretoCombinedFileName;
     private ChartMouseListener chartMouseListener;
 
-    public ResultsGraphicsForParetoCombinedSet(List<Solution> population, String folder, String paretoCombinedFileName) throws IOException {
+    public ResultsGraphicsForParetoCombinedSet(List<ProblemSolution> population, String folder, String paretoCombinedFileName) throws IOException {
         this.population = population;
         this.folder = folder;
         this.paretoCombinedFileName = paretoCombinedFileName;
@@ -163,7 +163,7 @@ public class ResultsGraphicsForParetoCombinedSet {
 
     private void showSolution(double x, double y) throws IOException {
         if (x != 0.0 && y != 0.0) {
-            for (Solution solution : population) {
+            for (ProblemSolution solution : population) {
                 if (solution.getAggregatedObjective1() == x && solution.getAggregatedObjective2() == y) {
                     JOptionPane.showMessageDialog(null, "Solution Information:\n Total Distance = " + solution.getTotalDistance()
                             + " m\n Total Delivery Delay = " + solution.getTotalDeliveryDelay() + " min \n Charge Balance = "

@@ -10,7 +10,7 @@ import static Algorithms.Algorithms.greedyConstructive;
 import static Algorithms.Algorithms.perturbation;
 import static Algorithms.Methods.readProblemData;
 import ProblemRepresentation.Request;
-import ProblemRepresentation.Solution;
+import ProblemRepresentation.ProblemSolution;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -105,11 +105,11 @@ public class SolutionGeneratorForAggregationTree {
 
         Methods.initializeFleetOfVehicles(setOfVehicles, numberOfVehicles);
 
-        Solution solution = greedyConstructive(0.2, 0.15, 0.55, 0.1, listOfRequests, requestsWichBoardsInNode,
+        ProblemSolution solution = greedyConstructive(0.2, 0.15, 0.55, 0.1, listOfRequests, requestsWichBoardsInNode,
                 requestsWichLeavesInNode, numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList,
                 loadIndexList, timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
 
-        Solution solution1 = new Solution();
+        ProblemSolution solution1 = new ProblemSolution();
 
         for (int i = 0; i < numberOfSolutionsPerInstance; i++) {//numberOfSolutionsPerInstance
             solution1.setSolution(perturbation(parameters, solution, listOfRequests, requestsWichBoardsInNode, requestsWichLeavesInNode,

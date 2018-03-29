@@ -5,7 +5,7 @@
  */
 package InstanceReader;
 
-import ProblemRepresentation.Solution;
+import ProblemRepresentation.ProblemSolution;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
@@ -25,11 +25,11 @@ public class DataOutput {
         this.fileName = this.algorithmName + ".txt";
     }
     
-    public void saveBestSolutionFoundInTxtFile(Solution solution, int currentIteration){
+    public void saveBestSolutionFoundInTxtFile(ProblemSolution solution, int currentIteration){
         this.streamForTxt.print(currentIteration + "\t" + solution);
     }
     
-     public void saveBestSolutionFoundInCsvFile(Solution solution, int currentIteration){
+     public void saveBestSolutionFoundInCsvFile(ProblemSolution solution, int currentIteration){
         
     }
 }

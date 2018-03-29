@@ -29,7 +29,7 @@ import org.jfree.chart.JFreeChart;
  */
 public class EvolutionaryAlgorithms {
 
-    public static void MOGA(List<Double> parameters, List<Solution> Pop, Integer TamPop, Integer MaxGer, double Pm, double Pc, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void MOGA(List<Double> parameters, List<ProblemSolution> Pop, Integer TamPop, Integer MaxGer, double Pm, double Pc, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P, List<Integer> m,
             List<List<Long>> d, List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
         String diretorio, nomeArquivo;
@@ -52,8 +52,8 @@ public class EvolutionaryAlgorithms {
             //----------------------------------------------------------------------------------------------------
             for (int cont = 0; cont < 1; cont++) {
                 //--------------- initializePopulation com a mesma população inicial ------------------
-                List<Solution> naoDominados = new ArrayList();
-                List<Solution> arquivo = new ArrayList();
+                List<ProblemSolution> naoDominados = new ArrayList();
+                List<ProblemSolution> arquivo = new ArrayList();
                 double dist[][] = new double[TamPop][TamPop];
                 double sigmaSH = Math.sqrt(2) / 60;// 0.05;//deixado para o algoritmo calcular o raio do nicho
                 double sigma = 1;
@@ -61,7 +61,7 @@ public class EvolutionaryAlgorithms {
                 int TamMax = 60;
                 initializePopulation(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode);
                 for (int i = 0; i < TamPop; i++) {
-                    Solution s = new Solution();
+                    ProblemSolution s = new ProblemSolution();
                     s.setSolution(vizinhoAleatorio(parameters, Pop.get(i), i, i + 1, 1, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                     Pop.get(i).setSolution(s);
                 }
@@ -89,7 +89,7 @@ public class EvolutionaryAlgorithms {
                     System.out.println("Geração = " + GerAtual);
                     GerAtual++;
                 }
-                List<Solution> melhores = new ArrayList<>();
+                List<ProblemSolution> melhores = new ArrayList<>();
                 dominanceAlgorithm(arquivo, melhores);
                 normalizeObjectiveFunctionsValues(melhores);
                 //melhores.addAll(naoDominados);
@@ -114,14 +114,14 @@ public class EvolutionaryAlgorithms {
             List<Integer> loadIndexList, List<List<Long>> timeBetweenNodes, List<List<Long>> distanceBetweenNodes,
             Long timeWindows, Long currentTime, Integer lastNode) throws IOException {
 
-        List<Solution> offspring = new ArrayList<>();
-        List<Solution> population = new ArrayList<>();
-        List<Solution> finalPareto = new ArrayList<>();
-        List<Solution> nonDominatedSolutions = new ArrayList();
-        List<Solution> fileWithSolutions = new ArrayList();
+        List<ProblemSolution> offspring = new ArrayList<>();
+        List<ProblemSolution> population = new ArrayList<>();
+        List<ProblemSolution> finalPareto = new ArrayList<>();
+        List<ProblemSolution> nonDominatedSolutions = new ArrayList();
+        List<ProblemSolution> fileWithSolutions = new ArrayList();
         List<Integer> parents = new ArrayList<>();
-        List<Solution> parentsAndOffspring = new ArrayList();
-        List<List<Solution>> nonDominatedFronts = new ArrayList<>();
+        List<ProblemSolution> parentsAndOffspring = new ArrayList();
+        List<List<ProblemSolution>> nonDominatedFronts = new ArrayList<>();
         List<List<Double>> hypervolumes = new ArrayList<>();
         double hypervolume = 0;
         String folderName, fileName;
@@ -135,7 +135,7 @@ public class EvolutionaryAlgorithms {
             System.out.println("Folder already exists!");
         }
         try {
-            List<Solution> combinedPareto = new ArrayList<>();
+            List<ProblemSolution> combinedPareto = new ArrayList<>();
             PrintStream printStreamForCombinedPareto = new PrintStream(folderName + "/" + fileName + "-Pareto_Combinado.txt");
             PrintStream printStreamForObjectiveFunctionOfCombinedPareto = new PrintStream(folderName + "/" + fileName + "-Pareto_Combinado_Funcoes_Objetivo.txt");
             PrintStream printStreamForAllObjectives = new PrintStream(folderName + "/nsga_pareto_9fo.csv");
@@ -189,7 +189,7 @@ public class EvolutionaryAlgorithms {
                 evaluateAggregatedObjectiveFunctions(parameters, offspring);
                 //normalizeObjectiveFunctions(fileWithSolutions);
                 //normalizeObjectiveFunctions(fileWithSolutions);
-                for (Solution s : fileWithSolutions) {
+                for (ProblemSolution s : fileWithSolutions) {
                     saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
                     saida3.print("\t" + s.getAggregatedObjective1Normalized() + "\t" + s.getAggregatedObjective2Normalized() + "\n");
                 }
@@ -239,7 +239,7 @@ public class EvolutionaryAlgorithms {
 
                     listOfHypervolumes.add(smetric(fileWithSolutions, nadirPoint));
 
-                    for (Solution s : fileWithSolutions) {
+                    for (ProblemSolution s : fileWithSolutions) {
                         saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
                         //saida3.print("\t" + s.getAggregatedObjective1Normalized() + "\t" + s.getAggregatedObjective2Normalized() + "\n");
                         saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
@@ -250,7 +250,7 @@ public class EvolutionaryAlgorithms {
                     actualGeneration++;
                 }
 
-                for (Solution s : fileWithSolutions) {
+                for (ProblemSolution s : fileWithSolutions) {
                     saida4.print(s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
                 }
 
@@ -265,7 +265,7 @@ public class EvolutionaryAlgorithms {
 
             dominanceAlgorithm(combinedPareto, finalPareto);
             printPopulation(finalPareto);
-            for (Solution individual : finalPareto) {
+            for (ProblemSolution individual : finalPareto) {
                 printStreamForCombinedPareto.print(individual + "\n");
                 printStreamForObjectiveFunctionOfCombinedPareto.print(individual.getStringWithObjectives() + "\n");
                 printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
@@ -301,14 +301,14 @@ public class EvolutionaryAlgorithms {
             List<Integer> loadIndexList, List<List<Long>> timeBetweenNodes, List<List<Long>> distanceBetweenNodes,
             Long timeWindows, Long currentTime, Integer lastNode) throws IOException {
 
-        List<Solution> offspring = new ArrayList<>();
-        List<Solution> population = new ArrayList<>();
-        List<Solution> finalPareto = new ArrayList<>();
-        List<Solution> nonDominatedSolutions = new ArrayList();
-        List<Solution> fileWithSolutions = new ArrayList();
+        List<ProblemSolution> offspring = new ArrayList<>();
+        List<ProblemSolution> population = new ArrayList<>();
+        List<ProblemSolution> finalPareto = new ArrayList<>();
+        List<ProblemSolution> nonDominatedSolutions = new ArrayList();
+        List<ProblemSolution> fileWithSolutions = new ArrayList();
         List<Integer> parents = new ArrayList<>();
-        List<Solution> parentsAndOffspring = new ArrayList();
-        List<List<Solution>> nonDominatedFronts = new ArrayList<>();
+        List<ProblemSolution> parentsAndOffspring = new ArrayList();
+        List<List<ProblemSolution>> nonDominatedFronts = new ArrayList<>();
         List<List<Double>> hypervolumes = new ArrayList<>();
         double hypervolume = 0;
         String folderName, fileName;
@@ -322,7 +322,7 @@ public class EvolutionaryAlgorithms {
             System.out.println("Folder already exists!");
         }
         try {
-            List<Solution> combinedPareto = new ArrayList<>();
+            List<ProblemSolution> combinedPareto = new ArrayList<>();
             PrintStream printStreamForCombinedPareto = new PrintStream(folderName + "/" + fileName + "-Pareto_Combinado.txt");
             PrintStream printStreamForObjectiveFunctionOfCombinedPareto = new PrintStream(folderName + "/" + fileName + "-Pareto_Combinado_Funcoes_Objetivo.txt");
             PrintStream printStreamForAllObjectives = new PrintStream(folderName + "/nsga_pareto_9fo.csv");
@@ -384,7 +384,7 @@ public class EvolutionaryAlgorithms {
                 evaluateAggregatedObjectiveFunctions(parameters, hc.getTransfomationList(), offspring);
                 //normalizeObjectiveFunctions(fileWithSolutions);
                 //normalizeObjectiveFunctions(fileWithSolutions);
-                for (Solution s : fileWithSolutions) {
+                for (ProblemSolution s : fileWithSolutions) {
                     saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
                     saida3.print("\t" + s.getAggregatedObjective1Normalized() + "\t" + s.getAggregatedObjective2Normalized() + "\n");
                 }
@@ -440,7 +440,7 @@ public class EvolutionaryAlgorithms {
 
                     listOfHypervolumes.add(smetric(fileWithSolutions, nadirPoint));
 
-                    for (Solution s : fileWithSolutions) {
+                    for (ProblemSolution s : fileWithSolutions) {
                         saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
                         saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
                     }
@@ -450,7 +450,7 @@ public class EvolutionaryAlgorithms {
                     actualGeneration++;
                 }
 
-                for (Solution s : fileWithSolutions) {
+                for (ProblemSolution s : fileWithSolutions) {
                     saida4.print(s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
                 }
 
@@ -465,7 +465,7 @@ public class EvolutionaryAlgorithms {
 
             dominanceAlgorithm(combinedPareto, finalPareto);
             printPopulation(finalPareto);
-            for (Solution individual : finalPareto) {
+            for (ProblemSolution individual : finalPareto) {
                 printStreamForCombinedPareto.print(individual + "\n");
                 printStreamForObjectiveFunctionOfCombinedPareto.print(individual.getStringWithObjectives() + "\n");
                 printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
@@ -493,7 +493,7 @@ public class EvolutionaryAlgorithms {
         return hypervolume;
     }
 
-    public static double[][] getMatrixOfObjetives(List<Solution> population) {
+    public static double[][] getMatrixOfObjetives(List<ProblemSolution> population) {
         int rows = population.size();
         int columns = population.get(0).getObjectives().size();
         double[][] matrix = new double[rows][columns];
@@ -506,7 +506,7 @@ public class EvolutionaryAlgorithms {
         return matrix;
     }
 
-    public static double[][] getMatrixOfObjetives(List<Solution> population, List<Double> parameters) {
+    public static double[][] getMatrixOfObjetives(List<ProblemSolution> population, List<Double> parameters) {
         int rows = population.size();
         int columns = population.get(0).getObjectives().size();
         double[][] matrix = new double[rows][columns];
@@ -519,12 +519,12 @@ public class EvolutionaryAlgorithms {
         return matrix;
     }
 
-    private static void saveCurrentPopulation(List<Solution> population, int actualGeneration, String folderName,
+    private static void saveCurrentPopulation(List<ProblemSolution> population, int actualGeneration, String folderName,
             String fileName) throws FileNotFoundException {
         PrintStream printStreamForCombinedPareto = new PrintStream(folderName + "/" + fileName
                 + "-Population_" + actualGeneration + ".csv");
 
-        for (Solution individual : population) {
+        for (ProblemSolution individual : population) {
             printStreamForCombinedPareto.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
         }
 
@@ -558,9 +558,9 @@ public class EvolutionaryAlgorithms {
         new ResultsGraphicsForConvergence(hypervolumeConvergence, "ResultGraphics", "Convergence");
     }
 
-    public static double smetric(List<Solution> solutions) {
-        solutions.sort(Comparator.comparingDouble(Solution::getAggregatedObjective1));
-        //        .thenComparingDouble(Solution::getAggregatedObjective2).reversed());
+    public static double smetric(List<ProblemSolution> solutions) {
+        solutions.sort(Comparator.comparingDouble(ProblemSolution::getAggregatedObjective1));
+        //        .thenComparingDouble(ProblemSolution::getAggregatedObjective2).reversed());
 
         double x_nadir = 1;
         double y_nadir = 1;
@@ -580,8 +580,8 @@ public class EvolutionaryAlgorithms {
         return volumes.stream().mapToDouble(Double::valueOf).sum();
     }
 
-    public static double smetric(List<Solution> solutions, List<Double> nadirPoint) {
-        solutions.sort(Comparator.comparingDouble(Solution::getAggregatedObjective1));
+    public static double smetric(List<ProblemSolution> solutions, List<Double> nadirPoint) {
+        solutions.sort(Comparator.comparingDouble(ProblemSolution::getAggregatedObjective1));
 
         double x_nadir = 1.0;
         double y_nadir = 1.0;
@@ -602,7 +602,7 @@ public class EvolutionaryAlgorithms {
         return volumes.stream().mapToDouble(Double::valueOf).sum();
     }
 
-    public static void normalizeAggregatedObjectiveFunctions(List<Solution> solutions, List<Double> nadirPoint) {
+    public static void normalizeAggregatedObjectiveFunctions(List<ProblemSolution> solutions, List<Double> nadirPoint) {
         solutions.forEach(s -> {
             s.setAggregatedObjective1Normalized(s.getAggregatedObjective1() / nadirPoint.get(0));
             s.setAggregatedObjective2Normalized(s.getAggregatedObjective2() / nadirPoint.get(1));
@@ -618,11 +618,11 @@ public class EvolutionaryAlgorithms {
             List<Integer> loadIndexList, List<List<Long>> timeBetweenNodes, List<List<Long>> distanceBetweenNodes,
             Long timeWindows, Long currentTime, Integer lastNode) throws IOException {
 
-        List<Solution> population = new ArrayList<>();
-        List<Solution> nonDominated = new ArrayList();
-        List<Solution> file = new ArrayList();
+        List<ProblemSolution> population = new ArrayList<>();
+        List<ProblemSolution> nonDominated = new ArrayList();
+        List<ProblemSolution> file = new ArrayList();
         List<Integer> parents = new ArrayList<>();
-        List<Solution> parentsAndOffspring = new ArrayList();
+        List<ProblemSolution> parentsAndOffspring = new ArrayList();
         String folderName, fileName;
         List<List<Double>> hypervolumes = new ArrayList<>();
         double hypervolume = 0;
@@ -636,7 +636,7 @@ public class EvolutionaryAlgorithms {
             System.out.println("Folder already exists!");
         }
         try {
-            List<Solution> combinedPareto = new ArrayList<>();
+            List<ProblemSolution> combinedPareto = new ArrayList<>();
             for (int executionCounter = 0; executionCounter < maximumNumberOfExecutions; executionCounter++) {
                 List<Double> listOfHypervolumes = new ArrayList<>();
                 String number;
@@ -709,13 +709,13 @@ public class EvolutionaryAlgorithms {
                 parentsAndOffspring.clear();
                 hypervolumes.add(listOfHypervolumes);
             }
-            List<Solution> finalPareto = new ArrayList<>();
+            List<ProblemSolution> finalPareto = new ArrayList<>();
             dominanceAlgorithm(combinedPareto, finalPareto);
             PrintStream saida4 = new PrintStream(folderName + "/spea_pareto.txt");
             PrintStream saida5 = new PrintStream(folderName + "/spea_pareto_reduced.txt");
             PrintStream saida6 = new PrintStream(folderName + "/spea_pareto_9fo.txt");
 
-            for (Solution solution : finalPareto) {
+            for (ProblemSolution solution : finalPareto) {
                 saida4.print(solution + "\n");
                 saida5.print(solution.getAggregatedObjective1() + "\t" + solution.getAggregatedObjective2() + "\n");
                 saida6.print(solution.getStringWithAllNonReducedObjectives() + "\n");
@@ -730,8 +730,8 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void saveDataInTextFile(List<Solution> arquivo, PrintStream saida1, PrintStream saida2, PrintStream saida3) {
-        for (Solution s : arquivo) {
+    public static void saveDataInTextFile(List<ProblemSolution> arquivo, PrintStream saida1, PrintStream saida2, PrintStream saida3) {
+        for (ProblemSolution s : arquivo) {
             saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
             saida3.print("\t" + s.getAggregatedObjective1Normalized() + "\t" + s.getAggregatedObjective2Normalized() + "\n");
         }
@@ -740,7 +740,7 @@ public class EvolutionaryAlgorithms {
         saida3.print("\n\n");
     }
 
-    public static void fitnessEvaluationForSPEA2(List<Solution> Pop, double[][] dist, Integer TamPop, Integer TamArq) {
+    public static void fitnessEvaluationForSPEA2(List<ProblemSolution> Pop, double[][] dist, Integer TamPop, Integer TamArq) {
         Integer k = (int) Math.sqrt(TamPop + TamArq);
         List<Double> lista = new ArrayList<>();
         double maximo = 0, minimo = 9999999;
@@ -759,22 +759,22 @@ public class EvolutionaryAlgorithms {
             }
         }
 
-//        double maximo = Pop.stream().mapToDouble(Solution::getFitness).max().getAsDouble();
-//        double minimo = Pop.stream().mapToDouble(Solution::getFitness).min().getAsDouble();
+//        double maximo = Pop.stream().mapToDouble(ProblemSolution::getFitness).max().getAsDouble();
+//        double minimo = Pop.stream().mapToDouble(ProblemSolution::getFitness).min().getAsDouble();
 //
         double soma = 0;
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             double fitness = (maximo - s.getFitness()) / (maximo - minimo);
             //double fitness = (s.getFitness() - minimo) / (maximo - minimo);
             s.setFitness(fitness);
             soma += fitness;
         }
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getFitness() / soma);
         }
     }
 
-    public static void reducePopulation(List<Solution> population, List<List<Solution>> fronts, int populationSize) {
+    public static void reducePopulation(List<ProblemSolution> population, List<List<ProblemSolution>> fronts, int populationSize) {
         try {
             int frontsCounter = 0;
             population.clear();
@@ -794,24 +794,24 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void crowdDistance(List<Solution> front, List<Solution> population) {
+    public static void crowdDistance(List<ProblemSolution> front, List<ProblemSolution> population) {
 
-        front.sort(Comparator.comparing(Solution::getAggregatedObjective1Normalized)
-                .thenComparing(Solution::getAggregatedObjective2Normalized)
+        front.sort(Comparator.comparing(ProblemSolution::getAggregatedObjective1Normalized)
+                .thenComparing(ProblemSolution::getAggregatedObjective2Normalized)
                 .reversed());
 
         double maxObjective1 = population.stream()
-                .mapToDouble(Solution::getAggregatedObjective1Normalized)
+                .mapToDouble(ProblemSolution::getAggregatedObjective1Normalized)
                 .max().getAsDouble();
         double minObjective1 = population.stream()
-                .mapToDouble(Solution::getAggregatedObjective1Normalized)
+                .mapToDouble(ProblemSolution::getAggregatedObjective1Normalized)
                 .min().getAsDouble();
 
         double maxObjective2 = population.stream()
-                .mapToDouble(Solution::getAggregatedObjective2Normalized)
+                .mapToDouble(ProblemSolution::getAggregatedObjective2Normalized)
                 .max().getAsDouble();
         double minObjective2 = population.stream()
-                .mapToDouble(Solution::getAggregatedObjective2Normalized)
+                .mapToDouble(ProblemSolution::getAggregatedObjective2Normalized)
                 .min().getAsDouble();
 
         front.get(0).setCrowdDistance(1000000000);
@@ -833,11 +833,11 @@ public class EvolutionaryAlgorithms {
 
             front.get(i).setCrowdDistance(crowdDistance1 + crowdDistance2);
         }
-        front.sort(Comparator.comparing(Solution::getCrowdDistance).reversed());
+        front.sort(Comparator.comparing(ProblemSolution::getCrowdDistance).reversed());
     }
 
-    public static void fitnessEvalutaionForMOGA(List<Solution> Pop) {
-        for (Solution s : Pop) {
+    public static void fitnessEvalutaionForMOGA(List<ProblemSolution> Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getNumberOfSolutionsWichDomineThisSolution() + 1);
         }
 
@@ -858,10 +858,10 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void fitnessEvalutaionForMOGA2(List<Solution> Pop) {
+    public static void fitnessEvalutaionForMOGA2(List<ProblemSolution> Pop) {
         List<Integer> frequencia = new ArrayList<>();
         List<Integer> fa = new ArrayList<>();
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getNumberOfSolutionsWichDomineThisSolution() + 1);
         }
 
@@ -916,8 +916,8 @@ public class EvolutionaryAlgorithms {
             posicao = posicao + nvezes;
         }
 
-//       for(Solution s: Pop){
-//           System.out.println("Solution s = "+s.getFitness());
+//       for(ProblemSolution s: Pop){
+//           System.out.println("ProblemSolution s = "+s.getFitness());
 //       }
         double soma = 0;
 
@@ -943,12 +943,12 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void fitnessEvalutaionForMOGA3(List<Solution> Pop) {
+    public static void fitnessEvalutaionForMOGA3(List<ProblemSolution> Pop) {
         List<Integer> mi = new ArrayList<>();
         List<Integer> frequencia = new ArrayList<>();
         List<Integer> fa = new ArrayList<>();
 
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getNumberOfSolutionsWichDomineThisSolution() + 1);
         }
         populationSorting(Pop);
@@ -978,8 +978,8 @@ public class EvolutionaryAlgorithms {
 
         //----------------------------------------------------------------------------------    
         //System.out.println("Tamanho da população = " + Pop.size());
-        Solution maior = new Solution();
-        Solution menor = new Solution();
+        ProblemSolution maior = new ProblemSolution();
+        ProblemSolution menor = new ProblemSolution();
 
         maior.setSolution(Collections.max(Pop));
         menor.setSolution(Collections.min(Pop));
@@ -1019,12 +1019,12 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void fitnessEvalutaionForMOGA4(List<Solution> Pop) {
+    public static void fitnessEvalutaionForMOGA4(List<ProblemSolution> Pop) {
         List<Integer> mi = new ArrayList<>();
         List<Integer> frequencia = new ArrayList<>();
         List<Integer> fa = new ArrayList<>();
 
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getNumberOfSolutionsWichDomineThisSolution() + 1);
         }
         populationSorting(Pop);
@@ -1054,8 +1054,8 @@ public class EvolutionaryAlgorithms {
 
         //----------------------------------------------------------------------------------    
         //System.out.println("Tamanho da população = " + Pop.size());
-        Solution maior = new Solution();
-        Solution menor = new Solution();
+        ProblemSolution maior = new ProblemSolution();
+        ProblemSolution menor = new ProblemSolution();
 
         maior.setSolution(Collections.max(Pop));
         menor.setSolution(Collections.min(Pop));
@@ -1097,10 +1097,10 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void fitnessEvaluationForMultiObjectiveOptimization(List<Solution> Pop) {
+    public static void fitnessEvaluationForMultiObjectiveOptimization(List<ProblemSolution> Pop) {
         List<Integer> frequencia = new ArrayList<>();
         List<Integer> fa = new ArrayList<>();
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness(s.getNumberOfSolutionsWichDomineThisSolution() + 1);
         }
 
@@ -1183,7 +1183,7 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void normalizeFitness(List<Solution> Pop) {
+    public static void normalizeFitness(List<ProblemSolution> Pop) {
         double soma = 0;
         for (int i = 0; i < Pop.size(); i++) {
             soma += Pop.get(i).getFitness();
@@ -1193,7 +1193,7 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void dominanceAlgorithm(List<Solution> population, List<Solution> nonDominated) {
+    public static void dominanceAlgorithm(List<ProblemSolution> population, List<ProblemSolution> nonDominated) {
         //--------------------------------------------------------------------------------------------------------------
         //List<Solucao> naoDominados = new ArrayList<>();
         nonDominated.clear();
@@ -1242,25 +1242,25 @@ public class EvolutionaryAlgorithms {
         removeEqualSolutions(nonDominated);
     }
 
-    public static void normalizeObjectiveFunctionsValues2(List<Solution> Pop) {
+    public static void normalizeObjectiveFunctionsValues2(List<ProblemSolution> Pop) {
         double max = -999999999;
         double min = 999999999;
 
         //para F1
         //obtendo o valor maximo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective1() > max) {
                 max = s.getAggregatedObjective1();
             }
         }
         //obtendo o valor minimo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective1() < min) {
                 min = s.getAggregatedObjective1();
             }
         }
         //System.out.println("F1: max = " + max +"\tmin = " + min);
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setAggregatedObjective1Normalized((s.getAggregatedObjective1() - min) / (max - min));
         }
 
@@ -1269,24 +1269,24 @@ public class EvolutionaryAlgorithms {
 
         //para F2
         //obtendo o valor maximo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective2() > max) {
                 max = s.getAggregatedObjective2();
             }
         }
         //obtendo o valor minimo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective2() < min) {
                 min = s.getAggregatedObjective2();
             }
         }
         //System.out.println("F2: max = " + max +"\tmin = " + min);
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setAggregatedObjective2Normalized((s.getAggregatedObjective2() - min) / (max - min));
         }
     }
 
-    public static void evaluateDistanceBetweenSolutions(List<Solution> Pop, double dist[][]) {
+    public static void evaluateDistanceBetweenSolutions(List<ProblemSolution> Pop, double dist[][]) {
         //calcula a distancia entre os elementos - usa somente metada da matriz
         List<Double> linha = new ArrayList<>();
         for (int i = 0; i < Pop.size(); i++) {
@@ -1316,7 +1316,7 @@ public class EvolutionaryAlgorithms {
 //        };
     }
 
-    public static void fitnessValueSharing(List<Solution> Pop, double dist[][], double sigmaSH, double sigma, double alfa) {
+    public static void fitnessValueSharing(List<ProblemSolution> Pop, double dist[][], double sigmaSH, double sigma, double alfa) {
         for (int i = 0; i < Pop.size(); i++) {
             double soma = 0;
             List<Double> s = new ArrayList<>();
@@ -1341,10 +1341,10 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void initializePopulation(List<Solution> Pop, int TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
+    public static void initializePopulation(List<ProblemSolution> Pop, int TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d,
             List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
-        Solution s0 = new Solution();
+        ProblemSolution s0 = new ProblemSolution();
         for (int i = 0; i < TamPop; i++) {
             s0.setSolution(geraPesos(i, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
             //Pop.add(s0);
@@ -1354,20 +1354,20 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void normalizeAggregatedObjectiveFunctions(List<Solution> population) {
+    public static void normalizeAggregatedObjectiveFunctions(List<ProblemSolution> population) {
         if (population.size() != 0) {
             double maxObjective1 = population.stream()
-                    .mapToDouble(Solution::getAggregatedObjective1)
+                    .mapToDouble(ProblemSolution::getAggregatedObjective1)
                     .max().getAsDouble();
             double minObjective1 = population.stream()
-                    .mapToDouble(Solution::getAggregatedObjective1)
+                    .mapToDouble(ProblemSolution::getAggregatedObjective1)
                     .min().getAsDouble();
 
             double maxObjective2 = population.stream()
-                    .mapToDouble(Solution::getAggregatedObjective2)
+                    .mapToDouble(ProblemSolution::getAggregatedObjective2)
                     .max().getAsDouble();
             double minObjective2 = population.stream()
-                    .mapToDouble(Solution::getAggregatedObjective2)
+                    .mapToDouble(ProblemSolution::getAggregatedObjective2)
                     .min().getAsDouble();
             population.forEach(individual -> {
                 individual.setAggregatedObjective1Normalized((individual.getAggregatedObjective1() - minObjective1)
@@ -1378,19 +1378,19 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void normalizeObjectiveFunctionsValues(List<Solution> Pop) {
+    public static void normalizeObjectiveFunctionsValues(List<ProblemSolution> Pop) {
         double max = -999999999;
         double min = 999999999;
 
         //para F1
         //obtendo o valor maximo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective1() > max) {
                 max = s.getAggregatedObjective1();
             }
         }
         //obtendo o valor minimo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective1() < min) {
                 min = s.getAggregatedObjective1();
             }
@@ -1406,13 +1406,13 @@ public class EvolutionaryAlgorithms {
 
         //para F2
         //obtendo o valor maximo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective2() > max) {
                 max = s.getAggregatedObjective2();
             }
         }
         //obtendo o valor minimo
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             if (s.getAggregatedObjective2() < min) {
                 min = s.getAggregatedObjective2();
             }
@@ -1423,22 +1423,22 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void normalizeObjectiveFunctionsValues3(List<Solution> Pop) {
-        Solution maior = new Solution();
-        Solution menor = new Solution();
+    public static void normalizeObjectiveFunctionsValues3(List<ProblemSolution> Pop) {
+        ProblemSolution maior = new ProblemSolution();
+        ProblemSolution menor = new ProblemSolution();
 
         maior.setSolution(Collections.max(Pop));
         menor.setSolution(Collections.min(Pop));
 
-        for (Solution s : Pop) {
+        for (ProblemSolution s : Pop) {
             s.setFitness((maior.getFitness() - s.getFitness()) / (maior.getFitness() - menor.getFitness()));
         }
     }
 
-    public static void updateSolutionsFile(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
+    public static void updateSolutionsFile(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
 
-        List<Solution> naoDominados = new ArrayList<>();
-        List<Solution> Q = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> Q = new ArrayList<>();
         Random rnd = new Random();
         double melhorFitness;
         if (Pop.size() > 0) {
@@ -1455,7 +1455,7 @@ public class EvolutionaryAlgorithms {
         arquivo.clear();
         arquivo.addAll(naoDominados);
         normalizeObjectiveFunctionsValues(arquivo);
-        for (Solution s : arquivo) {
+        for (ProblemSolution s : arquivo) {
             s.setFitness(melhorFitness);
         }
         //retiraIguais(arquivo);
@@ -1512,11 +1512,11 @@ public class EvolutionaryAlgorithms {
         //
     }
 
-    public static void updateNSGAIISolutionsFile(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
+    public static void updateNSGAIISolutionsFile(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
         //retiraIguais(Pop);        
 
-        List<Solution> naoDominados = new ArrayList<>();
-        List<Solution> Q = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> Q = new ArrayList<>();
         Random rnd = new Random();
         double melhorFitness;
         if (Pop.size() > 0) {
@@ -1536,7 +1536,7 @@ public class EvolutionaryAlgorithms {
         arquivo.addAll(naoDominados);
         removeEqualSolutions(arquivo);
         normalizeObjectiveFunctionsValues(arquivo);
-        for (Solution s : arquivo) {
+        for (ProblemSolution s : arquivo) {
             s.setFitness(melhorFitness);
         }
         //---------------------------------------------------------------------
@@ -1581,11 +1581,11 @@ public class EvolutionaryAlgorithms {
         fileSorting(arquivo);
     }
 
-    public static void updateNSGAIISolutionsFile2(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
+    public static void updateNSGAIISolutionsFile2(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
         //retiraIguais(Pop);        
 
-        List<Solution> naoDominados = new ArrayList<>();
-        List<Solution> Q = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> Q = new ArrayList<>();
         Random rnd = new Random();
         double melhorFitness;
         if (Pop.size() > 0) {
@@ -1611,7 +1611,7 @@ public class EvolutionaryAlgorithms {
 
         normalizeObjectiveFunctionsValues(arquivo);
 
-        for (Solution s : arquivo) {
+        for (ProblemSolution s : arquivo) {
             s.setFitness(melhorFitness);
         }
         //---------------------------------------------------------------------
@@ -1656,8 +1656,8 @@ public class EvolutionaryAlgorithms {
         fileSorting(arquivo);
     }
 
-    public static void updateTestFile(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
-        List<Solution> naoDominados = new ArrayList<>();
+    public static void updateTestFile(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
+        List<ProblemSolution> naoDominados = new ArrayList<>();
         dominanceAlgorithm(Pop, naoDominados);
         arquivo.addAll(naoDominados);
         naoDominados.clear();
@@ -1669,8 +1669,8 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void updateSPEA2SolutionsFile(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
-        List<Solution> naoDominados = new ArrayList<>();
+    public static void updateSPEA2SolutionsFile(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
+        List<ProblemSolution> naoDominados = new ArrayList<>();
         arquivo.addAll(Pop);
         removeEqualSolutions(arquivo);
         dominanceAlgorithm(arquivo, naoDominados);
@@ -1683,7 +1683,7 @@ public class EvolutionaryAlgorithms {
         //OrdenaArquivo(Pop);
         int i = 0;
         if (arquivo.size() < TamMax) {
-            List<Solution> NewPop = new ArrayList<>();
+            List<ProblemSolution> NewPop = new ArrayList<>();
             NewPop.addAll(Pop);
             NewPop.addAll(arquivo);
             do {
@@ -1697,9 +1697,9 @@ public class EvolutionaryAlgorithms {
         fileSorting(arquivo);
     }
 
-    public static void updateNSGASolutionsFile(List<Solution> Pop, List<Solution> arquivo, int TamMax) {
+    public static void updateNSGASolutionsFile(List<ProblemSolution> Pop, List<ProblemSolution> arquivo, int TamMax) {
 
-        List<Solution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
         arquivo.addAll(Pop);
         removeEqualSolutions(arquivo);
         dominanceAlgorithm(arquivo, naoDominados);
@@ -1745,9 +1745,9 @@ public class EvolutionaryAlgorithms {
         fileSorting(arquivo);
     }
 
-    public static void updateNSGASolutionsFileTest(List<Solution> population, List<Solution> file, int TamMax) {
+    public static void updateNSGASolutionsFileTest(List<ProblemSolution> population, List<ProblemSolution> file, int TamMax) {
 
-        List<Solution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
         file.addAll(population);
         removeEqualSolutions(file);
         dominanceAlgorithm(file, naoDominados);
@@ -1790,20 +1790,20 @@ public class EvolutionaryAlgorithms {
                 file.remove(pos);
             }
         } else if (file.size() < TamMax) {
-            population.sort(Comparator.comparing(Solution::getFitness));
+            population.sort(Comparator.comparing(ProblemSolution::getFitness));
             int solutionsNumber = TamMax - file.size();
             file.addAll(population.subList(0, solutionsNumber));
         }
         fileSorting(file);
     }
 
-    public static void fileSorting(List<Solution> arquivo) {
+    public static void fileSorting(List<ProblemSolution> arquivo) {
         int tamanhoArquivo = arquivo.size();
 
         for (int i = 0; i < tamanhoArquivo; i++) {
             for (int j = 0; j < tamanhoArquivo; j++) {
                 if (arquivo.get(i).getAggregatedObjective1() < arquivo.get(j).getAggregatedObjective1()) {
-                    Solution s = new Solution();
+                    ProblemSolution s = new ProblemSolution();
                     s.setSolution(arquivo.get(i));
                     arquivo.get(i).setSolution(arquivo.get(j));
                     arquivo.get(j).setSolution(s);
@@ -1812,7 +1812,7 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static void removeEqualSolutions(List<Solution> arquivo) {
+    public static void removeEqualSolutions(List<ProblemSolution> arquivo) {
         int tamanhoArquivo = arquivo.size();
         for (int i = 0; i < tamanhoArquivo; i++) {
             for (int j = i + 1; j < tamanhoArquivo; j++) {
@@ -1843,7 +1843,7 @@ public class EvolutionaryAlgorithms {
 //            System.out.println("primeira fronteira = " + front);
 //            List<Integer> dominadas = new ArrayList<>();
 //            
-//            for(Solution s: front){
+//            for(ProblemSolution s: front){
 //                
 //                dominadas.addAll(s.getL());
 //                
@@ -1865,11 +1865,11 @@ public class EvolutionaryAlgorithms {
 //        }
 //    }
 
-    public static void FNDS(List<Solution> Pop, List<List<Solution>> fronts) {
-        List<Solution> PopAux = new ArrayList<>();//lista para remover soluções
+    public static void FNDS(List<ProblemSolution> Pop, List<List<ProblemSolution>> fronts) {
+        List<ProblemSolution> PopAux = new ArrayList<>();//lista para remover soluções
         PopAux.addAll(Pop);
         fronts.clear();
-        List<Solution> front = new ArrayList<>();//lista com apenas uma fronteira
+        List<ProblemSolution> front = new ArrayList<>();//lista com apenas uma fronteira
         int contador = 0;
         //ImprimePopulacao(Pop);
         while (PopAux.size() > 0) {
@@ -1879,7 +1879,7 @@ public class EvolutionaryAlgorithms {
                 }
             }
 
-            for (Solution s : front) {
+            for (ProblemSolution s : front) {
                 for (int posicao : s.getListOfSolutionsDominatedByThisSolution()) {
                     Pop.get(posicao).redeDom();
                 }
@@ -1891,7 +1891,7 @@ public class EvolutionaryAlgorithms {
             //System.out.println(front);
             //System.out.println(fronts.size());
             //ImprimePopulacao(front);
-            for (Solution s : PopAux) {//forçando a barra - olhar o motivo de dar numero negativo no eDom
+            for (ProblemSolution s : PopAux) {//forçando a barra - olhar o motivo de dar numero negativo no eDom
                 if (s.getNumberOfSolutionsWichDomineThisSolution() < 0) {
                     s.setNumberOfSolutionsWichDomineThisSolution(0);
                 }
@@ -1907,7 +1907,7 @@ public class EvolutionaryAlgorithms {
         for (int i = 0; i < fronts.size(); i++) {
             //System.out.println(i);
             front.addAll(fronts.get(i));
-            for (Solution s : front) {
+            for (ProblemSolution s : front) {
                 s.setNumberOfSolutionsWichDomineThisSolution(i);
             }
             //System.out.println(front.size());
@@ -1915,22 +1915,22 @@ public class EvolutionaryAlgorithms {
         }
         //System.out.println("\n");
         Pop.clear();
-        for (List<Solution> f : fronts) {
+        for (List<ProblemSolution> f : fronts) {
             Pop.addAll(f);
             //System.out.println(f);
         }
     }
 
-    public static void FNDS2(List<Solution> Pop, List<List<Solution>> fronts) {
-        List<Solution> PopAux = new ArrayList<>();//lista para remover soluções
+    public static void FNDS2(List<ProblemSolution> Pop, List<List<ProblemSolution>> fronts) {
+        List<ProblemSolution> PopAux = new ArrayList<>();//lista para remover soluções
         PopAux.addAll(Pop);
-        List<Solution> front = new ArrayList<>();//lista com apenas uma fronteira
+        List<ProblemSolution> front = new ArrayList<>();//lista com apenas uma fronteira
 
         //fronts.add(new ArrayList<>());
         int contador = 0;
 //        for(int i=0; i<Pop.size();i++){
 //            for(int j=0; j<PopAux.size();j++){
-//                for(Solution s: PopAux){
+//                for(ProblemSolution s: PopAux){
 //                    if(s.geteDom()==i){
 //                        front.add(s);
 //                    }
@@ -1970,11 +1970,11 @@ public class EvolutionaryAlgorithms {
         //System.out.println("Tamanho = " + fronts.size());
     }
 
-    public static void nonDominatedFrontiersSortingAlgorithm(List<Solution> population, List<List<Solution>> frontiers) {
-        List<Solution> auxiliarPopulation = new ArrayList<>();//lista para remover soluções
+    public static void nonDominatedFrontiersSortingAlgorithm(List<ProblemSolution> population, List<List<ProblemSolution>> frontiers) {
+        List<ProblemSolution> auxiliarPopulation = new ArrayList<>();//lista para remover soluções
         auxiliarPopulation.addAll(population);
         frontiers.clear();
-        List<Solution> front = new ArrayList<>();
+        List<ProblemSolution> front = new ArrayList<>();
         int frontierCounter = 0;
 
         while (auxiliarPopulation.size() > 0) {
@@ -1989,7 +1989,7 @@ public class EvolutionaryAlgorithms {
         for (int i = 0; i < frontiers.size(); i++) {
 
             front.addAll(frontiers.get(i));
-            for (Solution solution : front) {
+            for (ProblemSolution solution : front) {
                 solution.setNumberOfSolutionsWichDomineThisSolution(i);
             }
             front.clear();
@@ -2001,7 +2001,7 @@ public class EvolutionaryAlgorithms {
 //        }
     }
 
-    public static void ReduzPopulacao(List<Solution> Pop_linha, List<List<Solution>> fronts, int TamPop) {
+    public static void ReduzPopulacao(List<ProblemSolution> Pop_linha, List<List<ProblemSolution>> fronts, int TamPop) {
         for (int i = 0; i < fronts.size(); i++) {
             Pop_linha.addAll(fronts.get(i));
             printPopulation(Pop_linha);
@@ -2013,14 +2013,14 @@ public class EvolutionaryAlgorithms {
         }
     }
 
-    public static Solution MOVND(List<Double> parameters, Solution s_0, List<Request> listRequests, List<Request> P, Set<Integer> K, List<Request> U,
+    public static ProblemSolution MOVND(List<Double> parameters, ProblemSolution s_0, List<Request> listRequests, List<Request> P, Set<Integer> K, List<Request> U,
             Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, List<List<Long>> d, List<List<Long>> c,
             Integer n, Integer Qmax, Long TimeWindows) {
 
         Random rnd = new Random();
-        Solution melhor = new Solution(s_0);
-        Solution s_linha = new Solution();
-        Solution s = new Solution();
+        ProblemSolution melhor = new ProblemSolution(s_0);
+        ProblemSolution s_linha = new ProblemSolution();
+        ProblemSolution s = new ProblemSolution();
         int cont1 = 0;
         int k, r;
         r = 4;
@@ -2044,7 +2044,7 @@ public class EvolutionaryAlgorithms {
         return melhor;
     }
 
-    public static void buscaLocal(List<Double> parameters, List<Solution> arquivo, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static void buscaLocal(List<Double> parameters, List<ProblemSolution> arquivo, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, List<List<Long>> d,
             List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
         Random rnd = new Random();
@@ -2052,31 +2052,31 @@ public class EvolutionaryAlgorithms {
         //numeroSolucoes = 10;
         //System.out.println("Numero solucoes para busca = " + numeroSolucoes);
 
-        List<Solution> naoDominados = new ArrayList<>();
+        List<ProblemSolution> naoDominados = new ArrayList<>();
         dominanceAlgorithm(arquivo, naoDominados);
         numeroSolucoes = naoDominados.size() / 5;
         //ImprimePopulacao(naoDominados);
         for (int i = 0; i < numeroSolucoes; i++) {
 //            int posicao = rnd.nextInt(arquivo.size());
 //            System.out.println(posicao);
-//            Solution s = new Solution(MOVND(arquivo.get(posicao), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
+//            ProblemSolution s = new ProblemSolution(MOVND(arquivo.get(posicao), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
 //            arquivo.get(posicao).setSolution(s);
             int posicao = rnd.nextInt(naoDominados.size());
             System.out.println(posicao);
-            Solution s = new Solution(MOVND(parameters, naoDominados.get(posicao), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
+            ProblemSolution s = new ProblemSolution(MOVND(parameters, naoDominados.get(posicao), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
             arquivo.add(s);
         }
 
     }
 
-    public static Solution MOILS(List<Double> parameters, Solution s_0, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
+    public static ProblemSolution MOILS(List<Double> parameters, ProblemSolution s_0, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d,
             List<List<Long>> c, Long TimeWindows) {
         //Solução inicial já é gerada pelo GA
-        Solution s = new Solution(s_0);
-        Solution s_linha = new Solution();
-        Solution s_2linha = new Solution();
-        List<Solution> historico = new ArrayList<>();
+        ProblemSolution s = new ProblemSolution(s_0);
+        ProblemSolution s_linha = new ProblemSolution();
+        ProblemSolution s_2linha = new ProblemSolution();
+        List<ProblemSolution> historico = new ArrayList<>();
         int MAXITER = 20;
 
         //BuscaLocal
@@ -2124,12 +2124,12 @@ public class EvolutionaryAlgorithms {
         return s_0;
     }
 
-    public static Solution firstImprovementInMultiObjectiveOptimization(List<Double> parameters, Solution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution firstImprovementInMultiObjectiveOptimization(List<Double> parameters, ProblemSolution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
+        ProblemSolution melhor = new ProblemSolution(s);
 
-        Solution aux = new Solution();
+        ProblemSolution aux = new ProblemSolution();
 
         List<Integer> original = new ArrayList<Integer>(s.getLinkedRouteList());
 
@@ -2337,12 +2337,12 @@ public class EvolutionaryAlgorithms {
         return melhor;
     }
 
-    public static Solution bestImprovementInMultiObjectiveOptimization(List<Double> parameters, Solution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution bestImprovementInMultiObjectiveOptimization(List<Double> parameters, ProblemSolution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
+        ProblemSolution melhor = new ProblemSolution(s);
 
-        Solution aux = new Solution();
+        ProblemSolution aux = new ProblemSolution();
 
         List<Integer> original = new ArrayList<Integer>(s.getLinkedRouteList());
 

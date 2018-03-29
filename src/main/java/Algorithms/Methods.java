@@ -455,7 +455,7 @@ public class Methods {
         }
     }
 
-    public static long FinalizaRota(List<Request> P, Route R, Long currentTime, Integer lastNode, List<List<Long>> d, Solution S) {
+    public static long FinalizaRota(List<Request> P, Route R, Long currentTime, Integer lastNode, List<List<Long>> d, ProblemSolution S) {
         //-------------------------------------------------------------------------------------------------------------------------------------- 
         if (P.isEmpty()) {
             R.addVisitedNodes(0);
@@ -516,55 +516,55 @@ public class Methods {
         }
     }
 
-    public static void inicializePopulation(List<Solution> Pop, Integer TamPop, List<Request> listRequests,
+    public static void inicializePopulation(List<ProblemSolution> Pop, Integer TamPop, List<Request> listRequests,
             Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K,
             List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
 
         for (int i = 0; i < TamPop; i++) {
-            Solution S = new Solution();
+            ProblemSolution S = new ProblemSolution();
             S.setSolution(GeraSolucaoAleatoria(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
             //S.setSolution(PerturbacaoSemente(parameters, S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
             Pop.add(S);
         }
 
         for (int i = 0; i < TamPop; i++) {
-            Solution solucao = new Solution(Pop.get(i));
+            ProblemSolution solucao = new ProblemSolution(Pop.get(i));
         }
         //Coloquei a linha de baixo, que estava no codigo principal dos algoritmos multi
         Inicializa(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode);
     }
 
-    public static void inicializeRandomPopulation(List<Double> parameters, List<Solution> Pop, Integer TamPop, List<Request> listRequests,
+    public static void inicializeRandomPopulation(List<Double> parameters, List<ProblemSolution> Pop, Integer TamPop, List<Request> listRequests,
             Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K,
             List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
 
-        Solution S = new Solution();
+        ProblemSolution S = new ProblemSolution();
         S.setSolution(GeraSolucaoAleatoria(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
         for (int i = 0; i < TamPop; i++) {
-            Solution S2 = new Solution();
+            ProblemSolution S2 = new ProblemSolution();
             S2.setSolution(PerturbacaoSemente(i, parameters, S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
             Pop.add(S2);
         }
 //        for (int i = 0; i < TamPop; i++) {
-//            Solution S = new Solution();
+//            ProblemSolution S = new ProblemSolution();
 //            S.setSolution(GeraSolucaoAleatoria(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
-//            Solution S2 = new Solution();
+//            ProblemSolution S2 = new ProblemSolution();
 //            S2.setSolution(PerturbacaoSemente(i, parameters, S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
 //            Pop.add(S2);
 //        }
 //        for (int i = 0; i < TamPop; i++) {
-//            Solution solucao = new Solution(Pop.get(i));
+//            ProblemSolution solucao = new ProblemSolution(Pop.get(i));
 //        }
 //        //Coloquei a linha de baixo, que estava no codigo principal dos algoritmos multi
 //        Inicializa(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode);
     }
 
-    public static void Inicializa(List<Solution> Pop, int TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
+    public static void Inicializa(List<ProblemSolution> Pop, int TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d,
             List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
-        Solution s0 = new Solution();
+        ProblemSolution s0 = new ProblemSolution();
         for (int i = 0; i < TamPop; i++) {
             s0.setSolution(geraPesos(i, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
             //Pop.add(s0);
@@ -580,27 +580,27 @@ public class Methods {
 //            Long TimeWindows, Long currentTime, Integer lastNode) {
 //
 //        for (int i = 0; i < TamPop; i++) {
-//            Solution S = new Solution();
-//            Solution S_linha = new Solution();            
+//            ProblemSolution S = new ProblemSolution();
+//            ProblemSolution S_linha = new ProblemSolution();            
 //            S.setSolution(GeraSolucaoAleatoria(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
 //            S_linha.setSolution(perturbation(S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
 //            Pop.add(S);
 //        }
 //
 //        for (int i = 0; i < TamPop; i++) {
-//            Solution solucao = new Solution(Pop.get(i));
+//            ProblemSolution solucao = new ProblemSolution(Pop.get(i));
 //        }
 //        //Coloquei a linha de baixo, que estava no codigo principal dos algoritmos multi
 //        //initializePopulation(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode);
 //    }
-    public static void InicializaPopulacaoPerturbacao(List<Double> parameters, List<Solution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void InicializaPopulacaoPerturbacao(List<Double> parameters, List<ProblemSolution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U,
             List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
 
         for (int i = 0; i < TamPop; i++) {
-            Solution S = new Solution();
-            Solution S_linha = new Solution();
+            ProblemSolution S = new ProblemSolution();
+            ProblemSolution S_linha = new ProblemSolution();
             S.setSolution(GeraSolucaoAleatoria(Pop, TamPop, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows, currentTime, lastNode));
             //S_linha.setSolution(perturbation(S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
             S_linha.setSolution(PerturbacaoSemente(i, parameters, S, listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
@@ -608,13 +608,13 @@ public class Methods {
         }
     }
 
-    public static void InicializaPopulacaoGulosa(List<Solution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void InicializaPopulacaoGulosa(List<ProblemSolution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U,
             List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
 
         for (int i = 0; i < TamPop; i++) {
-            Solution S = new Solution();
+            ProblemSolution S = new ProblemSolution();
             Random rnd = new Random();
             double x, y, z, w;
             do {
@@ -630,11 +630,11 @@ public class Methods {
 
         }
         //for (int i = 0; i < TamPop; i++) {
-        //  Solution solucao = new Solution(Pop.get(i));
+        //  ProblemSolution solucao = new ProblemSolution(Pop.get(i));
         //}
     }
 
-    public static Solution GeraSolucaoAleatoria(List<Solution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static ProblemSolution GeraSolucaoAleatoria(List<ProblemSolution> Pop, Integer TamPop, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U,
             List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
@@ -644,7 +644,7 @@ public class Methods {
         P.addAll(listRequests);
 
         //Step 1
-        Solution solution = new Solution();
+        ProblemSolution solution = new ProblemSolution();
         String log = "";
 
         int currentK;
@@ -770,7 +770,7 @@ public class Methods {
         return solution;
     }
 
-    public static void mutationSwap(List<Double> parameters, List<Solution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void mutationSwap(List<Double> parameters, List<ProblemSolution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P,
             List<Integer> m, List<List<Long>> d, List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
         Random rnd = new Random();
@@ -792,14 +792,14 @@ public class Methods {
 
                 Collections.swap(individuo, posicao1, posicao2);
 
-                Solution S = new Solution();
+                ProblemSolution S = new ProblemSolution();
                 S.setSolution(rebuildSolution(parameters, individuo, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                 Pop.get(i).setSolution(S);
             }
         }
     }
 
-    public static void mutacaoShuffle(List<Double> parameters, List<Solution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void mutacaoShuffle(List<Double> parameters, List<ProblemSolution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P,
             List<Integer> m, List<List<Long>> d, List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
         Random rnd = new Random();
@@ -814,14 +814,14 @@ public class Methods {
             if (prob < Pm) {
                 List<Integer> individuo = new ArrayList<>(Pop.get(i).getLinkedRouteList());
                 Collections.shuffle(individuo);
-                Solution S = new Solution();
+                ProblemSolution S = new ProblemSolution();
                 S.setSolution(rebuildSolution(parameters, individuo, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                 Pop.get(i).setSolution(S);
             }
         }
     }
 
-    public static void mutation2Opt(List<Double> parameters, List<Solution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void mutation2Opt(List<Double> parameters, List<ProblemSolution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P,
             List<Integer> m, List<List<Long>> d, List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
         Random rnd = new Random();
@@ -857,14 +857,14 @@ public class Methods {
                 individuo.subList(min, max).clear();
                 individuo.addAll(min, aux);
 
-                Solution S = new Solution();
+                ProblemSolution S = new ProblemSolution();
                 S.setSolution(rebuildSolution(parameters, individuo, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                 Pop.get(i).setSolution(S);
             }
         }
     }
 
-    public static void mutation2Shuffle(List<Double> parameters, List<Solution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
+    public static void mutation2Shuffle(List<Double> parameters, List<ProblemSolution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin,
             Map<Integer, List<Request>> Pout, Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P,
             List<Integer> m, List<List<Long>> d, List<List<Long>> c, Long TimeWindows, Long currentTime, Integer lastNode) {
         Random rnd = new Random();
@@ -900,14 +900,14 @@ public class Methods {
                 individuo.subList(min, max).clear();
                 individuo.addAll(min, aux);
 
-                Solution S = new Solution();
+                ProblemSolution S = new ProblemSolution();
                 S.setSolution(rebuildSolution(parameters, individuo, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                 Pop.get(i).setSolution(S);
             }
         }
     }
 
-    public static void MutacaoILS(List<Double> parameters, List<Solution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
+    public static void MutacaoILS(List<Double> parameters, List<ProblemSolution> Pop, double Pm, List<Request> listRequests, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             Integer n, Integer Qmax, Set<Integer> K, List<Request> U, List<Request> P, List<Integer> m, List<List<Long>> d, List<List<Long>> c,
             Long TimeWindows, Long currentTime, Integer lastNode) {
         Random rnd = new Random();
@@ -921,7 +921,7 @@ public class Methods {
             //System.out.println("Prob gerada = " + prob);
             if (prob < Pm) {
 
-                Solution S = new Solution();
+                ProblemSolution S = new ProblemSolution();
                 //S.setSolution(IteratedLocalSearch(Pop.get(i), listRequests, Pin, Pout, n, Qmax, K, U, P, m, d, c, TimeWindows));
                 //S.setSolution(VariableNeighborhoodDescend(Pop.get(i), listRequests,  P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                 S.setSolution(firstImprovementAlgorithm(parameters, Pop.get(i), 2, listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
@@ -930,7 +930,7 @@ public class Methods {
         }
     }
 
-    public static void Fitness(List<Solution> Pop) {
+    public static void Fitness(List<ProblemSolution> Pop) {
         int soma = 0;
         for (int i = 0; i < Pop.size(); i++) {
             soma += Pop.get(i).getObjectiveFunction();
@@ -948,20 +948,20 @@ public class Methods {
         }
     }
 
-    public static void NewFitness(List<Solution> population) {
-        double max = population.stream().mapToDouble(Solution::getObjectiveFunction).max().getAsDouble();
-        double min = population.stream().mapToDouble(Solution::getObjectiveFunction).min().getAsDouble();
+    public static void NewFitness(List<ProblemSolution> population) {
+        double max = population.stream().mapToDouble(ProblemSolution::getObjectiveFunction).max().getAsDouble();
+        double min = population.stream().mapToDouble(ProblemSolution::getObjectiveFunction).min().getAsDouble();
         population.forEach(u -> u.setFitness((max - u.getObjectiveFunction()) / (max - min)));
 
-        double sum = population.stream().mapToDouble(Solution::getFitness).sum();
+        double sum = population.stream().mapToDouble(ProblemSolution::getFitness).sum();
         population.forEach(u -> u.setFitness(u.getFitness() / sum));
     }
 
-    public static void populationSorting(List<Solution> Pop) {
+    public static void populationSorting(List<ProblemSolution> Pop) {
         Collections.sort(Pop);
     }
 
-    public static void printPopulation(List<Solution> Pop) {
+    public static void printPopulation(List<ProblemSolution> Pop) {
         for (int i = 0; i < Pop.size(); i++) {
             //System.out.println("Pop(" + i + ") = " + Pop.get(i));
             System.out.println(Pop.get(i));
@@ -969,7 +969,7 @@ public class Methods {
         }
     }
 
-    public static void rouletteWheelSelectionAlgorithm(List<Integer> pais, List<Solution> Pop, Integer TamMax) {
+    public static void rouletteWheelSelectionAlgorithm(List<Integer> pais, List<ProblemSolution> Pop, Integer TamMax) {
         Random rnd = new Random();
         double valor;
         double soma;
@@ -998,7 +998,7 @@ public class Methods {
         }
     }
 
-    public static void onePointCrossover(List<Double> parameters, List<Solution> Pop_nova, List<Solution> Pop, Integer TamMax, double Pc,
+    public static void onePointCrossover(List<Double> parameters, List<ProblemSolution> Pop_nova, List<ProblemSolution> Pop, Integer TamMax, double Pc,
             List<Integer> pais, List<Request> listRequests, List<Request> P, Set<Integer> K, List<Request> U,
             Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, List<List<Long>> d, List<List<Long>> c,
             Integer n, Integer Qmax, Long TimeWindows) {
@@ -1008,7 +1008,7 @@ public class Methods {
         int menorTamanho;
         double valor;
         Random rnd = new Random();
-        List<Solution> NewPop = new ArrayList<>();
+        List<ProblemSolution> NewPop = new ArrayList<>();
         List<Integer> filho1 = new ArrayList<>();
         List<Integer> filho2 = new ArrayList<>();
         NewPop.clear();
@@ -1018,8 +1018,8 @@ public class Methods {
 
             pai = pais.get(i);
             mae = pais.get(i + 1);
-            Solution s1 = new Solution();
-            Solution s2 = new Solution();
+            ProblemSolution s1 = new ProblemSolution();
+            ProblemSolution s2 = new ProblemSolution();
             if (valor < Pc) {
 
                 menorTamanho = Math.min(Pop.get(pai).getLinkedRouteList().size(), Pop.get(mae).getLinkedRouteList().size());
@@ -1057,7 +1057,7 @@ public class Methods {
         populationSorting(Pop_nova);
     }
 
-    public static void twoPointsCrossover(List<Double> parameters, List<Solution> Pop_nova, List<Solution> Pop, Integer TamMax, double Pc, List<Integer> pais, List<Request> listRequests,
+    public static void twoPointsCrossover(List<Double> parameters, List<ProblemSolution> Pop_nova, List<ProblemSolution> Pop, Integer TamMax, double Pc, List<Integer> pais, List<Request> listRequests,
             List<Request> P, Set<Integer> K, List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
         int pai;
@@ -1066,7 +1066,7 @@ public class Methods {
         int menorTamanho;
         double valor;
         Random rnd = new Random();
-        List<Solution> NewPop = new ArrayList<>();
+        List<ProblemSolution> NewPop = new ArrayList<>();
         List<Integer> filho1 = new ArrayList<>();
         List<Integer> filho2 = new ArrayList<>();
         NewPop.clear();
@@ -1077,8 +1077,8 @@ public class Methods {
 
                 pai = pais.get(i);
                 mae = pais.get(i + 1);
-                Solution s1 = new Solution();
-                Solution s2 = new Solution();
+                ProblemSolution s1 = new ProblemSolution();
+                ProblemSolution s2 = new ProblemSolution();
                 if (valor < Pc) {
 
                     int index1, index2;
@@ -1140,8 +1140,8 @@ public class Methods {
         }
     }
 
-    public static Solution copyBestSolution(List<Solution> population, Solution bestSolution) {
-        for (Solution solution : population) {
+    public static ProblemSolution copyBestSolution(List<ProblemSolution> population, ProblemSolution bestSolution) {
+        for (ProblemSolution solution : population) {
             if (solution.getObjectiveFunction() < bestSolution.getObjectiveFunction()) {
                 bestSolution.setSolution(solution);
             }
@@ -1149,11 +1149,11 @@ public class Methods {
         return bestSolution;
     }
 
-    public static void insertBestIndividualInPopulation(List<Solution> population, Solution bestSolution) {
+    public static void insertBestIndividualInPopulation(List<ProblemSolution> population, ProblemSolution bestSolution) {
         population.get(population.size() - 1).setSolution(bestSolution);
     }
 
-    public static void savePopulation(List<Solution> population, Integer generationNumber) {
+    public static void savePopulation(List<ProblemSolution> population, Integer generationNumber) {
         String folder, dataFileName;
         try {
             folder = "\\home\\renan";
@@ -1166,7 +1166,7 @@ public class Methods {
             printStream = new PrintStream(folder + "\\GA-MESTRADO" + dataFileName + ".txt");
 
             printStream.print("\tGeneration = " + generationNumber + "\n");
-            for (Solution solution : population) {
+            for (ProblemSolution solution : population) {
                 printStream.print("\t" + solution + "\n");
             }
 
@@ -1175,12 +1175,12 @@ public class Methods {
         }
     }
 
-    public static Solution firstImprovementAlgorithm(List<Double> parameters, Solution s, int movementType, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution firstImprovementAlgorithm(List<Double> parameters, ProblemSolution s, int movementType, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
+        ProblemSolution melhor = new ProblemSolution(s);
 
-        Solution aux = new Solution();
+        ProblemSolution aux = new ProblemSolution();
 
         List<Integer> original = new ArrayList<Integer>(s.getLinkedRouteList());
 
@@ -1388,12 +1388,12 @@ public class Methods {
         return melhor;
     }
 
-    public static Solution bestImprovementAlgorithm(List<Double> parameters, Solution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution bestImprovementAlgorithm(List<Double> parameters, ProblemSolution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
+        ProblemSolution melhor = new ProblemSolution(s);
 
-        Solution aux = new Solution();
+        ProblemSolution aux = new ProblemSolution();
 
         List<Integer> original = new ArrayList<Integer>(s.getLinkedRouteList());
 
@@ -1598,11 +1598,11 @@ public class Methods {
         return melhor;
     }
 
-    public static Solution primeiroMelhorVizinhoAleatorio(List<Double> parameters, Solution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution primeiroMelhorVizinhoAleatorio(List<Double> parameters, ProblemSolution s, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
-        Solution aux = new Solution();
+        ProblemSolution melhor = new ProblemSolution(s);
+        ProblemSolution aux = new ProblemSolution();
         List<Integer> original = new ArrayList<>(s.getLinkedRouteList());
         List<Integer> vizinho = new ArrayList<>();
         int qtd = (int) (0.1 * (original.size() * original.size()));
@@ -1641,7 +1641,7 @@ public class Methods {
                     Collections.swap(vizinho, posicao1, posicao2);
                     aux.setSolution(rebuildSolution(parameters, new ArrayList<Integer>(vizinho), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                     //System.out.println("Posições da troca = " + posicao1 + "\t" + posicao2);
-                    //System.out.println("Solution gerada = " + aux);
+                    //System.out.println("ProblemSolution gerada = " + aux);
                     if (aux.getTotalDistance() < melhor.getTotalDistance()) {
                         melhor.setSolution(aux);
                         return melhor;
@@ -1665,7 +1665,7 @@ public class Methods {
                     vizinho.set(posicao, elemento);
                     aux.setSolution(rebuildSolution(parameters, new ArrayList<>(vizinho), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                     //System.out.println("Posições da troca = " + posicao + "\t" + elemento);
-                    //System.out.println("Solution gerada = " + aux);
+                    //System.out.println("ProblemSolution gerada = " + aux);
                     if (aux.getTotalDistance() < melhor.getTotalDistance()) {
                         melhor.setSolution(aux);
                         return melhor;
@@ -1702,11 +1702,11 @@ public class Methods {
         return melhor;
     }
 
-    public static Solution vizinhoAleatorio(List<Double> parameters, Solution s, int semente1, int semente2, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution vizinhoAleatorio(List<Double> parameters, ProblemSolution s, int semente1, int semente2, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout,
             List<List<Long>> d, List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution melhor = new Solution(s);
-        Solution aux = new Solution();
+        ProblemSolution melhor = new ProblemSolution(s);
+        ProblemSolution aux = new ProblemSolution();
         List<Integer> original = new ArrayList<>(s.getLinkedRouteList());
         List<Integer> vizinho = new ArrayList<>();
         int qtd = (int) (0.1 * (original.size() * original.size()));
@@ -1746,7 +1746,7 @@ public class Methods {
                     aux.setSolution(rebuildSolution(parameters, new ArrayList<Integer>(vizinho), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                     return aux;
                     //System.out.println("Posições da troca = " + posicao1 + "\t" + posicao2);
-                    //System.out.println("Solution gerada = " + aux);
+                    //System.out.println("ProblemSolution gerada = " + aux);
 //                    if (aux.getfObjetivo() < melhor.getfObjetivo()) {
 //                        melhor.setSolution(aux);
 //                        return melhor;
@@ -1770,7 +1770,7 @@ public class Methods {
                     vizinho.set(posicao, elemento);
                     aux.setSolution(rebuildSolution(parameters, new ArrayList<>(vizinho), listRequests, P, K, U, Pin, Pout, d, c, n, Qmax, TimeWindows));
                     //System.out.println("Posições da troca = " + posicao + "\t" + elemento);
-                    //System.out.println("Solution gerada = " + aux);
+                    //System.out.println("ProblemSolution gerada = " + aux);
                     return aux;
 //                    if (aux.getfObjetivo() < melhor.getfObjetivo()) {
 //                        melhor.setSolution(aux);
@@ -1809,11 +1809,11 @@ public class Methods {
         return melhor;
     }
 
-    public static Solution buscaTabu(List<Double> parameters, Solution inicial, int tipoEstrategia, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
+    public static ProblemSolution buscaTabu(List<Double> parameters, ProblemSolution inicial, int tipoEstrategia, int tipoMovimento, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, List<List<Long>> d,
             List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
-        Solution estrela = new Solution();
-        Solution s = new Solution(inicial);
+        ProblemSolution estrela = new ProblemSolution();
+        ProblemSolution s = new ProblemSolution(inicial);
         estrela.setSolution(s);
 
         int iteracao = 0, //contador do n�mero de itera��es
@@ -1865,15 +1865,15 @@ public class Methods {
         return estrela;
     }
 
-    public static Solution melhorVizinhoBT(List<Double> parameters, Solution s, Solution estrela, int tipoMovimento, int[][] listaTabuTroca, int[][] listaTabuSubstituicao,
+    public static ProblemSolution melhorVizinhoBT(List<Double> parameters, ProblemSolution s, ProblemSolution estrela, int tipoMovimento, int[][] listaTabuTroca, int[][] listaTabuSubstituicao,
             int[][] listaTabuMovimento, int iteracao, List<Request> listRequests, List<Request> P, Set<Integer> K,
             List<Request> U, Map<Integer, List<Request>> Pin, Map<Integer, List<Request>> Pout, List<List<Long>> d,
             List<List<Long>> c, Integer n, Integer Qmax, Long TimeWindows) {
 
-        Solution melhor = new Solution();
+        ProblemSolution melhor = new ProblemSolution();
         melhor.setTotalDistance(999999);
 
-        Solution aux = new Solution();
+        ProblemSolution aux = new ProblemSolution();
 
         List<Integer> original = new ArrayList<Integer>(s.getLinkedRouteList());
 

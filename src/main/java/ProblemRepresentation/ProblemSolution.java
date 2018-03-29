@@ -1,13 +1,11 @@
 package ProblemRepresentation;
 
-//import GoogleMapsApi.StaticGoogleMap;
 import GoogleMapsApi.GoogleStaticMap;
-import InstanceReader.NodeDAO;
 import java.io.*;
 import java.text.*;
 import java.util.*;
 
-public class Solution implements Comparable<Solution> {
+public class ProblemSolution implements Comparable<ProblemSolution> {
 
     private List<Double> objectives;
     private Set<Route> setOfRoutes;
@@ -50,7 +48,7 @@ public class Solution implements Comparable<Solution> {
     private String logger;
     private int tempoExtraTotal;
 
-    public Solution() {
+    public ProblemSolution() {
         setOfRoutes = new HashSet<Route>();
         listOfSolutionsDominatedByThisSolution = new ArrayList<>();
         objectiveFunction = -1;
@@ -92,7 +90,7 @@ public class Solution implements Comparable<Solution> {
         logger = "";
     }
 
-    public Solution(Solution solution) {
+    public ProblemSolution(ProblemSolution solution) {
         setOfRoutes = new HashSet<Route>(solution.getSetOfRoutes());
         listOfSolutionsDominatedByThisSolution = new ArrayList<>(solution.getListOfSolutionsDominatedByThisSolution());
         objectiveFunction = solution.getObjectiveFunction();
@@ -129,7 +127,7 @@ public class Solution implements Comparable<Solution> {
         logger = new String(solution.getLogger());
     }
 
-    public void setSolution(Solution solution) {
+    public void setSolution(ProblemSolution solution) {
         setSetOfRoutes(solution.getSetOfRoutes());
         setListOfSolutionsDominatedByThisSolution(solution.getListOfSolutionsDominatedByThisSolution());
         setObjectiveFunction(solution.getObjectiveFunction());
@@ -685,10 +683,10 @@ public class Solution implements Comparable<Solution> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Solution && equals((Solution) obj);
+        return obj instanceof ProblemSolution && equals((ProblemSolution) obj);
     }
 
-    public boolean equals(Solution solucao2) {
+    public boolean equals(ProblemSolution solucao2) {
         if (this == solucao2) {
             return true;
         }
@@ -727,7 +725,7 @@ public class Solution implements Comparable<Solution> {
     }
 
     @Override
-    public int compareTo(Solution solucao) {
+    public int compareTo(ProblemSolution solucao) {
         if (this.getFitness() > solucao.getFitness()) {
             return 1;
         }
