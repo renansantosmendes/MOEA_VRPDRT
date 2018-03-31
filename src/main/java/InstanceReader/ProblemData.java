@@ -155,6 +155,14 @@ public class ProblemData {
         this.instanceRequests.addAll(this.requests);
     }
 
+    public List<List<Long>> getDistanceBetweenNodes() {
+        return distanceBetweenNodes;
+    }
+
+    public List<List<Long>> getTimeBetweenNodes() {
+        return timeBetweenNodes;
+    }
+
     
 
 

@@ -48,6 +48,7 @@ public class VRPDRT {
     private Set<Integer> feasibleNodes;
     private Route currentRoute;
     private double max, min;
+    private RankedList rankedList;
 
     public VRPDRT(Instance instance) {
         this.loadIndexList = new LinkedList<>();
@@ -57,6 +58,7 @@ public class VRPDRT {
         this.adjacenciesInstanceName = instance.getAdjacenciesData();
         this.numberOfVehicles = instance.getNumberOfVehicles();
         this.vehicleCapacity = instance.getVehicleCapacity();
+        rankedList = new RankedList(numberOfNodes);
         //this.readInstance();
     }
 
@@ -70,11 +72,29 @@ public class VRPDRT {
         this.vehicleCapacity = instance.getVehicleCapacity();
         this.excelDataFilesPath = excelDataFilesPath;
         this.readExcelInstance();
+        rankedList = new RankedList(numberOfNodes);
+    }
+
+    public VRPDRT(Instance instance, String excelDataFilesPath, RankedList rankedList) {
+        this.loadIndexList = new LinkedList<>();
+        this.instance = instance;
+        this.instanceName = instance.getInstanceName();
+        this.nodesInstanceName = instance.getNodesData();
+        this.adjacenciesInstanceName = instance.getAdjacenciesData();
+        this.numberOfVehicles = instance.getNumberOfVehicles();
+        this.vehicleCapacity = instance.getVehicleCapacity();
+        this.excelDataFilesPath = excelDataFilesPath;
+        this.readExcelInstance();
+        this.rankedList = rankedList;
     }
 
     public void readExcelInstance() {
         try {
             data = new ProblemData(instance, this.excelDataFilesPath);
+            requests.addAll(data.getRequests());
+            numberOfNodes = data.getNumberOfNodes();
+            timeBetweenNodes.addAll(data.getTimeBetweenNodes());
+            distanceBetweenNodes.addAll(data.getDistanceBetweenNodes());
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (BiffException ex) {
@@ -98,22 +118,14 @@ public class VRPDRT {
         this.solution.setSolution(solution);
     }
 
-    public ProblemSolution buildGreedySolution(Double alphaD, Double alphaP, Double alphaV, Double alphaT) {
+    public ProblemSolution buildGreedySolution() {
 
-        requestList.clear();
-        listOfNonAttendedRequests.clear();
-        requestList.addAll(requests);
-
-        //Step 1
+        initializeData();
         ProblemSolution solution = new ProblemSolution();
         String log = "";
 
         int currentVehicle;
-        Map<Integer, Double> costRankList = new HashMap<>(numberOfNodes);
-        Map<Integer, Double> numberOfPassengersRankList = new HashMap<>(numberOfNodes);
-        Map<Integer, Double> deliveryTimeWindowRankList = new HashMap<>(numberOfNodes);
-        Map<Integer, Double> timeWindowRankList = new HashMap<>(numberOfNodes);
-        Map<Integer, Double> nodeRankingFunction = new HashMap<>(numberOfNodes);
+        rankedList.initialize();
 
         Iterator<Integer> vehicleIterator = setOfVehicles.iterator();
         listOfNonAttendedRequests.clear();
@@ -129,15 +141,12 @@ public class VRPDRT {
             //Step 3
             currentRoute.addVisitedNodes(0);
             currentTime = (long) 0;
-           
+
             lastNode = currentRoute.getLastNode();
 
             while (hasRequestToAttend()) {
                 feasibleNodeIsFound = false;
-                loadIndex.clear();
-                for (int i = 0; i < numberOfNodes; i++) {
-                    loadIndex.add(requestsWhichBoardsInNode.get(i).size() - requestsWhichLeavesInNode.get(i).size());
-                }
+                calculateLoadIndex();
 
                 //Step 4
                 feasibleNodes = new HashSet<>();
@@ -145,36 +154,18 @@ public class VRPDRT {
 
                 findFeasibleNodes();
 
-//                //System.out.println("FEASIBLE NODES = "+ FeasibleNode);			
-//                if (feasibleNode.size() > 1) {
-//                    //Step 4.1
-//                    CalculaCRL(feasibleNode, costRankList, distanceBetweenNodes, lastNode);
-//                    //Step 4.2
-//                    CalculaNRL(feasibleNode, numberOfPassengersRankList, loadIndex, lastNode);
-//                    //Step 4.3
-//                    CalculaDRL(feasibleNode, deliveryTimeWindowRankList, requestsWhichLeavesInNode, lastNode,
-//                            timeBetweenNodes, earliestTime);
-//                    //Step 4.4
-//                    CalculaTRL(feasibleNode, timeWindowRankList, requestsWhichBoardsInNode, lastNode, timeBetweenNodes,
-//                            earliestTime);
-//                } else {
-//                    //Step 4.1
-//                    CalculaListaSemNosViaveis(costRankList, feasibleNode);
-//                    //Step 4.2
-//                    CalculaListaSemNosViaveis(numberOfPassengersRankList, feasibleNode);
-//                    //Step 4.3
-//                    CalculaListaSemNosViaveis(deliveryTimeWindowRankList, feasibleNode);
-//                    //Step 4.4
-//                    CalculaListaSemNosViaveis(timeWindowRankList, feasibleNode);
-//                }
+                System.out.println("FEASIBLE NODES = " + feasibleNodes);
+                if (hasFeasibleNode()) {
+                    rankedList.calculateCRL(feasibleNodes, distanceBetweenNodes, lastNode)
+                            .calculateNRL(feasibleNodes, loadIndex, lastNode)
+                            .calculateDRL(feasibleNodes, requestsWhichLeavesInNode, lastNode, timeBetweenNodes, earliestTime)
+                            .calculateTRL(feasibleNodes, requestsWhichBoardsInNode, lastNode, timeBetweenNodes, earliestTime);
+                } else {
+                    rankedList.calculateListWithoutFeasibleNodes(feasibleNodes);
+                }
 //
-//                //Step 5
-//                CalculaNRF(nodeRankingFunction, costRankList, numberOfPassengersRankList, deliveryTimeWindowRankList,
-//                        timeWindowRankList, alphaD, alphaP, alphaV, alphaT, feasibleNode);
-//
-//                //Step 6              
-//                //System.out.println("Tamanho da NRF = " + NRF.size());              
-//                max = Collections.max(nodeRankingFunction.values());
+                rankedList.calculateNRF(feasibleNodes);
+                max = Collections.max(rankedList.getValuesOfNRF());
 //
 //                currentTime = AdicionaNo(nodeRankingFunction, costRankList, numberOfPassengersRankList,
 //                        deliveryTimeWindowRankList, timeWindowRankList, max, lastNode, requestsWichBoardsInNode,
@@ -219,12 +210,37 @@ public class VRPDRT {
         return solution;
     }
 
+    private boolean hasFeasibleNode() {
+        return feasibleNodes.size() > 1;
+    }
+
+    private void calculateLoadIndex() {
+        loadIndex.clear();
+        for (int i = 0; i < numberOfNodes; i++) {
+            loadIndex.add(requestsWhichBoardsInNode.get(i).size() - requestsWhichLeavesInNode.get(i).size());
+        }
+    }
+
+    private void initializeData() {
+        requestList.clear();
+        listOfNonAttendedRequests.clear();
+        requestList.addAll(requests);
+        loadIndex = new ArrayList<>();
+        initializeFleetOfVehicles();
+    }
+
     private static boolean hasAvaibleVehicle(Iterator<Integer> vehicleIterator) {
         return vehicleIterator.hasNext();
     }
 
     private boolean hasRequestToAttend() {
         return !requestList.isEmpty();
+    }
+
+    public void initializeFleetOfVehicles() {
+        for (int i = 0; i < numberOfVehicles; i++) {
+            setOfVehicles.add(i);
+        }
     }
 
     public void separateOriginFromDestination() {
@@ -251,13 +267,13 @@ public class VRPDRT {
             destination.clear();
         }
     }
-    
+
     public void findFeasibleNodes() {
         for (int i = 1; i < numberOfNodes; i++) {
             evaluateFeasibilityForNode(i);
         }
     }
-    
+
     public void evaluateFeasibilityForNode(Integer currentNode) {
         if (currentNode != lastNode) {
             feasibleNodeIsFound = false;
@@ -278,7 +294,6 @@ public class VRPDRT {
                 }
             }
 
-          
             if (!feasibleNodeIsFound && currentRoute.getActualOccupation() > 0) {
                 for (Request request : requestsWhichLeavesInNode.get(currentNode)) {
                     if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
