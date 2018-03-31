@@ -4,6 +4,7 @@ import GoogleMapsApi.GoogleStaticMap;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProblemSolution implements Comparable<ProblemSolution> {
 
@@ -648,7 +649,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 //                + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t" + numberOfVehicles
 //                + "\t" + totalTravelTime + "\t" + totalWaintingTime + "\t" + deliveryTimeWindowAntecipation + "\t"
 //                + "\t" + df.format(totalOccupationRate) + "\t";
-        String s = df.format(aggregatedObjective1).replace(",", ".") + "\t" + df.format(aggregatedObjective2).replace(",", ".") + "\t" + totalDistance + "\t"
+        String s = this.objectiveFunction + "\n" +df.format(aggregatedObjective1).replace(",", ".") + "\t" + df.format(aggregatedObjective2).replace(",", ".") + "\t" + totalDistance + "\t"
                 + totalDeliveryDelay + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t"
                 + numberOfVehicles + "\t" + totalWaintingTime + "\t" + totalTravelTime + "\t" + deliveryTimeWindowAntecipation
                 + "\t" + totalOccupationRate + "\t";
@@ -735,4 +736,127 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         return 0;
     }
 
+    public void evaluate(List<List<Long>> distanceBetweenNodes, Integer vehicleCapacity) {
+        this.setTotalDistance(objectiveFunction1(distanceBetweenNodes));
+        this.setTotalDeliveryDelay(objectiveFunction2());
+        this.setTotalRouteTimeChargeBanlance(objectiveFunction3());
+        this.setNumberOfNonAttendedRequests(objectiveFunction4());
+        this.setNumberOfVehicles(objectiveFunction5());
+        this.setTotalTravelTime(objectiveFunction6());
+        this.setTotalWaintingTime(objectiveFunction7());
+        this.setDeliveryTimeWindowAntecipation(objectiveFunction8());
+        this.setTotalOccupationRate(objectiveFunction9(vehicleCapacity));
+        this.setObjectivesList();
+        //Algorithms.evaluateAggregatedObjectiveFunctions(this, 1, 1, 1, 1, 1);
+        this.setObjectiveFunction(evaluationFunction());
+    }
+
+    public long objectiveFunction1(List<List<Long>> distanceBetweenNodes) {
+        int totalCost = 0;
+        int W = 1000,//1000,
+                costU = 0;//800;//200;
+        for (Route route : this.getSetOfRoutes()) {
+            totalCost += W;
+            for (int i = 0, j = route.getNodesVisitationList().size(); i < j - 1; i++) {
+                totalCost += distanceBetweenNodes.get(route.getNodesVisitationList().get(i)).get(route.getNodesVisitationList().get(i + 1));
+            }
+        }
+        totalCost += this.getNonAttendedRequestsList().size() * costU;
+        return totalCost;
+    }
+
+    public long objectiveFunction2() {
+        int totalSum = 0;
+        for (Route routes : this.getSetOfRoutes()) {
+            int sum = 0;
+            for (Request request : routes.getRequestAttendanceList()) {
+                if (request.getDeliveryTime() > request.getDeliveryTimeWindowUpper()) {
+                    long dif = request.getDeliveryTime() - request.getDeliveryTimeWindowUpper();
+                    sum += dif;
+                }
+            }
+            routes.setTempoExtra(sum);
+            totalSum += sum;
+        }
+        return totalSum;
+    }
+
+    public long objectiveFunction3() {
+        Set<Route> routes = new HashSet<>();
+        routes.addAll(this.getSetOfRoutes());
+        List<Long> routeEndTime = new ArrayList<>();
+        for (Route route : routes) {
+            long time = route.getTimeListTheVehicleLeavesTheNode().get(route.getNodesVisitationList().size() - 2);
+            routeEndTime.add(time);
+        }
+        routeEndTime.sort(Comparator.naturalOrder());
+
+        Long greaterRoute = routeEndTime.get(routeEndTime.size() - 1);
+        Long smallerRoute = routeEndTime.get(0);
+
+        return greaterRoute - smallerRoute;
+    }
+
+    public int objectiveFunction4() {
+        return this.getNonAttendedRequestsList().size();
+    }
+
+    public int objectiveFunction5() {
+        return this.getSetOfRoutes().size();
+    }
+    
+    public  int objectiveFunction6() {
+        Set<Route> routes = new HashSet<>();
+        routes.addAll(this.getSetOfRoutes());
+        int sum = 0;
+        for (Route route : routes) {
+            for (Request request : route.getRequestAttendanceList()) {
+                sum += request.getDeliveryTime() - request.getPickupTime();
+            }
+        }
+        return sum;
+    }
+
+    public int objectiveFunction7() {
+        Set<Route> routes = new HashSet<>();
+        routes.addAll(this.getSetOfRoutes());
+        int sum = 0;
+        for (Route route : routes) {
+            for (Request request : route.getRequestAttendanceList()) {
+                sum += request.getPickupTime() - request.getPickupTimeWIndowLower();
+            }
+        }
+        return sum;
+    }
+    
+    public int objectiveFunction8() {
+        Set<Route> routes = new HashSet<>();
+        routes.addAll(this.getSetOfRoutes());
+        int sum = 0;
+        for (Route route : routes) {
+            for (Request request : route.getRequestAttendanceList()) {
+                sum += Math.abs(Math.max(request.getDeliveryTimeWindowLower() - request.getDeliveryTime(), 0));
+            }
+        }
+        return sum;
+    }
+
+    public double objectiveFunction9( int vehicleCapacity) {
+        this.getSetOfRoutes().forEach(route -> route.calculateOccupationRate(vehicleCapacity));
+        List<Double> routesOccupationRate = this.getSetOfRoutes().stream().map(Route::getOccupationRate)
+                .collect(Collectors.toCollection(ArrayList::new));
+        double totalOccupationRate = routesOccupationRate.stream().mapToDouble(Double::valueOf).average().getAsDouble();
+        return 1 - totalOccupationRate;
+    }
+    
+    public double evaluationFunction() {
+        double evalutaion = 0;
+        double V = 12;
+        double beta = 1 / 10;
+        double gama = 1;
+        int Y = 1000;
+        int W = 800;
+        evalutaion = this.getTotalDistance() + this.getSetOfRoutes().size() * W + this.getNonAttendedRequestsList().size() * Y;
+        return evalutaion;
+    }
 }
