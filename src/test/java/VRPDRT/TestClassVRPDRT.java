@@ -7,9 +7,8 @@ r.
 package VRPDRT;
 
 import InstanceReader.Instance;
-import ProblemRepresentation.ProblemSolution;
-import ProblemRepresentation.RankedList;
-import junit.framework.Assert;
+import ProblemRepresentation.*;
+import java.util.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -51,6 +50,16 @@ public class TestClassVRPDRT {
     public void testRebuildSolution() {
         ProblemSolution solution = problem.buildGreedySolution();
         System.out.println(solution);
+        System.out.println(solution.getLinkedRouteList());
+        
+        List<Integer> sequence = new ArrayList<>();
+        sequence.addAll(solution.getLinkedRouteList());
+        Collections.swap(sequence, 0, 4);
+        System.out.println("new sequence = " + sequence);
+        problem.rebuildSolution(sequence, problem.getData().getRequests());
+       
+        System.out.println(solution);
+        System.out.println(solution.getLinkedRouteList());
         assertEquals(200026.0, solution.getObjectiveFunction(), 0.001);
     }
 

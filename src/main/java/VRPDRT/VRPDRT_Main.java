@@ -109,7 +109,14 @@ public class VRPDRT_Main {
                 numberOfNodes,  vehicleCapacity, setOfVehicles,  listOfNonAttendedRequests,  requestList, loadIndexList,
                 timeBetweenNodes,  distanceBetweenNodes, timeWindows,  currentTime,  lastNode);
         System.out.println(solution);
-        
+        List<Integer> sequence = new ArrayList<>();
+        sequence.addAll(solution.getLinkedRouteList());
+        Collections.swap(sequence, 0, 4);
+        System.out.println("new sequence = " + sequence);
+        System.out.println(
+        rebuildSolution(parameters, sequence, requests, new ArrayList<>(), setOfVehicles, listOfNonAttendedRequests, 
+                requestsWhichBoardsInNode, requestsWhichLeavesInNode, timeBetweenNodes, distanceBetweenNodes, numberOfNodes,
+                vehicleCapacity, timeWindows));
         
         
 //        CL_NSGAII(instanceName, parameters, nadirPoint, populationSize, maximumNumberOfGenerations, maximumNumberOfExecutions, probabilityOfMutation, probabilityOfCrossover,

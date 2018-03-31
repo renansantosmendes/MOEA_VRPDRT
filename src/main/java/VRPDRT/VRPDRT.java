@@ -459,9 +459,9 @@ public class VRPDRT {
     }
     
     
-    public  ProblemSolution rebuildSolution(List<Double> parameters, List<Integer> neighborhood, List<Request> listRequests, List<Request> requestList) {
-        requestList.clear();
-        requestList.addAll(listRequests);
+    public  ProblemSolution rebuildSolution(List<Integer> neighborhood, List<Request> requestList) {
+//        requestList.clear();
+//        requestList.addAll(listRequests);
 
         solution = new ProblemSolution();
         solution.setLinkedRouteList(neighborhood);
@@ -717,7 +717,7 @@ public class VRPDRT {
             }
         }
         solution.setNonAttendedRequestsList(nonAttendedRequests);
-        solution.evaluate( distanceBetweenNodes, vehicleCapacity);
+        solution.evaluate(distanceBetweenNodes, vehicleCapacity);
         //evaluateAggregatedObjectiveFunctions(parameters, solution);
         solution.setLogger(log);
 
