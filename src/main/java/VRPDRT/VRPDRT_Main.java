@@ -109,7 +109,7 @@ public class VRPDRT_Main {
                 numberOfNodes,  vehicleCapacity, setOfVehicles,  listOfNonAttendedRequests,  requestList, loadIndexList,
                 timeBetweenNodes,  distanceBetweenNodes, timeWindows,  currentTime,  lastNode);
         System.out.println(solution);
-        solution.getSetOfRoutes().forEach(r -> System.out.println(r.getRequestAttendanceList().size()));
+        
         
         
 //        CL_NSGAII(instanceName, parameters, nadirPoint, populationSize, maximumNumberOfGenerations, maximumNumberOfExecutions, probabilityOfMutation, probabilityOfCrossover,

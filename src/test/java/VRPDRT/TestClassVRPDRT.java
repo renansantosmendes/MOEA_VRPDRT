@@ -9,6 +9,7 @@ package VRPDRT;
 import InstanceReader.Instance;
 import ProblemRepresentation.ProblemSolution;
 import ProblemRepresentation.RankedList;
+import junit.framework.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -29,22 +30,28 @@ public class TestClassVRPDRT {
                 .setNumberOfNodes(12)
                 .setNumberOfVehicles(250)
                 .setVehicleCapacity(4);
-        
+
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
         rankedList.setAlphaD(0.20)
                 .setAlphaP(0.15)
-                .setAlphaT(0.55)
-                .setAlphaV(0.10);
-        
-        problem = new VRPDRT(instance, path,rankedList);
+                .setAlphaT(0.10)
+                .setAlphaV(0.55);
+
+        problem = new VRPDRT(instance, path, rankedList);
     }
 
     @Test
     public void testBuildGreedySolution() {
         ProblemSolution solution = problem.buildGreedySolution();
         System.out.println(solution);
-        System.out.println(solution.getNonAttendedRequestsList());
-        solution.getSetOfRoutes().forEach(r -> System.out.println(r.getRequestAttendanceList().size()));
+        assertEquals(200026.0, solution.getObjectiveFunction(), 0.001);
+    }
+    
+    @Test
+    public void testRebuildSolution() {
+        ProblemSolution solution = problem.buildGreedySolution();
+        System.out.println(solution);
+        assertEquals(200026.0, solution.getObjectiveFunction(), 0.001);
     }
 
 }

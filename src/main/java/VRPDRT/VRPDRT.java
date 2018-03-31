@@ -122,7 +122,6 @@ public class VRPDRT {
     }
 
     public ProblemSolution buildGreedySolution() {
-
         initializeData();
         solution = new ProblemSolution();
         log = "";
@@ -172,16 +171,12 @@ public class VRPDRT {
                 removeNonAttendeRequests();
                 finalizeRoute();
             }
-//
-//            //Step 9
             nonAttendedRequestListFeasibilityAvaliation();
         }
-//
         solution.setNonAttendedRequestsList(nonAttendedRequests);
         solution.evaluate( distanceBetweenNodes, vehicleCapacity);
         solution.setLogger(log);
         solution.linkTheRoutes();
-
         return solution;
     }
 
@@ -250,11 +245,11 @@ public class VRPDRT {
     }
 
     public void evaluateFeasibilityForNode(Integer currentNode) {
-        if (currentNode != lastNode) {
+        if (!Objects.equals(currentNode, lastNode)) {
             feasibleNodeIsFound = false;
             if (currentRoute.getActualOccupation() < vehicleCapacity) {
-                for (Request request : requestsWhichBoardsInNode.get(currentNode)) {//retorna uma lista com as requisições que embarcam em i
-                    if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) { //d.get(lastNode).get(i) � o tempo de chegar de lastNode ate o no i?
+                for (Request request : requestsWhichBoardsInNode.get(currentNode)) {
+                    if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) { 
                         feasibleNodes.add(currentNode);
                         feasibleNodeIsFound = true;
                         break;
@@ -409,7 +404,6 @@ public class VRPDRT {
                         }
                     }
                 }
-                //Procura solicitação para desembarcar
                 if (!feasibleRequestIsFound && currentRoute.getActualOccupation() > 0) {
                     for (Request request : requestsWhichLeavesInNode.get(i)) {
                         if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
@@ -447,7 +441,6 @@ public class VRPDRT {
             currentTime += timeBetweenNodes.get(lastNode).get(0);
             solution.getSetOfRoutes().add(currentRoute);
         }
-        //return currentTime;
     }
 
     public void nonAttendedRequestListFeasibilityAvaliation() {
@@ -463,5 +456,271 @@ public class VRPDRT {
                 requestList.addAll(nonAttendedRequests);
             }
         }
+    }
+    
+    
+    public  ProblemSolution rebuildSolution(List<Double> parameters, List<Integer> neighborhood, List<Request> listRequests, List<Request> requestList) {
+        requestList.clear();
+        requestList.addAll(listRequests);
+
+        solution = new ProblemSolution();
+        solution.setLinkedRouteList(neighborhood);
+        String log = "";
+
+        vehicleIterator = setOfVehicles.iterator();
+        nonAttendedRequests.clear();
+        
+
+        List<Request> auxP = new LinkedList<>(requestList);
+        for (Request request : auxP) {
+            if (!neighborhood.contains(request.getOrigin()) || !neighborhood.contains(request.getDestination()) || !(timeBetweenNodes.get(0).get(request.getOrigin()) <= request.getPickupTimeWindowUpper())) {
+                nonAttendedRequests.add((Request) request.clone());
+                requestList.remove((Request) request.clone());
+            }
+        }
+
+        while (!hasRequestToAttend() && hasAvaibleVehicle() && !neighborhood.isEmpty()) {
+            requestsWhichBoardsInNode.clear();
+            requestsWhichLeavesInNode.clear();
+            List<Request> origem = new LinkedList<Request>();
+            List<Request> destino = new LinkedList<Request>();
+            for (int j = 0; j < numberOfNodes; j++) {
+
+                for (Request request : requestList) {
+                    if (request.getOrigin() == j) {
+                        origem.add((Request) request.clone());
+                    }
+                    if (request.getDestination() == j) {
+                        destino.add((Request) request.clone());
+                    }
+                }
+
+                requestsWhichBoardsInNode.put(j, new LinkedList<Request>(origem));
+                requestsWhichLeavesInNode.put(j, new LinkedList<Request>(destino));
+
+                origem.clear();
+                destino.clear();
+            }
+            
+            currentRoute = new Route();
+            currentVehicle = vehicleIterator.next();
+            log += "\tROTA " + (currentVehicle + 1) + " ";
+
+            
+            currentRoute.addVisitedNodes(0);
+            long currentTime = 0;
+
+            Integer lastNode = currentRoute.getLastNode();
+            Integer newNode;
+            boolean encontrado;
+
+            while (!requestList.isEmpty()) {
+
+//				lastNode = R.getLastNode();
+                newNode = -1;
+                encontrado = false;
+
+                //List<Integer> vizinhoCopia = new ArrayList<Integer>(vizinho);
+                for (int k = 0; !encontrado && k < neighborhood.size(); k++) {
+                    int i = neighborhood.get(k);
+
+                    if (i != lastNode) {
+                        if (currentRoute.getActualOccupation() < vehicleCapacity) {
+                            for (Request request : requestsWhichBoardsInNode.get(i)) {
+                                if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(i) <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+                                    newNode = neighborhood.remove(k);
+                                    encontrado = true;
+                                    break;
+                                }
+                                //if( (currentTime + d.get(lastNode).get(i)) <= request.getPickupTimeWindowUpper()){
+                                if (currentTime + timeBetweenNodes.get(lastNode).get(i) >= request.getPickupTimeWIndowLower() - timeWindows
+                                        && currentTime + timeBetweenNodes.get(lastNode).get(i) <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+                                    newNode = neighborhood.remove(k);
+                                    encontrado = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        /**
+                         * E OS N�S DE ENTREGA? DEVEM SER VI�VEIS TAMB�M?*
+                         */
+                        if (!encontrado && currentRoute.getActualOccupation() > 0) {
+                            for (Request request : requestsWhichLeavesInNode.get(i)) {
+                                if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
+                                    newNode = neighborhood.remove(k);
+                                    encontrado = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (newNode == -1) {
+                    System.out.println("newNode Invalido");
+                }
+                //-------------------------------------------------------------------------------------------------
+                //Step 6
+                List<Long> EarliestTime = new ArrayList<>();
+
+                if (lastNode == 0) {
+                    //System.out.println("VIZINHO PROBLEMATICO "+vizinho);
+                    for (Request request : requestsWhichBoardsInNode.get(newNode)) {
+                        if (timeBetweenNodes.get(lastNode).get(newNode) <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+                            EarliestTime.add(request.getPickupTimeWIndowLower());
+                        }
+                    }
+
+                    currentTime = Math.max(Collections.min(EarliestTime) - timeBetweenNodes.get(lastNode).get(newNode), 0);
+                    currentRoute.setDepartureTimeFromDepot(currentTime);
+
+                    EarliestTime.clear();
+                }
+
+                currentTime += timeBetweenNodes.get(lastNode).get(newNode);
+
+                currentRoute.addVisitedNodes(newNode);
+                lastNode = currentRoute.getLastNode();
+
+                List<Request> listRequestAux = new LinkedList<>(requestsWhichLeavesInNode.get(lastNode));
+
+                for (Request request : listRequestAux) {
+
+                    if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
+                        requestsWhichLeavesInNode.get(lastNode).remove((Request) request.clone());
+                        requestList.remove((Request) request.clone());
+
+                        //if(currentK == 1){
+                        log += "ENTREGA: " + currentTime + ": " + (Request) request.clone() + " ";
+                        //}
+
+                        currentRoute.leavePassenger((Request) request.clone(), currentTime);
+
+                        //EXTRA
+                        log += "Q=" + currentRoute.getActualOccupation() + " ";
+                    }
+                }
+                listRequestAux.clear();
+
+                listRequestAux.addAll(requestsWhichBoardsInNode.get(lastNode));
+
+                for (Request request : listRequestAux) {
+                    if (currentRoute.getActualOccupation() < vehicleCapacity && currentTime >= request.getPickupTimeWIndowLower() && currentTime <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+                        requestsWhichBoardsInNode.get(lastNode).remove((Request) request.clone());
+                        log += "COLETA: " + currentTime + ": " + (Request) request.clone() + " ";
+                        currentRoute.boardPassenger((Request) request.clone(), currentTime);
+                        log += "Q=" + currentRoute.getActualOccupation() + " ";
+                    }
+                }
+
+                listRequestAux.clear();
+
+                listRequestAux.addAll(requestsWhichBoardsInNode.get(lastNode));
+
+                long waitTime = timeWindows;
+                long aux;
+
+                for (Request request : listRequestAux) {
+                    if (currentRoute.getActualOccupation() < vehicleCapacity && currentTime + waitTime >= request.getPickupTimeWIndowLower() && currentTime + waitTime <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+
+                        aux = currentTime + waitTime - request.getPickupTimeWIndowLower();
+                        currentTime = Math.min(currentTime + waitTime, request.getPickupTimeWIndowLower());
+                        waitTime = aux;
+                        requestsWhichBoardsInNode.get(lastNode).remove((Request) request.clone());
+                        log += "COLETAw: " + currentTime + ": " + (Request) request.clone() + " ";
+                        currentRoute.boardPassenger((Request) request.clone(), currentTime);
+                        log += "Q=" + currentRoute.getActualOccupation() + " ";
+                    }
+                }
+
+                listRequestAux.clear();
+
+                for (Integer key : requestsWhichBoardsInNode.keySet()) {
+                    listRequestAux.addAll(requestsWhichBoardsInNode.get(key));
+                    for (Integer i = 0, k = listRequestAux.size(); i < k; i++) {
+                        Request request = listRequestAux.get(i);
+                        if (currentTime > request.getPickupTimeWindowUpper() || !neighborhood.contains(request.getOrigin()) || !neighborhood.contains(request.getDestination())) {
+                            nonAttendedRequests.add((Request) request.clone());
+                            requestList.remove((Request) request.clone());
+                            requestsWhichBoardsInNode.get(key).remove((Request) request.clone());
+                            requestsWhichLeavesInNode.get(request.getDestination()).remove((Request) request.clone());
+                        }
+                    }
+                    listRequestAux.clear();
+
+                }
+
+                encontrado = false;
+                for (int k = 0; !encontrado && k < neighborhood.size(); k++) {
+                    int i = neighborhood.get(k);
+
+                    if (i != lastNode) {
+
+                        if (currentRoute.getActualOccupation() < vehicleCapacity) {
+                            for (Request request : requestsWhichBoardsInNode.get(i)) {
+                                if (currentTime + timeBetweenNodes.get(lastNode).get(i) >= request.getPickupTimeWIndowLower() - timeWindows
+                                        && currentTime + timeBetweenNodes.get(lastNode).get(i) <= request.getPickupTimeWindowUpper() && neighborhood.contains(request.getDestination())) {
+                                    encontrado = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!encontrado && currentRoute.getActualOccupation() > 0) {
+                            for (Request request : requestsWhichLeavesInNode.get(i)) {
+                                if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
+                                    encontrado = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!encontrado) {
+                    for (Integer key : requestsWhichBoardsInNode.keySet()) {
+
+                        listRequestAux.addAll(requestsWhichBoardsInNode.get(key));
+
+                        for (Integer i = 0, k = listRequestAux.size(); i < k; i++) {
+                            Request request = listRequestAux.get(i);
+
+                            nonAttendedRequests.add((Request) request.clone());
+                            requestList.remove((Request) request.clone());
+                            requestsWhichBoardsInNode.get(key).remove((Request) request.clone());
+                            requestsWhichLeavesInNode.get(request.getDestination()).remove((Request) request.clone());
+
+                        }
+                        listRequestAux.clear();
+
+                    }
+                }
+
+                //Step 8
+                if (requestList.isEmpty()) {
+                    currentRoute.addVisitedNodes(0);
+                    currentTime += timeBetweenNodes.get(lastNode).get(0);
+                    solution.getSetOfRoutes().add(currentRoute);
+                }
+
+            }
+
+            //Step 9
+            if (!nonAttendedRequests.isEmpty() && vehicleIterator.hasNext()) {
+                List<Request> auxU = new LinkedList<>(nonAttendedRequests);
+                for (Request request : auxU) {
+                    if (neighborhood.contains(request.getOrigin()) && neighborhood.contains(request.getDestination()) && timeBetweenNodes.get(0).get(request.getOrigin()) <= request.getPickupTimeWindowUpper()) {
+                        requestList.add((Request) request.clone());
+                        nonAttendedRequests.remove((Request) request.clone());
+                    }
+                }
+            }
+        }
+        solution.setNonAttendedRequestsList(nonAttendedRequests);
+        solution.evaluate( distanceBetweenNodes, vehicleCapacity);
+        //evaluateAggregatedObjectiveFunctions(parameters, solution);
+        solution.setLogger(log);
+
+        return solution;
     }
 }
