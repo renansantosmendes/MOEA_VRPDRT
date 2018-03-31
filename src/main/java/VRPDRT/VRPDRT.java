@@ -22,15 +22,13 @@ public class VRPDRT {
     private List<List<Integer>> listOfAdjacencies = new LinkedList<>();
     private List<List<Long>> distanceBetweenNodes = new LinkedList<>();
     private List<List<Long>> timeBetweenNodes = new LinkedList<>();
-    private Set<Integer> Pmais = new HashSet<>();
-    private Set<Integer> Pmenos = new HashSet<>();
     private Set<Integer> setOfNodes = new HashSet<>();
     private int numberOfNodes;
     private Map<Integer, List<Request>> requestsWhichBoardsInNode = new HashMap<>();
     private Map<Integer, List<Request>> requestsWhichLeavesInNode = new HashMap<>();
     private List<Integer> loadIndexList = new LinkedList<>();
     private Set<Integer> setOfVehicles = new HashSet<>();
-    private List<Request> listOfNonAttendedRequests = new ArrayList<>();
+    private List<Request> nonAttendedRequests = new ArrayList<>();
     private List<Request> requestList = new ArrayList<>();
     private ProblemData data;
     private Instance instance;
@@ -45,10 +43,12 @@ public class VRPDRT {
     private Integer lastNode;
     private List<Integer> loadIndex;
     private boolean feasibleNodeIsFound;
+    private boolean feasibleRequestIsFound;
     private Set<Integer> feasibleNodes;
     private Route currentRoute;
     private double max, min;
     private RankedList rankedList;
+    private String log;
 
     public VRPDRT(Instance instance) {
         this.loadIndexList = new LinkedList<>();
@@ -128,7 +128,7 @@ public class VRPDRT {
         rankedList.initialize();
 
         Iterator<Integer> vehicleIterator = setOfVehicles.iterator();
-        listOfNonAttendedRequests.clear();
+        nonAttendedRequests.clear();
         while (hasRequestToAttend() && hasAvaibleVehicle(vehicleIterator)) {
 
             separateOriginFromDestination();
@@ -163,36 +163,18 @@ public class VRPDRT {
                 } else {
                     rankedList.calculateListWithoutFeasibleNodes(feasibleNodes);
                 }
-//
+
                 rankedList.calculateNRF(feasibleNodes);
                 max = Collections.max(rankedList.getValuesOfNRF());
-//
-//                currentTime = AdicionaNo(nodeRankingFunction, costRankList, numberOfPassengersRankList,
-//                        deliveryTimeWindowRankList, timeWindowRankList, max, lastNode, requestsWichBoardsInNode,
-//                        timeBetweenNodes, earliestTime, currentTime, route);
-//
-//                lastNode = route.getLastNode();
-//
-//                //Step 7
-//                //RETIRAR A LINHA DE BAIXO DEPOIS - inicialização de listRequestAux
-//                List<Request> listRequestAux = new LinkedList<>();
-//                //Desembarca as solicitações no nó 
-//                Desembarca(requestsWhichBoardsInNode, requestsWhichLeavesInNode, lastNode, currentTime, requestList,
-//                        listRequestAux, route, log);
-//                //Embarca as solicitações sem tempo de espera
-//                Embarca(requestsWhichBoardsInNode, lastNode, currentTime, requestList, listRequestAux, route, log, vehicleCapacity);
-//                //Embarca agora as solicitações onde o veículo precisar esperar e guarda atualiza o tempo (currentTime)                               
-//                currentTime = EmbarcaRelaxacao(requestsWhichBoardsInNode, lastNode, currentTime, requestList,
-//                        listRequestAux, route, log, vehicleCapacity, timeWindows);
-//
-//                //---------- Trata as solicitações inviáveis -----------
-//                RetiraSolicitacoesInviaveis(requestsWhichBoardsInNode, requestsWhichLeavesInNode, listRequestAux,
-//                        currentTime, requestList, listOfNonAttendedRequests);
-//                feasibleNodeIsFound = ProcuraSolicitacaoParaAtender(route, vehicleCapacity, requestsWhichBoardsInNode,
-//                        requestsWhichLeavesInNode, currentTime, numberOfNodes, timeBetweenNodes, lastNode, timeWindows,
-//                        feasibleNodeIsFound);
-//                RetiraSolicitacaoNaoSeraAtendida(feasibleNodeIsFound, requestsWhichBoardsInNode, requestsWhichLeavesInNode,
-//                        listRequestAux, currentTime, requestList, listOfNonAttendedRequests);
+                addBestNode(earliestTime);
+
+                //Step 7
+                landPassengers();
+                boardPassengers();
+                boardPassengersWithRelaxationTime();
+                removesUnfeasibleRequests();
+                findRequestToAttend();
+                removeNonAttendeRequests();
 //
 //                //Step 8
 //                currentTime = FinalizaRota(requestList, route, currentTime, lastNode, timeBetweenNodes, solution);
@@ -223,7 +205,7 @@ public class VRPDRT {
 
     private void initializeData() {
         requestList.clear();
-        listOfNonAttendedRequests.clear();
+        nonAttendedRequests.clear();
         requestList.addAll(requests);
         loadIndex = new ArrayList<>();
         initializeFleetOfVehicles();
@@ -245,7 +227,7 @@ public class VRPDRT {
 
     public void separateOriginFromDestination() {
 
-        listOfNonAttendedRequests.clear();
+        nonAttendedRequests.clear();
         requestsWhichBoardsInNode.clear();
         requestsWhichLeavesInNode.clear();
         List<Request> origin = new LinkedList<Request>();
@@ -301,6 +283,167 @@ public class VRPDRT {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    public void addBestNode(List<Long> earliestTime) {
+        //-------------------------------------------------------------------------------------------------------------------------------------- 
+        for (Map.Entry<Integer, Double> nrf : rankedList.getNodeRankingFunction().entrySet()) {
+            Integer newNode = nrf.getKey();
+            Double value = nrf.getValue();
+
+            if (Objects.equals(max, value)) {
+                if (lastNode == 0) {
+                    for (Request request : requestsWhichBoardsInNode.get(newNode)) {
+                        if (timeBetweenNodes.get(lastNode).get(newNode) <= request.getPickupTimeWindowUpper()) {
+                            earliestTime.add(request.getPickupTimeWIndowLower());
+                        }
+                    }
+                    currentTime = Math.max(Collections.min(earliestTime) - timeBetweenNodes.get(lastNode).get(newNode), 0);
+                    currentRoute.setDepartureTimeFromDepot(currentTime);
+                    earliestTime.clear();
+                }
+
+                currentTime += timeBetweenNodes.get(lastNode).get(newNode);
+
+                currentRoute.addVisitedNodes(newNode);
+                lastNode = currentRoute.getLastNode();
+                break;
+            }
+        }
+        rankedList.clear();
+        lastNode = currentRoute.getLastNode();
+        //return currentTime;
+    }
+
+    public void landPassengers() {
+        List<Request> listRequestAux = new LinkedList<>();
+        listRequestAux.addAll(requestsWhichLeavesInNode.get(lastNode));
+
+        for (Request request : listRequestAux) {
+
+            if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
+                requestsWhichLeavesInNode.get(lastNode).remove((Request) request.clone());
+                requestList.remove((Request) request.clone());
+                log += "ENTREGA: " + currentTime + ": " + (Request) request.clone() + " ";
+                try {
+                    currentRoute.leavePassenger((Request) request.clone(), currentTime);
+                } catch (Exception e) {
+                    //System.out.print("solucao vigente: " + S + " R problema\n");
+                    System.out.println("L Atend (" + currentRoute.getRequestAttendanceList().size() + ") " + currentRoute.getRequestAttendanceList());
+                    System.out.println("L Visit (" + currentRoute.getNodesVisitationList().size() + ") " + currentRoute.getNodesVisitationList());
+                    System.out.println("Qik (" + currentRoute.getVehicleOccupationWhenLeavesNode().size() + ") " + currentRoute.getVehicleOccupationWhenLeavesNode());
+                    System.out.println("Tempoik (" + currentRoute.getTimeListTheVehicleLeavesTheNode().size() + ") " + currentRoute.getTimeListTheVehicleLeavesTheNode());
+                    System.exit(-1);
+                }
+                //EXTRA
+                log += "Q=" + currentRoute.getActualOccupation() + " ";
+            }
+        }
+        listRequestAux.clear();
+    }
+
+    public void boardPassengers() {
+        List<Request> listRequestAux = new LinkedList<>();
+        listRequestAux.addAll(requestsWhichBoardsInNode.get(lastNode));
+
+        for (Request request : listRequestAux) {
+            if (currentRoute.getActualOccupation() < vehicleCapacity && currentTime >= request.getPickupTimeWIndowLower() && currentTime <= request.getPickupTimeWindowUpper()) {
+                requestsWhichBoardsInNode.get(lastNode).remove((Request) request.clone());
+                log += "COLETA: " + currentTime + ": " + (Request) request.clone() + " ";
+                currentRoute.boardPassenger((Request) request.clone(), currentTime);
+                //EXTRA
+                log += "Q =" + currentRoute.getActualOccupation() + " ";
+            }
+        }
+
+        listRequestAux.clear();
+    }
+
+    public void boardPassengersWithRelaxationTime() {
+
+        List<Request> listRequestAux = new LinkedList<>();
+        listRequestAux.addAll(requestsWhichBoardsInNode.get(lastNode));
+
+        long waitTime = timeWindows;
+        long aux;
+
+        for (Request request : listRequestAux) {
+            if (currentRoute.getActualOccupation() < vehicleCapacity && currentTime + waitTime >= request.getPickupTimeWIndowLower() && currentTime + waitTime <= request.getPickupTimeWindowUpper()) {
+                aux = currentTime + waitTime - request.getPickupTimeWIndowLower();
+                currentTime = Math.min(currentTime + waitTime, request.getPickupTimeWIndowLower());
+                waitTime = aux;
+                requestsWhichBoardsInNode.get(lastNode).remove((Request) request.clone());
+                log += "COLETAw: " + currentTime + ": " + (Request) request.clone() + " ";
+                currentRoute.boardPassenger((Request) request.clone(), currentTime);
+                log += "Q=" + currentRoute.getActualOccupation() + " ";
+            }
+        }
+    }
+
+    public void removesUnfeasibleRequests() {
+        List<Request> listRequestAux = new LinkedList<>();
+        listRequestAux.clear();
+        for (Integer key : requestsWhichBoardsInNode.keySet()) {
+            listRequestAux.addAll(requestsWhichBoardsInNode.get(key));
+            Integer i;
+            Integer n2;
+            for (i = 0, n2 = listRequestAux.size(); i < n2; i++) {
+                Request request = listRequestAux.get(i);
+                if (currentTime > request.getPickupTimeWindowUpper()) {
+                    nonAttendedRequests.add((Request) request.clone());
+                    requestList.remove((Request) request.clone());
+                    requestsWhichBoardsInNode.get(key).remove((Request) request.clone());
+                    requestsWhichLeavesInNode.get(request.getDestination()).remove((Request) request.clone());
+                }
+            }
+            listRequestAux.clear();
+        }
+    }
+
+    public void findRequestToAttend() {
+        feasibleRequestIsFound = false;
+        for (int i = 1; !feasibleRequestIsFound && i < numberOfNodes; i++) {//varre todas as solicitações para encontrar se tem alguma viável
+            if (i != lastNode) {
+
+                //Procura solicitação para embarcar
+                if (currentRoute.getActualOccupation() < vehicleCapacity) {//se tiver lugar, ele tenta embarcar alguem no veículo
+                    for (Request request : requestsWhichBoardsInNode.get(i)) {//percorre todos os nós menos o nó que acabou de ser adicionado (por causa da restrição)
+                        if (currentTime + timeBetweenNodes.get(lastNode).get(i) >= request.getPickupTimeWIndowLower() - timeWindows
+                                && currentTime + timeBetweenNodes.get(lastNode).get(i) <= request.getPickupTimeWindowUpper()) {
+                            feasibleRequestIsFound = true;
+                            break;
+                        }
+                    }
+                }
+                //Procura solicitação para desembarcar
+                if (!feasibleRequestIsFound && currentRoute.getActualOccupation() > 0) {
+                    for (Request request : requestsWhichLeavesInNode.get(i)) {
+                        if (!requestsWhichBoardsInNode.get(request.getOrigin()).contains(request)) {
+                            feasibleRequestIsFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeNonAttendeRequests() {
+        List<Request> listRequestAux = new LinkedList<>();
+        if (!feasibleRequestIsFound) {
+            for (Integer key : requestsWhichBoardsInNode.keySet()) {//bloco de comando que coloca as solicitações que nn embarcaram no conjunto de inviáveis (U)
+                listRequestAux.addAll(requestsWhichBoardsInNode.get(key));
+                Integer i, n2;
+                for (i = 0, n2 = listRequestAux.size(); i < n2; i++) {
+                    Request request = listRequestAux.get(i);
+                    nonAttendedRequests.add((Request) request.clone());
+                    requestList.remove((Request) request.clone());
+                    requestsWhichBoardsInNode.get(key).remove((Request) request.clone());
+                    requestsWhichLeavesInNode.get(request.getDestination()).remove((Request) request.clone());
+                }
+                listRequestAux.clear();
             }
         }
     }

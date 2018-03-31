@@ -199,6 +199,32 @@ public class RankedList {
     public Collection<Double> getValuesOfNRF(){
         return nodeRankingFunction.values();
     }
+
+    public Map<Integer, Double> getCostRankList() {
+        return costRankList;
+    }
+
+    public Map<Integer, Double> getNumberOfPassengersRankList() {
+        return numberOfPassengersRankList;
+    }
+
+    public Map<Integer, Double> getDeliveryTimeWindowRankList() {
+        return deliveryTimeWindowRankList;
+    }
+
+    public Map<Integer, Double> getTimeWindowRankList() {
+        return timeWindowRankList;
+    }
+
+    public Map<Integer, Double> getNodeRankingFunction() {
+        return nodeRankingFunction;
+    }
+
+    public int getNumberOfNodes() {
+        return numberOfNodes;
+    }
+    
+    
     
     
 }
