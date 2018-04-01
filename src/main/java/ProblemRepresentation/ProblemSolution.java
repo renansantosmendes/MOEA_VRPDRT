@@ -649,7 +649,11 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 //                + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t" + numberOfVehicles
 //                + "\t" + totalTravelTime + "\t" + totalWaintingTime + "\t" + deliveryTimeWindowAntecipation + "\t"
 //                + "\t" + df.format(totalOccupationRate) + "\t";
-        String s = this.objectiveFunction + "\n" +df.format(aggregatedObjective1).replace(",", ".") + "\t" + df.format(aggregatedObjective2).replace(",", ".") + "\t" + totalDistance + "\t"
+//        String s = this.objectiveFunction + "\n" +df.format(aggregatedObjective1).replace(",", ".") + "\t" + df.format(aggregatedObjective2).replace(",", ".") + "\t" + totalDistance + "\t"
+//                + totalDeliveryDelay + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t"
+//                + numberOfVehicles + "\t" + totalWaintingTime + "\t" + totalTravelTime + "\t" + deliveryTimeWindowAntecipation
+//                + "\t" + totalOccupationRate + "\t";
+        String s = this.objectiveFunction + "\t" + totalDistance + "\t"
                 + totalDeliveryDelay + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t"
                 + numberOfVehicles + "\t" + totalWaintingTime + "\t" + totalTravelTime + "\t" + deliveryTimeWindowAntecipation
                 + "\t" + totalOccupationRate + "\t";
@@ -804,8 +808,8 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
     public int objectiveFunction5() {
         return this.getSetOfRoutes().size();
     }
-    
-    public  int objectiveFunction6() {
+
+    public int objectiveFunction6() {
         Set<Route> routes = new HashSet<>();
         routes.addAll(this.getSetOfRoutes());
         int sum = 0;
@@ -828,7 +832,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         }
         return sum;
     }
-    
+
     public int objectiveFunction8() {
         Set<Route> routes = new HashSet<>();
         routes.addAll(this.getSetOfRoutes());
@@ -841,14 +845,14 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         return sum;
     }
 
-    public double objectiveFunction9( int vehicleCapacity) {
+    public double objectiveFunction9(int vehicleCapacity) {
         this.getSetOfRoutes().forEach(route -> route.calculateOccupationRate(vehicleCapacity));
         List<Double> routesOccupationRate = this.getSetOfRoutes().stream().map(Route::getOccupationRate)
                 .collect(Collectors.toCollection(ArrayList::new));
         double totalOccupationRate = routesOccupationRate.stream().mapToDouble(Double::valueOf).average().getAsDouble();
         return 1 - totalOccupationRate;
     }
-    
+
     public double evaluationFunction() {
         double evalutaion = 0;
         double V = 12;

@@ -57,13 +57,20 @@ public class TestClassVRPDRT {
         sequence.addAll(solution.getLinkedRouteList());
         Collections.swap(sequence, 0, 4);
         //Collections.shuffle(sequence);
-        System.out.println("new sequence = " + sequence);
+//        System.out.println("new sequence = " + sequence);
         solution = problem.rebuildSolution(sequence, problem.getData().getRequests());
 
         System.out.println(solution);
         System.out.println(solution.getLinkedRouteList());
-        for (int i = 0; i < 1; i++) {
-            System.out.println("Random Solution = " + problem.buildRandomSolution());
+        for (int i = 0; i < 10; i++) {
+            RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+            rankedList.setAlphaD(0.20)
+                    .setAlphaP(0.15)
+                    .setAlphaT(0.10)
+                    .setAlphaV(0.55);
+
+            problem = new VRPDRT(instance, path, rankedList);
+            System.out.println("Random Solution = " + problem.buildRandomSolution().getLinkedRouteList());
         }
         assertEquals(178125.0, solution.getObjectiveFunction(), 0.001);//178125.0
     }

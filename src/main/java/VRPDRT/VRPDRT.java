@@ -1004,7 +1004,7 @@ public class VRPDRT {
         
         Collections.swap(sequence, index1, index2);
         //Collections.shuffle(sequence);
-        System.out.println("new sequence = " + sequence);
+        //System.out.println("new sequence = " + sequence);
         solution = rebuildSolution(sequence, requests);
         
         return solution;
