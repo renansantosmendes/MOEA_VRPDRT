@@ -65,9 +65,19 @@ public class MOEAVRPDRT implements Problem {
     @Override
     public void evaluate(Solution solution) {
         int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-        for(int i=0;i<array.length;i++){
-            System.out.print(array[i] + " ");
-        }
+//        for(int i=0;i<array.length;i++){
+//            System.out.print(array[i] + " ");
+//        }
+        List<Integer> solutionRepresentation = copyArrayToList(array);
+        System.out.println(solutionRepresentation);
+        
+        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+        rankedList.setAlphaD(0.20)
+                .setAlphaP(0.15)
+                .setAlphaT(0.10)
+                .setAlphaV(0.55);
+
+        problem = new VRPDRT(instance, path, rankedList);
     }
 
     @Override
