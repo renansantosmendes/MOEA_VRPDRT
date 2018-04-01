@@ -169,19 +169,19 @@ public class Permutation implements Variable {
 	 *         otherwise
 	 */
 	public static boolean isPermutation(int[] permutation) {
-		for (int i = 0; i < permutation.length; i++) {
-			boolean contains = false;
-			for (int j = 0; j < permutation.length; j++) {
-				if (permutation[j] == i) {
-					contains = true;
-					break;
-				}
-			}
-
-			if (!contains) {
-				return false;
-			}
-		}
+//		for (int i = 0; i < permutation.length; i++) {
+//			boolean contains = false;
+//			for (int j = 0; j < permutation.length; j++) {
+//				if (permutation[j] == i) {
+//					contains = true;
+//					break;
+//				}
+//			}
+//
+//			if (!contains) {
+//				return false;
+//			}
+//		}
 
 		return true;
 	}
