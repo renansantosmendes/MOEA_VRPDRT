@@ -194,6 +194,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
     }
 
     public void setObjectivesList() {
+        this.objectives.clear();
         this.objectives.add((double) this.totalDistance);
         this.objectives.add((double) this.totalDeliveryDelay);
         this.objectives.add((double) this.totalRouteTimeChargeBanlance);

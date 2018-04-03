@@ -76,6 +76,7 @@ public class VRPDRT {
         this.excelDataFilesPath = excelDataFilesPath;
         this.readExcelInstance();
         rankedList = new RankedList(numberOfNodes);
+        //initializeData();
     }
 
     public VRPDRT(Instance instance, String excelDataFilesPath, RankedList rankedList) {
@@ -89,6 +90,7 @@ public class VRPDRT {
         this.excelDataFilesPath = excelDataFilesPath;
         this.readExcelInstance();
         this.rankedList = rankedList;
+        // initializeData();
     }
 
     public void readExcelInstance() {
@@ -174,7 +176,7 @@ public class VRPDRT {
             nonAttendedRequestListFeasibilityAvaliation();
         }
         solution.setNonAttendedRequestsList(nonAttendedRequests);
-        solution.evaluate( distanceBetweenNodes, vehicleCapacity);
+        solution.evaluate(distanceBetweenNodes, vehicleCapacity);
         solution.setLogger(log);
         solution.linkTheRoutes();
         return solution;
@@ -249,7 +251,7 @@ public class VRPDRT {
             feasibleNodeIsFound = false;
             if (currentRoute.getActualOccupation() < vehicleCapacity) {
                 for (Request request : requestsWhichBoardsInNode.get(currentNode)) {
-                    if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) { 
+                    if (lastNode == 0 && timeBetweenNodes.get(lastNode).get(currentNode) <= request.getPickupTimeWindowUpper()) {
                         feasibleNodes.add(currentNode);
                         feasibleNodeIsFound = true;
                         break;
@@ -457,19 +459,17 @@ public class VRPDRT {
             }
         }
     }
-    
-    
-    public  ProblemSolution rebuildSolution(List<Integer> neighborhood, List<Request> requestList) {
+
+    public ProblemSolution rebuildSolution(List<Integer> neighborhood, List<Request> requestList) {
 //        requestList.clear();
 //        requestList.addAll(listRequests);
 
         solution = new ProblemSolution();
         solution.setLinkedRouteList(neighborhood);
         String log = "";
-
+        initializeFleetOfVehicles();
         vehicleIterator = setOfVehicles.iterator();
         nonAttendedRequests.clear();
-        
 
         List<Request> auxP = new LinkedList<>(requestList);
         for (Request request : auxP) {
@@ -479,7 +479,9 @@ public class VRPDRT {
             }
         }
 
+        System.out.println("conditions = " + !hasRequestToAttend() + "\t" + hasAvaibleVehicle() + "\t" + !neighborhood.isEmpty());
         while (!hasRequestToAttend() && hasAvaibleVehicle() && !neighborhood.isEmpty()) {
+
             requestsWhichBoardsInNode.clear();
             requestsWhichLeavesInNode.clear();
             List<Request> origem = new LinkedList<Request>();
@@ -501,12 +503,11 @@ public class VRPDRT {
                 origem.clear();
                 destino.clear();
             }
-            
+
             currentRoute = new Route();
             currentVehicle = vehicleIterator.next();
             log += "\tROTA " + (currentVehicle + 1) + " ";
 
-            
             currentRoute.addVisitedNodes(0);
             long currentTime = 0;
 
@@ -723,8 +724,8 @@ public class VRPDRT {
 
         return solution;
     }
-    
-    public  ProblemSolution rebuildSolutionRefactoring(List<Integer> neighborhood, List<Request> requestList) {
+
+    public ProblemSolution rebuildSolutionRefactoring(List<Integer> neighborhood, List<Request> requestList) {
         requestList.clear();
         requestList.addAll(requests);
 
@@ -734,7 +735,6 @@ public class VRPDRT {
 
         vehicleIterator = setOfVehicles.iterator();
         nonAttendedRequests.clear();
-        
 
         List<Request> auxP = new LinkedList<>(requestList);
         for (Request request : auxP) {
@@ -766,12 +766,11 @@ public class VRPDRT {
                 origem.clear();
                 destino.clear();
             }
-            
+
             currentRoute = new Route();
             currentVehicle = vehicleIterator.next();
             log += "\tROTA " + (currentVehicle + 1) + " ";
 
-            
             currentRoute.addVisitedNodes(0);
             long currentTime = 0;
 
@@ -988,23 +987,23 @@ public class VRPDRT {
 
         return solution;
     }
-    
-    public ProblemSolution buildRandomSolution(){
+
+    public ProblemSolution buildRandomSolution() {
         solution = new ProblemSolution();
         solution = buildGreedySolution();
-        
+
         List<Integer> sequence = new ArrayList<>();
         sequence.addAll(solution.getLinkedRouteList());
         Random rnd = new Random();
-        int index1,index2;
-        do{
+        int index1, index2;
+        do {
             index1 = rnd.nextInt(solution.getLinkedRouteList().size());
             index2 = rnd.nextInt(solution.getLinkedRouteList().size());
-        }while(Objects.equals(sequence.get(index1), sequence.get(index2)));
-        
+        } while (Objects.equals(sequence.get(index1), sequence.get(index2)));
+
         Collections.swap(sequence, index1, index2);
         solution = rebuildSolution(sequence, requests);
-        
+
         return solution;
     }
 }

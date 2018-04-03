@@ -17,7 +17,9 @@ public class MOEAVRPDRTTest {
     MOEAVRPDRT problem;
 
     public MOEAVRPDRTTest() {
-        problem = new MOEAVRPDRT();
+        problem = new MOEAVRPDRT()
+                .setNumberOfObjectives(9)
+                .setNumberOfVariables(1);
     }
 
     @Test
