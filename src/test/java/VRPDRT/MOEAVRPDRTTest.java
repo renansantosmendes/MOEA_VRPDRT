@@ -6,7 +6,9 @@
 package VRPDRT;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.moeaframework.Executor;
+import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Solution;
 
 /**
  *
@@ -18,14 +20,28 @@ public class MOEAVRPDRTTest {
 
     public MOEAVRPDRTTest() {
         problem = new MOEAVRPDRT()
-                .setNumberOfObjectives(9)
-                .setNumberOfVariables(1);
+                .setNumberOfObjectives(2)
+                .setNumberOfVariables(1)
+                .setNumberOfConstraints(0);
     }
 
     @Test
     public void mainTest() {
-        for (int i = 0; i < 10; i++) {
-            problem.evaluate(problem.newSolution());
+        NondominatedPopulation result = new Executor()
+                .withProblemClass(MOEAVRPDRT.class)
+                .withAlgorithm("NSGAII")
+                .withMaxEvaluations(2000)
+                .withProperty("populationSize", 100)
+                .withProperty("operator", "2X+swap")
+                .withProperty("swap.rate", 0.02)
+                .withProperty("2X.rate", 0.7)
+                .run();
+
+        System.out.format("Objective1  Objective2%n");
+        for (Solution solution : result) {
+            System.out.format("%.4f      %.4f%n",
+                    solution.getObjective(0),
+                    solution.getObjective(1));
         }
     }
 

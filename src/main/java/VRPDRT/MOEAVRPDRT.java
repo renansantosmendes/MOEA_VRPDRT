@@ -22,8 +22,8 @@ public class MOEAVRPDRT implements Problem {
     private VRPDRT problem;
     private RankedList rankedList;
     private int numberOfVariables = 1;
-    private int numberOfObjectives = 9;
-    private int numberOfConstraints = 1;
+    private int numberOfObjectives = 2;
+    private int numberOfConstraints = 0;
 
     public MOEAVRPDRT() {
         instance.setNumberOfRequests(50)
@@ -52,6 +52,11 @@ public class MOEAVRPDRT implements Problem {
         return this;
     }
     
+    public MOEAVRPDRT setNumberOfConstraints(int numberOfConstraints){
+        this.numberOfConstraints = numberOfConstraints;
+        return this;
+    }
+    
     @Override
     public String getName() {
         return "MOEAVRPDRT";
@@ -69,19 +74,20 @@ public class MOEAVRPDRT implements Problem {
 
     @Override
     public int getNumberOfConstraints() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.numberOfConstraints;
     }
 
     @Override
     public void evaluate(Solution solution) {
         int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
         List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-        System.out.println(solutionRepresentation);
+//        System.out.println(solutionRepresentation);
 
         problem = new VRPDRT(instance, path);
-        System.out.println("tamanho requests = " + problem.getData().getRequests().size());
+//        System.out.println("tamanho requests = " + problem.getData().getRequests().size());
        
         ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getData().getRequests());
+        System.out.println("number of Objectives = " + ps.getObjectives());
         solution.setObjectives(copyListToArrayDouble(ps.getObjectives()));
     }
 

@@ -479,7 +479,7 @@ public class VRPDRT {
             }
         }
 
-        System.out.println("conditions = " + !hasRequestToAttend() + "\t" + hasAvaibleVehicle() + "\t" + !neighborhood.isEmpty());
+//        System.out.println("conditions = " + !hasRequestToAttend() + "\t" + hasAvaibleVehicle() + "\t" + !neighborhood.isEmpty());
         while (!hasRequestToAttend() && hasAvaibleVehicle() && !neighborhood.isEmpty()) {
 
             requestsWhichBoardsInNode.clear();

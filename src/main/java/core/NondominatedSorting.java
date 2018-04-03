@@ -31,8 +31,8 @@ import org.moeaframework.core.comparator.ParetoDominanceComparator;
  * of rank 0 belong to the Pareto non-dominated front.
  * <p>
  * Despite its name, this naive non-dominated sort implementation tends to be
- * faster than the "fast non-dominated sort" implementation from [1].  This
- * is primarily due to the fact that for the average case, the "fast" version
+ * faster than the "fast non-dominated sort" implementation from [1]. This is
+ * primarily due to the fact that for the average case, the "fast" version
  * always requires O(MN^2) comparisons while this naive implementations requires
  * only (K-1)/2 * M * (N-1)*N/2, assuming there are K equally sized fronts.
  * <p>
@@ -44,153 +44,152 @@ import org.moeaframework.core.comparator.ParetoDominanceComparator;
  */
 public class NondominatedSorting {
 
-	/**
-	 * Attribute key for the rank of a solution.
-	 */
-	public static final String RANK_ATTRIBUTE = "rank";
+    /**
+     * Attribute key for the rank of a solution.
+     */
+    public static final String RANK_ATTRIBUTE = "rank";
 
-	/**
-	 * Attribute key for the crowding distance of a solution.
-	 */
-	public static final String CROWDING_ATTRIBUTE = "crowdingDistance";
+    /**
+     * Attribute key for the crowding distance of a solution.
+     */
+    public static final String CROWDING_ATTRIBUTE = "crowdingDistance";
 
-	/**
-	 * The dominance comparator.
-	 */
-	protected final DominanceComparator comparator;
+    /**
+     * The dominance comparator.
+     */
+    protected final DominanceComparator comparator;
 
-	/**
-	 * Constructs a fast non-dominated sorting operator using Pareto dominance.
-	 */
-	public NondominatedSorting() {
-		this(new ParetoDominanceComparator());
-	}
+    /**
+     * Constructs a fast non-dominated sorting operator using Pareto dominance.
+     */
+    public NondominatedSorting() {
+        this(new ParetoDominanceComparator());
+    }
 
-	/**
-	 * Constructs a non-dominated sorting operator using the specified
-	 * dominance comparator.
-	 * 
-	 * @param comparator the dominance comparator
-	 */
-	public NondominatedSorting(DominanceComparator comparator) {
-		super();
-		this.comparator = comparator;
-	}
-	
-	/**
-	 * Returns the dominance comparator used by this non-dominated sorting
-	 * routine.
-	 * 
-	 * @return the dominance comparator used by this non-dominated sorting
-	 *         routine
-	 */
-	public DominanceComparator getComparator() {
-		return comparator;
-	}
+    /**
+     * Constructs a non-dominated sorting operator using the specified dominance
+     * comparator.
+     *
+     * @param comparator the dominance comparator
+     */
+    public NondominatedSorting(DominanceComparator comparator) {
+        super();
+        this.comparator = comparator;
+    }
 
-	/**
-	 * Performs non-dominated sorting on the specified population,
-	 * assigning the {@code rank} and {@code crowdingDistance} attributes to
-	 * solutions.
-	 * 
-	 * @param population the population whose solutions are to be evaluated
-	 */
-	public void evaluate(Population population) {
-		List<Solution> remaining = new ArrayList<Solution>();
+    /**
+     * Returns the dominance comparator used by this non-dominated sorting
+     * routine.
+     *
+     * @return the dominance comparator used by this non-dominated sorting
+     * routine
+     */
+    public DominanceComparator getComparator() {
+        return comparator;
+    }
 
-		for (Solution solution : population) {
-			remaining.add(solution);
-		}
+    /**
+     * Performs non-dominated sorting on the specified population, assigning the
+     * {@code rank} and {@code crowdingDistance} attributes to solutions.
+     *
+     * @param population the population whose solutions are to be evaluated
+     */
+    public void evaluate(Population population) {
+        List<Solution> remaining = new ArrayList<Solution>();
 
-		int rank = 0;
+        for (Solution solution : population) {
+            remaining.add(solution);
+        }
 
-		while (!remaining.isEmpty()) {
-			NondominatedPopulation front = new NondominatedPopulation(
-					comparator, DuplicateMode.ALLOW_DUPLICATES);
+        int rank = 0;
 
-			for (Solution solution : remaining) {
-				front.add(solution);
-			}
+        while (!remaining.isEmpty()) {
+            NondominatedPopulation front = new NondominatedPopulation(
+                    comparator, DuplicateMode.ALLOW_DUPLICATES);
 
-			for (Solution solution : front) {
-				remaining.remove(solution);
-				solution.setAttribute(RANK_ATTRIBUTE, rank);
-			}
+            for (Solution solution : remaining) {
+                front.add(solution);
+            }
 
-			updateCrowdingDistance(front);
+            for (Solution solution : front) {
+                remaining.remove(solution);
+                solution.setAttribute(RANK_ATTRIBUTE, rank);
+            }
 
-			rank++;
-		}
-	}
+            updateCrowdingDistance(front);
 
-	/**
-	 * Computes and assigns the {@code crowdingDistance} attribute to solutions.
-	 * The specified population should consist of solutions within the same
-	 * front/rank.
-	 * 
-	 * @param front the population whose solutions are to be evaluated
-	 */
-	public void updateCrowdingDistance(Population front) {
-		// initially assign all crowding distances of 0.0
-		for (Solution solution : front) {
-			solution.setAttribute(CROWDING_ATTRIBUTE, 0.0);
-		}
-		
-		// remove any duplicate solutions, the duplicate solutions will retain
-		// the crowding distance of 0.0
-		Population uniqueFront = new Population();
-		
-		for (Solution s1 : front) {
-			boolean isDuplicate = false;
-			
-			for (Solution s2 : uniqueFront) {
-				if (NondominatedPopulation.distance(s1, s2) < Settings.EPS) {
-					isDuplicate = true;
-					break;
-				}
-			}
-			
-			if (!isDuplicate) {
-				uniqueFront.add(s1);
-			}
-		}
-		
-		front = uniqueFront;
+            rank++;
+        }
+    }
 
-		// then compute the crowding distance for the unique solutions
-		int n = front.size();
-		
-		if (n < 3) {
-			for (Solution solution : front) {
-				solution.setAttribute(CROWDING_ATTRIBUTE,
-						Double.POSITIVE_INFINITY);
-			}
-		} else {
-			int numberOfObjectives = front.get(0).getNumberOfObjectives();
+    /**
+     * Computes and assigns the {@code crowdingDistance} attribute to solutions.
+     * The specified population should consist of solutions within the same
+     * front/rank.
+     *
+     * @param front the population whose solutions are to be evaluated
+     */
+    public void updateCrowdingDistance(Population front) {
+        // initially assign all crowding distances of 0.0
+        for (Solution solution : front) {
+            solution.setAttribute(CROWDING_ATTRIBUTE, 0.0);
+        }
 
-			for (int i = 0; i < numberOfObjectives; i++) {
-				front.sort(new ObjectiveComparator(i));
+        // remove any duplicate solutions, the duplicate solutions will retain
+        // the crowding distance of 0.0
+        Population uniqueFront = new Population();
 
-				double minObjective = front.get(0).getObjective(i);
-				double maxObjective = front.get(n - 1).getObjective(i);
-				
-				if (maxObjective - minObjective >= Settings.EPS) {
-					front.get(0).setAttribute(CROWDING_ATTRIBUTE,
-							Double.POSITIVE_INFINITY);
-					front.get(n - 1).setAttribute(CROWDING_ATTRIBUTE,
-							Double.POSITIVE_INFINITY);
+        for (Solution s1 : front) {
+            boolean isDuplicate = false;
 
-					for (int j = 1; j < n - 1; j++) {
-						double distance = (Double)front.get(j).getAttribute(
-								CROWDING_ATTRIBUTE);
-						distance += (front.get(j + 1).getObjective(i) - 
-								front.get(j - 1).getObjective(i))
-								/ (maxObjective - minObjective);
-						front.get(j).setAttribute(CROWDING_ATTRIBUTE, distance);
-					}
-				}
-			}
-		}
-	}
+            for (Solution s2 : uniqueFront) {
+                if (NondominatedPopulation.distance(s1, s2) < Settings.EPS) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+
+            if (!isDuplicate) {
+                uniqueFront.add(s1);
+            }
+        }
+
+        front = uniqueFront;
+
+        // then compute the crowding distance for the unique solutions
+        int n = front.size();
+
+        if (n < 3) {
+            for (Solution solution : front) {
+                solution.setAttribute(CROWDING_ATTRIBUTE,
+                        Double.POSITIVE_INFINITY);
+            }
+        } else {
+            int numberOfObjectives = front.get(0).getNumberOfObjectives();
+
+            for (int i = 0; i < numberOfObjectives; i++) {
+                front.sort(new ObjectiveComparator(i));
+
+                double minObjective = front.get(0).getObjective(i);
+                double maxObjective = front.get(n - 1).getObjective(i);
+
+                if (maxObjective - minObjective >= Settings.EPS) {
+                    front.get(0).setAttribute(CROWDING_ATTRIBUTE,
+                            Double.POSITIVE_INFINITY);
+                    front.get(n - 1).setAttribute(CROWDING_ATTRIBUTE,
+                            Double.POSITIVE_INFINITY);
+
+                    for (int j = 1; j < n - 1; j++) {
+                        double distance = (Double) front.get(j).getAttribute(
+                                CROWDING_ATTRIBUTE);
+                        distance += (front.get(j + 1).getObjective(i)
+                                - front.get(j - 1).getObjective(i))
+                                / (maxObjective - minObjective);
+                        front.get(j).setAttribute(CROWDING_ATTRIBUTE, distance);
+                    }
+                }
+            }
+        }
+    }
 
 }

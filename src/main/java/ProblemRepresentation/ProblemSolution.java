@@ -195,15 +195,20 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 
     public void setObjectivesList() {
         this.objectives.clear();
-        this.objectives.add((double) this.totalDistance);
-        this.objectives.add((double) this.totalDeliveryDelay);
-        this.objectives.add((double) this.totalRouteTimeChargeBanlance);
-        this.objectives.add((double) this.numberOfNonAttendedRequests);
-        this.objectives.add((double) this.numberOfVehicles);
-        this.objectives.add((double) this.totalTravelTime);
-        this.objectives.add((double) this.totalWaintingTime);
-        this.objectives.add((double) this.deliveryTimeWindowAntecipation);
-        this.objectives.add((double) this.totalOccupationRate);
+//        this.objectives.add((double) this.totalDistance);//f1
+//        this.objectives.add((double) this.totalDeliveryDelay);//f2
+//        this.objectives.add((double) this.totalRouteTimeChargeBanlance);//f3
+//        this.objectives.add((double) this.numberOfNonAttendedRequests);//f4
+//        this.objectives.add((double) this.numberOfVehicles);//f5
+//        this.objectives.add((double) this.totalTravelTime);//f6
+//        this.objectives.add((double) this.totalWaintingTime);//f7
+//        this.objectives.add((double) this.deliveryTimeWindowAntecipation);//f8
+//        this.objectives.add((double) this.totalOccupationRate);//f9
+
+        this.objectives.add((double) totalDeliveryDelay + numberOfNonAttendedRequests + totalTravelTime
+                + totalWaintingTime);
+        this.objectives.add((double) totalDistance + totalRouteTimeChargeBanlance + numberOfVehicles
+                + deliveryTimeWindowAntecipation + totalOccupationRate);
     }
 
     public Set<Route> getSetOfRoutes() {
