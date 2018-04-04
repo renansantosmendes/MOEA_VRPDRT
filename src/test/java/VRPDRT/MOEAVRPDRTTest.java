@@ -30,18 +30,29 @@ public class MOEAVRPDRTTest {
         NondominatedPopulation result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
-                .withMaxEvaluations(2000)
+                .withMaxEvaluations(100)
                 .withProperty("populationSize", 100)
                 .withProperty("operator", "2X+swap")
                 .withProperty("swap.rate", 0.02)
                 .withProperty("2X.rate", 0.7)
-                .run();
+                .runExperiment();
 
         System.out.format("Objective1  Objective2%n");
         for (Solution solution : result) {
             System.out.format("%.4f      %.4f%n",
                     solution.getObjective(0),
                     solution.getObjective(1));
+            
+           
+        }
+        
+        for (Solution solution : result) {
+            System.out.format("%.4f      %.4f%n",
+                    solution.getObjective(0),
+                    solution.getObjective(1));
+            
+            System.out.println(solution.getVariable(0));
+            System.out.println(solution.getObjectives());
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class Algorithms {
 
+    private static int evaluationNumber = 0;
     private static InstanceData data;
     private String instanceName = "r050n12tw10";
     private String nodesData = "bh_n12s";
@@ -26,6 +27,10 @@ public class Algorithms {
         this.data.readProblemData();
     }
 
+    public static int getEvaluationNumber(){
+        return evaluationNumber;
+    }
+    
     public static InstanceData getData() {
         return data;
     }
@@ -301,6 +306,8 @@ public class Algorithms {
     }
 
     public static void evaluateAggregatedObjectiveFunctions(List<Double> parameters, ProblemSolution S) {
+        evaluationNumber++;
+//        System.out.println(getEvaluationNumber());
 //        S.setAggregatedObjective1(S.getTotalDistanceNormalized() + S.getTotalDeliveryDelayNormalized() + S.getTotalRouteTimeChargeBanlanceNormalized()
 //                + S.getNumberOfVehiclesNormalized() + S.getNumberOfNonAttendedRequestsNormalized() + S.getTotalTravelTimeNormalized());
 //        S.setAggregatedObjective2(S.getTotalWaintingTimeNormalized());
@@ -384,8 +391,7 @@ public class Algorithms {
                 + parameters.get(8) * matrix.get(0).get(8) * S.getTotalOccupationRate()
         );
 
-        
-         S.setAggregatedObjective2(
+        S.setAggregatedObjective2(
                 parameters.get(0) * matrix.get(1).get(0) * S.getTotalDistance()
                 + parameters.get(1) * matrix.get(1).get(1) * S.getTotalDeliveryDelay()
                 + parameters.get(2) * matrix.get(1).get(2) * S.getTotalRouteTimeChargeBanlance()

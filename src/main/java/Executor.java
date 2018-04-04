@@ -30,6 +30,7 @@ import org.moeaframework.algorithm.Checkpoints;
 import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
+import org.moeaframework.core.Solution;
 import org.moeaframework.core.TerminationCondition;
 import org.moeaframework.core.spi.AlgorithmFactory;
 import org.moeaframework.core.spi.ProblemFactory;
@@ -49,11 +50,8 @@ import org.moeaframework.util.progress.ProgressListener;
  * <p>
  * <
  * pre>
- *   NondominatedPopulation result = new Executor()
- *       .withAlgorithm("NSGAII")
- *       .withProblem("DTLZ2_2")
- *       .withMaxEvaluations(10000)
- *       .run();
+ * NondominatedPopulation result = new Executor() .withAlgorithm("NSGAII")
+ * .withProblem("DTLZ2_2") .withMaxEvaluations(10000) .run();
  * </pre>
  * <p>
  * The problem and algorithm must be specified prior to calling {@link #run()}.
@@ -62,16 +60,11 @@ import org.moeaframework.util.progress.ProgressListener;
  * <p>
  * <
  * pre>
- *   NondominatedPopulation result = new Executor()
- *       .withAlgorithm("NSGAII")
- *       .withProblem("DTLZ2_2")
- *       .withMaxEvaluations(10000)
- *       .withProperty("populationSize", 100)
- *       .withProperty("sbx.rate", 1.0)
- *       .withProperty("sbx.distributionIndex", 15.0)
- *       .withProperty("pm.rate", 0.05)
- *       .withProperty("pm.distributionIndex", 20.0)
- *       .run();
+ * NondominatedPopulation result = new Executor() .withAlgorithm("NSGAII")
+ * .withProblem("DTLZ2_2") .withMaxEvaluations(10000)
+ * .withProperty("populationSize", 100) .withProperty("sbx.rate", 1.0)
+ * .withProperty("sbx.distributionIndex", 15.0) .withProperty("pm.rate", 0.05)
+ * .withProperty("pm.distributionIndex", 20.0) .run();
  * </pre>
  * <p>
  * The evaluation of function evaluations can be distributed across multiple
@@ -83,14 +76,10 @@ import org.moeaframework.util.progress.ProgressListener;
  * <p>
  * <
  * pre>
- *   NondominatedPopulation result = new Executor()
- *       .withAlgorithm("NSGAII")
- *       .withProblem("DTLZ2_2")
- *       .withMaxEvaluations(100000)
- *       .distributeOnAllCores()
- *       .withCheckpointFrequency(1000)
- *       .withCheckpointFile(new File("example.state"))
- *       .run();
+ * NondominatedPopulation result = new Executor() .withAlgorithm("NSGAII")
+ * .withProblem("DTLZ2_2") .withMaxEvaluations(100000) .distributeOnAllCores()
+ * .withCheckpointFrequency(1000) .withCheckpointFile(new File("example.state"))
+ * .run();
  * </pre>
  */
 public class Executor extends ProblemBuilder {
@@ -742,6 +731,21 @@ public class Executor extends ProblemBuilder {
     public NondominatedPopulation run() {
         isCanceled.set(false);
         return runSingleSeed(1, 1, createTerminationCondition());
+    }
+
+    public NondominatedPopulation runExperiment() {
+        NondominatedPopulation results = new NondominatedPopulation();
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Execution = " + i);
+            isCanceled.set(false);
+            NondominatedPopulation result = runSingleSeed(1, 1, createTerminationCondition());
+            for (Solution solution : result) {
+                results.add(solution);
+            }
+
+        }
+
+        return results;
     }
 
     /**

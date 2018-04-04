@@ -66,8 +66,8 @@ public class VRPDRT_Main {
         final Integer numberOfVehicles = 50;
 
         Integer populationSize = 100;
-        Integer maximumNumberOfGenerations = 500;
-        Integer maximumNumberOfExecutions = 30;
+        Integer maximumNumberOfGenerations = 10;
+        Integer maximumNumberOfExecutions = 1;
         double probabilityOfMutation = 0.02;
         double probabilityOfCrossover = 0.7;
         int fileSize = populationSize;
@@ -124,10 +124,10 @@ public class VRPDRT_Main {
 //                listOfNonAttendedRequests, requestList, loadIndexList, timeBetweenNodes, distanceBetweenNodes,
 //                timeWindows, currentTime, lastNode);
 
-//        SPEA2(instanceName, parameters, nadirPoint, populationSize, fileSize, maximumNumberOfGenerations, maximumNumberOfExecutions,
-//                probabilityOfMutation, probabilityOfCrossover, requests, requestsWhichBoardsInNode, requestsWhichLeavesInNode,
-//                numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList, loadIndexList,
-//                timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
+        SPEA2(instanceName, parameters, nadirPoint, populationSize, fileSize, maximumNumberOfGenerations, maximumNumberOfExecutions,
+                probabilityOfMutation, probabilityOfCrossover, requests, requestsWhichBoardsInNode, requestsWhichLeavesInNode,
+                numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList, loadIndexList,
+                timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
         //new GoogleStaticMap(new NodeDAO(nodesData).getListOfNodes(), adjacenciesData, nodesData).getStaticMapForInstance();
 //        new SolutionGeneratorForAggregationTree().generateSolutionsForAggregationTree(parameters);
     }
