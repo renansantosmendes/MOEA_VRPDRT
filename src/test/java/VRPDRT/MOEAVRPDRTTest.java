@@ -6,9 +6,8 @@
 package VRPDRT;
 
 import org.junit.Test;
-import org.moeaframework.Executor;
-import org.moeaframework.core.NondominatedPopulation;
-import org.moeaframework.core.Solution;
+import org.moeaframework.*;
+import org.moeaframework.core.*;
 
 /**
  *

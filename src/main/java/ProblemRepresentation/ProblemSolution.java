@@ -1,6 +1,7 @@
 package ProblemRepresentation;
 
 import GoogleMapsApi.GoogleStaticMap;
+import InstanceReader.Instance;
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -211,6 +212,19 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
                 + deliveryTimeWindowAntecipation + totalOccupationRate);
     }
 
+    public void setObjectivesList(Parameters parameters) {
+        this.objectives.clear();
+        List<Double> lambdas = new ArrayList<>();
+        lambdas.addAll(parameters.getParameters());
+        
+        this.objectives.add((double) lambdas.get(1)*totalDeliveryDelay + lambdas.get(3)*numberOfNonAttendedRequests 
+                + lambdas.get(5)*totalTravelTime + lambdas.get(6)*totalWaintingTime);
+        this.objectives.add((double) lambdas.get(0)*totalDistance + lambdas.get(2)*totalRouteTimeChargeBanlance 
+                + lambdas.get(4)*numberOfVehicles + lambdas.get(7)*deliveryTimeWindowAntecipation 
+                + lambdas.get(8)*totalOccupationRate);
+    }
+    
+    
     public Set<Route> getSetOfRoutes() {
         return setOfRoutes;
     }
@@ -761,6 +775,22 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         this.setObjectiveFunction(evaluationFunction());
     }
 
+    
+    public void evaluate(List<List<Long>> distanceBetweenNodes, Integer vehicleCapacity, Parameters parameters) {
+        this.setTotalDistance(objectiveFunction1(distanceBetweenNodes));
+        this.setTotalDeliveryDelay(objectiveFunction2());
+        this.setTotalRouteTimeChargeBanlance(objectiveFunction3());
+        this.setNumberOfNonAttendedRequests(objectiveFunction4());
+        this.setNumberOfVehicles(objectiveFunction5());
+        this.setTotalTravelTime(objectiveFunction6());
+        this.setTotalWaintingTime(objectiveFunction7());
+        this.setDeliveryTimeWindowAntecipation(objectiveFunction8());
+        this.setTotalOccupationRate(objectiveFunction9(vehicleCapacity));
+        this.setObjectivesList(parameters);
+        //Algorithms.evaluateAggregatedObjectiveFunctions(this, 1, 1, 1, 1, 1);
+        this.setObjectiveFunction(evaluationFunction());
+    }
+    
     public long objectiveFunction1(List<List<Long>> distanceBetweenNodes) {
         int totalCost = 0;
         int W = 1000,//1000,

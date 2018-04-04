@@ -52,6 +52,7 @@ public class VRPDRT {
     private Iterator<Integer> vehicleIterator;
     private int currentVehicle;
     private String log;
+    private Parameters parameters;
 
     public VRPDRT(Instance instance) {
         this.loadIndexList = new LinkedList<>();
@@ -62,6 +63,7 @@ public class VRPDRT {
         this.numberOfVehicles = instance.getNumberOfVehicles();
         this.vehicleCapacity = instance.getVehicleCapacity();
         rankedList = new RankedList(numberOfNodes);
+        this.parameters = new Parameters(instance);
         //this.readInstance();
     }
 
@@ -76,6 +78,7 @@ public class VRPDRT {
         this.excelDataFilesPath = excelDataFilesPath;
         this.readExcelInstance();
         rankedList = new RankedList(numberOfNodes);
+        this.parameters = new Parameters(instance);
         //initializeData();
     }
 
@@ -90,6 +93,7 @@ public class VRPDRT {
         this.excelDataFilesPath = excelDataFilesPath;
         this.readExcelInstance();
         this.rankedList = rankedList;
+        this.parameters = new Parameters(instance);
         // initializeData();
     }
 
@@ -176,7 +180,7 @@ public class VRPDRT {
             nonAttendedRequestListFeasibilityAvaliation();
         }
         solution.setNonAttendedRequestsList(nonAttendedRequests);
-        solution.evaluate(distanceBetweenNodes, vehicleCapacity);
+        solution.evaluate(distanceBetweenNodes, vehicleCapacity, parameters);
         solution.setLogger(log);
         solution.linkTheRoutes();
         return solution;
@@ -718,7 +722,7 @@ public class VRPDRT {
             }
         }
         solution.setNonAttendedRequestsList(nonAttendedRequests);
-        solution.evaluate(distanceBetweenNodes, vehicleCapacity);
+        solution.evaluate(distanceBetweenNodes, vehicleCapacity, parameters);
         //evaluateAggregatedObjectiveFunctions(parameters, solution);
         solution.setLogger(log);
 
