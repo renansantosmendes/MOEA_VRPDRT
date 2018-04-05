@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package VRPDRT;
+package problem.VRPDRT;
 
 import InstanceReader.*;
 import ProblemRepresentation.*;
+import VRPDRT.VRPDRT;
 import java.util.*;
 import org.moeaframework.core.*;
 import org.moeaframework.core.variable.*;
@@ -15,7 +16,7 @@ import org.moeaframework.core.variable.*;
  *
  * @author renansantos
  */
-public class MOEAVRPDRT implements Problem {
+public class MOEAVRPDRT_Tool implements Problem {
 
     private Instance instance = new Instance();
     private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
@@ -25,7 +26,7 @@ public class MOEAVRPDRT implements Problem {
     private int numberOfObjectives = 9;
     private int numberOfConstraints = 0;
 
-    public MOEAVRPDRT() {
+    public MOEAVRPDRT_Tool() {
         instance.setNumberOfRequests(50)
                 .setRequestTimeWindows(10)
                 .setInstanceSize("s")
@@ -42,17 +43,17 @@ public class MOEAVRPDRT implements Problem {
         problem = new VRPDRT(instance, path, rankedList);
     }
 
-    public MOEAVRPDRT setNumberOfObjectives(int numberOfObjectives){
+    public MOEAVRPDRT_Tool setNumberOfObjectives(int numberOfObjectives){
         this.numberOfObjectives = numberOfObjectives;
         return this;
     }
     
-    public MOEAVRPDRT setNumberOfVariables(int numberOfVariables){
+    public MOEAVRPDRT_Tool setNumberOfVariables(int numberOfVariables){
         this.numberOfVariables = numberOfVariables;
         return this;
     }
     
-    public MOEAVRPDRT setNumberOfConstraints(int numberOfConstraints){
+    public MOEAVRPDRT_Tool setNumberOfConstraints(int numberOfConstraints){
         this.numberOfConstraints = numberOfConstraints;
         return this;
     }
@@ -145,3 +146,4 @@ public class MOEAVRPDRT implements Problem {
     }
 
 }
+

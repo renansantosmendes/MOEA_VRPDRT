@@ -29,21 +29,21 @@ public class MOEAVRPDRTTest {
 
     public MOEAVRPDRTTest() {
         problem = new MOEAVRPDRT()
-                .setNumberOfObjectives(2)
+                .setNumberOfObjectives(9)
                 .setNumberOfVariables(1)
                 .setNumberOfConstraints(0);
-        
-         initializeData();
-        
+
+        initializeData();
+
     }
 
-    private void initializeData(){
+    private void initializeData() {
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
         rankedList.setAlphaD(0.20)
                 .setAlphaP(0.15)
                 .setAlphaT(0.10)
                 .setAlphaV(0.55);
-        
+
         instance.setNumberOfRequests(50)
                 .setRequestTimeWindows(10)
                 .setInstanceSize("s")
@@ -53,6 +53,7 @@ public class MOEAVRPDRTTest {
 
         subProblem = new VRPDRT(instance, path, rankedList);
     }
+
     private List<Integer> copyArrayToListInteger(int[] array) {
         List<Integer> list = new ArrayList<>();
         int size = array.length;
@@ -64,44 +65,86 @@ public class MOEAVRPDRTTest {
     }
 
     @Test
-    public void mainTest() {
-        NondominatedPopulation result = new Executor()
-                .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("NSGAII")
-                .withMaxEvaluations(10)
-                .withProperty("populationSize", 100)
-                .withProperty("operator", "2X+swap")
-                .withProperty("swap.rate", 0.02)
-                .withProperty("2X.rate", 0.7)
-                .runExperiment();
-
-        System.out.format("Objective1  Objective2%n");
-        for (Solution solution : result) {
-            System.out.format("%.4f      %.4f%n",
-                    solution.getObjective(0),
-                    solution.getObjective(1));
-
-            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-            initializeData();
-            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-            System.out.println("after rebuilding = " + ps);
-
-        }
-        
-        for (Solution solution : result) {
-            System.out.format("%.4f      %.4f%n",
-                    solution.getObjective(0),
-                    solution.getObjective(1));
+    public void nsgaiiTest() {
+//        NondominatedPopulation result = new Executor()
+//                .withProblemClass(MOEAVRPDRT.class)
+//                .withAlgorithm("NSGAII")
+//                .withMaxEvaluations(10)
+//                .withProperty("populationSize", 10000)
+//                .withProperty("operator", "2X+swap")
+//                .withProperty("swap.rate", 0.02)
+//                .withProperty("2X.rate", 0.7)
+//                .runExperiment();
+//
+//        System.out.format("Objective1  Objective2%n");
+//        for (Solution solution : result) {
+//            System.out.format("%.4f      %.4f%n",
+//                    solution.getObjective(0),
+//                    solution.getObjective(1));
+//
+//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+//            initializeData();
+//            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
+//            System.out.println("after rebuilding = " + ps);
+//
+//        }
+//        
+//        for (Solution solution : result) {
+//            System.out.format("%.4f      %.4f%n",
+//                    solution.getObjective(0),
+//                    solution.getObjective(1));
 
 //            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
 //            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
 //            initializeData();
 //            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
 //            System.out.println("after rebuilding = " + ps);
+//        }
+    }
+
+    @Test
+    public void moeadTest() {
+        NondominatedPopulation result = new Executor()
+                .withProblemClass(MOEAVRPDRT.class)
+                .withAlgorithm("MOEAD")
+                .withMaxEvaluations(100)
+                .withProperty("populationSize", 100)
+                .withProperty("operator", "2X+swap")
+                .withProperty("swap.rate", 0.02)
+                .withProperty("2X.rate", 0.7)
+                .run();
+
+        System.out.format("Objective1  Objective2%n");
+        for (Solution solution : result) {
+            System.out.println(
+                    solution.getObjective(0) + ","
+                    + solution.getObjective(1) + ","
+                    + solution.getObjective(2) + ","
+                    + solution.getObjective(3) + ","
+                    + solution.getObjective(4) + ","
+                    + solution.getObjective(5) + ","
+                    + solution.getObjective(6) + ","
+                    + solution.getObjective(7) + ","
+                    + solution.getObjective(8));
+
+            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+            //initializeData();
+            //ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
+            //System.out.println("after rebuilding = " + ps);
 
         }
 
+//        for (Solution solution : result) {
+            //System.out.println(solution.getObjectives());
+
+//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+//            initializeData();
+//            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
+//            System.out.println("after rebuilding = " + ps);
+//        }
     }
 
 }

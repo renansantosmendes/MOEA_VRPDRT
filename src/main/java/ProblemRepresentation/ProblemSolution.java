@@ -196,32 +196,42 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 
     public void setObjectivesList() {
         this.objectives.clear();
-//        this.objectives.add((double) this.totalDistance);//f1
-//        this.objectives.add((double) this.totalDeliveryDelay);//f2
-//        this.objectives.add((double) this.totalRouteTimeChargeBanlance);//f3
-//        this.objectives.add((double) this.numberOfNonAttendedRequests);//f4
-//        this.objectives.add((double) this.numberOfVehicles);//f5
-//        this.objectives.add((double) this.totalTravelTime);//f6
-//        this.objectives.add((double) this.totalWaintingTime);//f7
-//        this.objectives.add((double) this.deliveryTimeWindowAntecipation);//f8
-//        this.objectives.add((double) this.totalOccupationRate);//f9
+        this.objectives.add((double) this.totalDistance);//f1
+        this.objectives.add((double) this.totalDeliveryDelay);//f2
+        this.objectives.add((double) this.totalRouteTimeChargeBanlance);//f3
+        this.objectives.add((double) this.numberOfNonAttendedRequests);//f4
+        this.objectives.add((double) this.numberOfVehicles);//f5
+        this.objectives.add((double) this.totalTravelTime);//f6
+        this.objectives.add((double) this.totalWaintingTime);//f7
+        this.objectives.add((double) this.deliveryTimeWindowAntecipation);//f8
+        this.objectives.add((double) this.totalOccupationRate);//f9
 
-        this.objectives.add((double) totalDeliveryDelay + numberOfNonAttendedRequests + totalTravelTime
-                + totalWaintingTime);
-        this.objectives.add((double) totalDistance + totalRouteTimeChargeBanlance + numberOfVehicles
-                + deliveryTimeWindowAntecipation + totalOccupationRate);
+//        this.objectives.add((double) totalDeliveryDelay + numberOfNonAttendedRequests + totalTravelTime
+//                + totalWaintingTime);
+//        this.objectives.add((double) totalDistance + totalRouteTimeChargeBanlance + numberOfVehicles
+//                + deliveryTimeWindowAntecipation + totalOccupationRate);
     }
 
     public void setObjectivesList(Parameters parameters) {
         this.objectives.clear();
-        List<Double> lambdas = new ArrayList<>();
-        lambdas.addAll(parameters.getParameters());
-        
-        this.objectives.add((double) lambdas.get(1)*totalDeliveryDelay + lambdas.get(3)*numberOfNonAttendedRequests 
-                + lambdas.get(5)*totalTravelTime + lambdas.get(6)*totalWaintingTime);
-        this.objectives.add((double) lambdas.get(0)*totalDistance + lambdas.get(2)*totalRouteTimeChargeBanlance 
-                + lambdas.get(4)*numberOfVehicles + lambdas.get(7)*deliveryTimeWindowAntecipation 
-                + lambdas.get(8)*totalOccupationRate);
+        this.objectives.add((double) this.totalDistance);//f1
+        this.objectives.add((double) this.totalDeliveryDelay);//f2
+        this.objectives.add((double) this.totalRouteTimeChargeBanlance);//f3
+        this.objectives.add((double) this.numberOfNonAttendedRequests);//f4
+        this.objectives.add((double) this.numberOfVehicles);//f5
+        this.objectives.add((double) this.totalTravelTime);//f6
+        this.objectives.add((double) this.totalWaintingTime);//f7
+        this.objectives.add((double) this.deliveryTimeWindowAntecipation);//f8
+        this.objectives.add((double) this.totalOccupationRate);//f9
+//        this.objectives.clear();
+//        List<Double> lambdas = new ArrayList<>();
+//        lambdas.addAll(parameters.getParameters());
+//        
+//        this.objectives.add((double) lambdas.get(1)*totalDeliveryDelay + lambdas.get(3)*numberOfNonAttendedRequests 
+//                + lambdas.get(5)*totalTravelTime + lambdas.get(6)*totalWaintingTime);
+//        this.objectives.add((double) lambdas.get(0)*totalDistance + lambdas.get(2)*totalRouteTimeChargeBanlance 
+//                + lambdas.get(4)*numberOfVehicles + lambdas.get(7)*deliveryTimeWindowAntecipation 
+//                + lambdas.get(8)*totalOccupationRate);
     }
     
     
