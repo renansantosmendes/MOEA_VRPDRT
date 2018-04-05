@@ -673,7 +673,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 //                + totalDeliveryDelay + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t"
 //                + numberOfVehicles + "\t" + totalWaintingTime + "\t" + totalTravelTime + "\t" + deliveryTimeWindowAntecipation
 //                + "\t" + totalOccupationRate + "\t";
-        String s = this.objectiveFunction + "\t" + totalDistance + "\t"
+        String s = this.objectives + "\t"+ objectiveFunction + "\t" + totalDistance + "\t"
                 + totalDeliveryDelay + "\t" + totalRouteTimeChargeBanlance + "\t" + numberOfNonAttendedRequests + "\t"
                 + numberOfVehicles + "\t" + totalWaintingTime + "\t" + totalTravelTime + "\t" + deliveryTimeWindowAntecipation
                 + "\t" + totalOccupationRate + "\t";

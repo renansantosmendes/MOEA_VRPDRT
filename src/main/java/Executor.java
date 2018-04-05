@@ -735,7 +735,7 @@ public class Executor extends ProblemBuilder {
 
     public NondominatedPopulation runExperiment() {
         NondominatedPopulation results = new NondominatedPopulation();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 30; i++) {
             System.out.println("Execution = " + i);
             isCanceled.set(false);
             NondominatedPopulation result = runSingleSeed(1, 1, createTerminationCondition());
