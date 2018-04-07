@@ -69,7 +69,7 @@ public class TestClassVRPDRT {
                     .setAlphaT(0.10)
                     .setAlphaV(0.55);
 
-            problem = new VRPDRT(instance, path, rankedList);
+            //problem = new VRPDRT(instance, path, rankedList);
             System.out.println("Random Solution = " + problem.buildRandomSolution().getLinkedRouteList());
         }
         assertEquals(178125.0, solution.getObjectiveFunction(), 0.001);//178125.0

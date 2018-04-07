@@ -22,7 +22,7 @@ public class MOEAVRPDRT implements Problem {
     private VRPDRT problem;
     private RankedList rankedList;
     private int numberOfVariables = 1;
-    private int numberOfObjectives = 9;
+    private int numberOfObjectives = 2;
     private int numberOfConstraints = 0;
 
     public MOEAVRPDRT() {
@@ -42,21 +42,21 @@ public class MOEAVRPDRT implements Problem {
         problem = new VRPDRT(instance, path, rankedList);
     }
 
-    public MOEAVRPDRT setNumberOfObjectives(int numberOfObjectives){
+    public MOEAVRPDRT setNumberOfObjectives(int numberOfObjectives) {
         this.numberOfObjectives = numberOfObjectives;
         return this;
     }
-    
-    public MOEAVRPDRT setNumberOfVariables(int numberOfVariables){
+
+    public MOEAVRPDRT setNumberOfVariables(int numberOfVariables) {
         this.numberOfVariables = numberOfVariables;
         return this;
     }
-    
-    public MOEAVRPDRT setNumberOfConstraints(int numberOfConstraints){
+
+    public MOEAVRPDRT setNumberOfConstraints(int numberOfConstraints) {
         this.numberOfConstraints = numberOfConstraints;
         return this;
     }
-    
+
     @Override
     public String getName() {
         return "MOEAVRPDRT";
@@ -83,11 +83,11 @@ public class MOEAVRPDRT implements Problem {
         List<Integer> solutionRepresentation = copyArrayToListInteger(array);
 //        System.out.println(solutionRepresentation);
 
-        problem = new VRPDRT(instance, path);
+        //problem = new VRPDRT(instance, path);
 //        System.out.println("tamanho requests = " + problem.getData().getRequests().size());
-       
-        ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getData().getRequests());
-        System.out.println("number of Objectives = " + ps.getObjectives());
+//        ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getData().getRequests());
+        ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getRequestListCopy());
+        //System.out.println("number of Objectives = " + ps.getObjectives());
         solution.setObjectives(copyListToArrayDouble(ps.getObjectives()));
     }
 
@@ -99,8 +99,7 @@ public class MOEAVRPDRT implements Problem {
                 .setAlphaT(0.10)
                 .setAlphaV(0.55);
 
-        problem = new VRPDRT(instance, path, rankedList);
-
+        //problem = new VRPDRT(instance, path, rankedList);
         ProblemSolution ps = problem.buildRandomSolution();
         //System.out.println(ps);
         int arraySize = ps.getLinkedRouteList().size();
@@ -120,7 +119,7 @@ public class MOEAVRPDRT implements Problem {
         }
         return array;
     }
-    
+
     private double[] copyListToArrayDouble(List<Double> list) {
         int size = list.size();
         double[] array = new double[size];
@@ -130,15 +129,16 @@ public class MOEAVRPDRT implements Problem {
         return array;
     }
 
-    private List<Integer> copyArrayToListInteger(int[] array){
+    private List<Integer> copyArrayToListInteger(int[] array) {
         List<Integer> list = new ArrayList<>();
         int size = array.length;
-        
+
         for (int i = 0; i < size; i++) {
             list.add(array[i]);
         }
         return list;
     }
+
     @Override
     public void close() {
 

@@ -1006,8 +1006,17 @@ public class VRPDRT {
         } while (Objects.equals(sequence.get(index1), sequence.get(index2)));
 
         Collections.swap(sequence, index1, index2);
-        solution = rebuildSolution(sequence, requests);
+        //solution = rebuildSolution(sequence, requests);
+        solution = rebuildSolution(sequence, getRequestListCopy());
 
         return solution;
+    }
+    
+    public List<Request> getRequestListCopy(){
+        List<Request> requestList = new ArrayList<>();
+        for(Request request: requests){
+            requestList.add((Request) request.clone());
+        }
+        return requestList;
     }
 }

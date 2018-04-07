@@ -1,5 +1,6 @@
 package Main;
 
+import VRPDRT.MOEAVRPDRT;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
@@ -17,10 +18,20 @@ public class Main {
 
     public static void main(String[] args) {
         NondominatedPopulation result = new Executor()
-                .withProblem("UF1")
-                .withAlgorithm("MOEAD")
-                .withMaxEvaluations(10000)
+                .withProblemClass(MOEAVRPDRT.class)
+                .withAlgorithm("NSGAII")
+                .withMaxEvaluations(100)
+                .withProperty("populationSize", 100)
+                .withProperty("operator", "2X+swap")
+                .withProperty("swap.rate", 0.02)
+                .withProperty("2X.rate", 0.7)
                 .run();
-    }
 
+        System.out.format("Objective1  Objective2%n");
+        for (Solution solution : result) {
+            System.out.println(
+                    solution.getObjective(0) + ","
+                    + solution.getObjective(1));
+        }
+    }
 }
