@@ -26,124 +26,125 @@ import org.moeaframework.core.comparator.*;
 import org.moeaframework.core.operator.*;
 
 /**
- * Implementation of NSGA-II, with the ability to attach an optional 
+ * Implementation of NSGA-II, with the ability to attach an optional
  * &epsilon;-dominance archive.
  * <p>
  * References:
  * <ol>
- *   <li>Deb, K. et al.  "A Fast Elitist Multi-Objective Genetic Algorithm:
- *       NSGA-II."  IEEE Transactions on Evolutionary Computation, 6:182-197, 
- *       2000.
- *   <li>Kollat, J. B., and Reed, P. M.  "Comparison of Multi-Objective 
- *       Evolutionary Algorithms for Long-Term Monitoring Design."  Advances in
- *       Water Resources, 29(6):792-807, 2006.
+ * <li>Deb, K. et al. "A Fast Elitist Multi-Objective Genetic Algorithm:
+ * NSGA-II." IEEE Transactions on Evolutionary Computation, 6:182-197, 2000.
+ * <li>Kollat, J. B., and Reed, P. M. "Comparison of Multi-Objective
+ * Evolutionary Algorithms for Long-Term Monitoring Design." Advances in Water
+ * Resources, 29(6):792-807, 2006.
  * </ol>
  */
 public class NSGAII extends AbstractEvolutionaryAlgorithm implements
-		EpsilonBoxEvolutionaryAlgorithm {
+        EpsilonBoxEvolutionaryAlgorithm {
 
-	/**
-	 * The selection operator.  If {@code null}, this algorithm uses binary
-	 * tournament selection without replacement, replicating the behavior of the
-	 * original NSGA-II implementation.
-	 */
-	private final Selection selection;
+    /**
+     * The selection operator. If {@code null}, this algorithm uses binary
+     * tournament selection without replacement, replicating the behavior of the
+     * original NSGA-II implementation.
+     */
+    private final Selection selection;
+    private static int iteration = 0;
+    /**
+     * The variation operator.
+     */
+    private final Variation variation;
 
-	/**
-	 * The variation operator.
-	 */
-	private final Variation variation;
+    /**
+     * Constructs the NSGA-II algorithm with the specified components.
+     *
+     * @param problem the problem being solved
+     * @param population the population used to store solutions
+     * @param archive the archive used to store the result; can be {@code null}
+     * @param selection the selection operator
+     * @param variation the variation operator
+     * @param initialization the initialization method
+     */
+    public NSGAII(Problem problem, NondominatedSortingPopulation population,
+            EpsilonBoxDominanceArchive archive, Selection selection,
+            Variation variation, Initialization initialization) {
+        super(problem, population, archive, initialization);
+        this.selection = selection;
+        this.variation = variation;
+    }
 
-	/**
-	 * Constructs the NSGA-II algorithm with the specified components.
-	 * 
-	 * @param problem the problem being solved
-	 * @param population the population used to store solutions
-	 * @param archive the archive used to store the result; can be {@code null}
-	 * @param selection the selection operator
-	 * @param variation the variation operator
-	 * @param initialization the initialization method
-	 */
-	public NSGAII(Problem problem, NondominatedSortingPopulation population,
-			EpsilonBoxDominanceArchive archive, Selection selection,
-			Variation variation, Initialization initialization) {
-		super(problem, population, archive, initialization);
-		this.selection = selection;
-		this.variation = variation;
-	}
+    @Override
+    public void iterate() {
+        iteration++;
+        System.out.println("iteration = " + iteration);
+        NondominatedSortingPopulation population = getPopulation();
+        EpsilonBoxDominanceArchive archive = getArchive();
+        Population offspring = new Population();
+        int populationSize = population.size();
 
-	@Override
-	public void iterate() {
-		NondominatedSortingPopulation population = getPopulation();
-		EpsilonBoxDominanceArchive archive = getArchive();
-		Population offspring = new Population();
-		int populationSize = population.size();
+        if (selection == null) {
+            // recreate the original NSGA-II implementation using binary
+            // tournament selection without replacement; this version works by
+            // maintaining a pool of candidate parents.
+            LinkedList<Solution> pool = new LinkedList<Solution>();
 
-		if (selection == null) {
-			// recreate the original NSGA-II implementation using binary
-			// tournament selection without replacement; this version works by
-			// maintaining a pool of candidate parents.
-			LinkedList<Solution> pool = new LinkedList<Solution>();
-			
-			DominanceComparator comparator = new ChainedComparator(
-					new ParetoDominanceComparator(),
-					new CrowdingComparator());
-			
-			while (offspring.size() < populationSize) {
-				// ensure the pool has enough solutions
-				while (pool.size() < 2*variation.getArity()) {
-					List<Solution> poolAdditions = new ArrayList<Solution>();
-					
-					for (Solution solution : population) {
-						poolAdditions.add(solution);
-					}
-					
-					PRNG.shuffle(poolAdditions);
-					pool.addAll(poolAdditions);
-				}
-				
-				// select the parents using a binary tournament
-				Solution[] parents = new Solution[variation.getArity()];
-				
-				for (int i = 0; i < parents.length; i++) {
-					parents[i] = TournamentSelection.binaryTournament(
-							pool.removeFirst(),
-							pool.removeFirst(),
-							comparator);
-				}
-				
-				// evolve the children
-				offspring.addAll(variation.evolve(parents));
-			}
-		} else {
-			// run NSGA-II using selection with replacement; this version allows
-			// using custom selection operators
-			while (offspring.size() < populationSize) {
-				Solution[] parents = selection.select(variation.getArity(),
-						population);
+            DominanceComparator comparator = new ChainedComparator(
+                    new ParetoDominanceComparator(),
+                    new CrowdingComparator());
 
-				offspring.addAll(variation.evolve(parents));
-			}
-		}
+            while (offspring.size() < populationSize) {
+                // ensure the pool has enough solutions
+                while (pool.size() < 2 * variation.getArity()) {
+                    List<Solution> poolAdditions = new ArrayList<Solution>();
 
-		evaluateAll(offspring);
+                    for (Solution solution : population) {
+                        poolAdditions.add(solution);
+                    }
 
-		if (archive != null) {
-			archive.addAll(offspring);
-		}
+                    PRNG.shuffle(poolAdditions);
+                    pool.addAll(poolAdditions);
+                }
 
-		population.addAll(offspring);
-		population.truncate(populationSize);
-	}
+                // select the parents using a binary tournament
+                Solution[] parents = new Solution[variation.getArity()];
 
-	@Override
-	public EpsilonBoxDominanceArchive getArchive() {
-		return (EpsilonBoxDominanceArchive)super.getArchive();
-	}
+                for (int i = 0; i < parents.length; i++) {
+                    parents[i] = TournamentSelection.binaryTournament(
+                            pool.removeFirst(),
+                            pool.removeFirst(),
+                            comparator);
+                }
 
-	@Override
-	public NondominatedSortingPopulation getPopulation() {
-		return (NondominatedSortingPopulation)super.getPopulation();
-	}
+                // evolve the children
+                offspring.addAll(variation.evolve(parents));
+            }
+        } else {
+            // run NSGA-II using selection with replacement; this version allows
+            // using custom selection operators
+            while (offspring.size() < populationSize) {
+                Solution[] parents = selection.select(variation.getArity(),
+                        population);
+
+                offspring.addAll(variation.evolve(parents));
+            }
+        }
+
+        evaluateAll(offspring);
+
+        if (archive != null) {
+            archive.addAll(offspring);
+        }
+
+        population.addAll(offspring);
+        population.truncate(populationSize);
+    }
+
+    @Override
+    public EpsilonBoxDominanceArchive getArchive() {
+        return (EpsilonBoxDominanceArchive) super.getArchive();
+    }
+
+    @Override
+    public NondominatedSortingPopulation getPopulation() {
+        return (NondominatedSortingPopulation) super.getPopulation();
+    }
 
 }

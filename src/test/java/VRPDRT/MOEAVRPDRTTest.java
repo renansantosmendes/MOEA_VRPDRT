@@ -11,8 +11,10 @@ import ProblemRepresentation.RankedList;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.moeaframework.*;
-import org.moeaframework.core.*;
+import org.moeaframework.Executor;
+import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Solution;
+
 import org.moeaframework.core.variable.EncodingUtils;
 
 /**
@@ -109,8 +111,9 @@ public class MOEAVRPDRTTest {
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
                 .withMaxEvaluations(100)
-                .withProperty("populationSize", 50000)
-                .withProperty("operator", "2X+swap")
+                .withProperty("populationSize", 100)
+                .withProperty("operator", "2X")
+                .withProperty("operator", "swap")
                 .withProperty("swap.rate", 0.02)
                 .withProperty("2X.rate", 0.7)
                 .runExperiment();
