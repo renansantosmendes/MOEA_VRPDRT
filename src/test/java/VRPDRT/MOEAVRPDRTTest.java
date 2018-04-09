@@ -141,27 +141,15 @@ public class MOEAVRPDRTTest {
                 .withAlgorithm("NSGAII")
                 .withMaxEvaluations(2000)
                 .withProperty("populationSize", 100)
-                .withProperty("operator", "2X")
-                .withProperty("operator", "Shuffle2")
+                .withProperty("operator", "2x+Shuffle2")
+//                .withProperty("operator", "Shuffle2")
                 .withProperty("Shuffle2.rate", 0.02)
-                .withProperty("2X.rate", 0.7)
+                .withProperty("2x.rate", 0.7)
                 .runExperiment();
 
         System.out.format("Objective1  Objective2%n");
         for (Solution solution : result) {
-            System.out.println(
-                    solution.getObjective(0) + ","
-                    + solution.getObjective(1));
-//            System.out.println(
-//                    solution.getObjective(0) + ","
-//                    + solution.getObjective(1) + ","
-//                    + solution.getObjective(2) + ","
-//                    + solution.getObjective(3) + ","
-//                    + solution.getObjective(4) + ","
-//                    + solution.getObjective(5) + ","
-//                    + solution.getObjective(6) + ","
-//                    + solution.getObjective(7) + ","
-//                    + solution.getObjective(8));
+            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
 
             int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
             List<Integer> solutionRepresentation = copyArrayToListInteger(array);
