@@ -5,10 +5,15 @@
  */
 package org.moeaframework.core.operator.permutation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.moeaframework.core.PRNG;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.Variation;
+import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.core.variable.Permutation;
 
 /**
@@ -62,12 +67,59 @@ public class Shuffle2 implements Variation {
             j = permutation.size() - 1;
         }
 
-        permutation.swap(i, j);
+        int[] array = EncodingUtils.getPermutation(permutation);
+        List<Integer> indexes = new ArrayList<>();
+        indexes.add(i);
+        indexes.add(j);
+//        indexes.stream().sorted(Comparator.naturalOrder());
+        List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+
+        int min = Collections.min(indexes);
+        int max = Collections.max(indexes);
+
+        List<Integer> aux = new ArrayList<>(solutionRepresentation.subList(min, max));
+
+        Collections.shuffle(aux);
+
+        solutionRepresentation.subList(min, max).clear();
+        solutionRepresentation.addAll(min, aux);
+        
+        int[] newArray = copyListToArrayInteger(solutionRepresentation);
+        
+        permutation = new Permutation(newArray);
     }
 
     @Override
     public int getArity() {
         return 1;
+    }
+
+    private static int[] copyListToArrayInteger(List<Integer> list) {
+        int size = list.size();
+        int[] array = new int[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
+    private static double[] copyListToArrayDouble(List<Double> list) {
+        int size = list.size();
+        double[] array = new double[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
+    private static List<Integer> copyArrayToListInteger(int[] array) {
+        List<Integer> list = new ArrayList<>();
+        int size = array.length;
+
+        for (int i = 0; i < size; i++) {
+            list.add(array[i]);
+        }
+        return list;
     }
 
 }

@@ -47,7 +47,7 @@ public class NSGAII extends AbstractEvolutionaryAlgorithm implements
      * original NSGA-II implementation.
      */
     private final Selection selection;
-    private static int iteration = 0;
+    private static int generation = 0;
     /**
      * The variation operator.
      */
@@ -69,12 +69,13 @@ public class NSGAII extends AbstractEvolutionaryAlgorithm implements
         super(problem, population, archive, initialization);
         this.selection = selection;
         this.variation = variation;
+        generation = 0;
     }
 
     @Override
     public void iterate() {
-        iteration++;
-        System.out.println("iteration = " + iteration);
+        generation++;
+        System.out.println("Generation = " + generation);
         NondominatedSortingPopulation population = getPopulation();
         EpsilonBoxDominanceArchive archive = getArchive();
         Population offspring = new Population();

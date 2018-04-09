@@ -10,12 +10,19 @@ import ProblemRepresentation.ProblemSolution;
 import ProblemRepresentation.RankedList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import org.junit.Test;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import org.moeaframework.core.Variation;
+import org.moeaframework.core.operator.permutation.Shuffle2;
+import org.moeaframework.core.spi.OperatorFactory;
+import org.moeaframework.core.spi.OperatorProvider;
 
 import org.moeaframework.core.variable.EncodingUtils;
+import org.moeaframework.util.TypedProperties;
 
 /**
  *
@@ -107,14 +114,36 @@ public class MOEAVRPDRTTest {
 
     @Test
     public void moeadTest() {
+        OperatorFactory.getInstance().addProvider(new OperatorProvider() {
+            @Override
+            public String getMutationHint(Problem problem) {
+                return null;
+            }
+
+            @Override
+            public String getVariationHint(Problem problem) {
+                return null;
+            }
+
+            @Override
+            public Variation getVariation(String name, Properties properties, Problem problem) {
+                if (name.equalsIgnoreCase("Shuffle2")) {
+                    TypedProperties typedProperties = new TypedProperties(properties);
+                    return new Shuffle2(typedProperties.getDouble("Shuffle.rate", 1.0));
+                } else {
+                    return null;
+                }
+            }
+        });
+
         NondominatedPopulation result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
-                .withMaxEvaluations(100)
+                .withMaxEvaluations(2000)
                 .withProperty("populationSize", 100)
                 .withProperty("operator", "2X")
-                .withProperty("operator", "swap")
-                .withProperty("swap.rate", 0.02)
+                .withProperty("operator", "Shuffle2")
+                .withProperty("Shuffle2.rate", 0.02)
                 .withProperty("2X.rate", 0.7)
                 .runExperiment();
 
@@ -143,8 +172,7 @@ public class MOEAVRPDRTTest {
         }
 
 //        for (Solution solution : result) {
-            //System.out.println(solution.getObjectives());
-
+        //System.out.println(solution.getObjectives());
 //            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
 //            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
 //            initializeData();
