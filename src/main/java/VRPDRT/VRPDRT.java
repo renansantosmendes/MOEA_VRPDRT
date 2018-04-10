@@ -53,6 +53,7 @@ public class VRPDRT {
     private int currentVehicle;
     private String log;
     private Parameters parameters;
+    private static int seed = 256344;
 
     public VRPDRT(Instance instance) {
         this.loadIndexList = new LinkedList<>();
@@ -992,29 +993,40 @@ public class VRPDRT {
         return solution;
     }
 
+    public void startSeed(){
+         seed = 256344;
+    }
+    
     public ProblemSolution buildRandomSolution() {
+        
+       
         solution = new ProblemSolution();
         solution = buildGreedySolution();
 
         List<Integer> sequence = new ArrayList<>();
         sequence.addAll(solution.getLinkedRouteList());
-        Random rnd = new Random();
-        int index1, index2;
-        do {
-            index1 = rnd.nextInt(solution.getLinkedRouteList().size());
-            index2 = rnd.nextInt(solution.getLinkedRouteList().size());
-        } while (Objects.equals(sequence.get(index1), sequence.get(index2)));
+        for (int i = 0; i < 3; i++) {
+            seed++;
+            Random rnd = new Random(i + 1);
+            Random p1 = new Random(i + seed);
+            Random p2 = new Random(seed * i);
+            int index1, index2;
+            index1 = p1.nextInt(solution.getLinkedRouteList().size());
+            do {
+                index2 = p2.nextInt(solution.getLinkedRouteList().size());
+            } while (Objects.equals(sequence.get(index1), sequence.get(index2)));
 
-        Collections.swap(sequence, index1, index2);
+            Collections.swap(sequence, index1, index2);
+        }
         //solution = rebuildSolution(sequence, requests);
         solution = rebuildSolution(sequence, getRequestListCopy());
 
         return solution;
     }
-    
-    public List<Request> getRequestListCopy(){
+
+    public List<Request> getRequestListCopy() {
         List<Request> requestList = new ArrayList<>();
-        for(Request request: requests){
+        for (Request request : requests) {
             requestList.add((Request) request.clone());
         }
         return requestList;

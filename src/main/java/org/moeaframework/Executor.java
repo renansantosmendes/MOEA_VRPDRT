@@ -730,15 +730,16 @@ public class Executor extends ProblemBuilder {
      */
     public NondominatedPopulation run() {
         isCanceled.set(false);
+//        return runSeeds()
         return runSingleSeed(1, 1, createTerminationCondition());
     }
 
-    public NondominatedPopulation runExperiment() {
+    public NondominatedPopulation runExperiment(int numberOfSeeds) {
         NondominatedPopulation results = new NondominatedPopulation();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 3; i++) {
             System.out.println("Execution = " + i);
             isCanceled.set(false);
-            NondominatedPopulation result = runSingleSeed(1, 1, createTerminationCondition());
+            NondominatedPopulation result = runSingleSeed(i + 1,numberOfSeeds, createTerminationCondition());
             for (Solution solution : result) {
                 results.add(solution);
             }

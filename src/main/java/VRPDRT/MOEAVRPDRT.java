@@ -40,6 +40,7 @@ public class MOEAVRPDRT implements Problem {
                 .setAlphaV(0.55);
 
         problem = new VRPDRT(instance, path, rankedList);
+        problem.startSeed();
     }
 
     public MOEAVRPDRT setNumberOfObjectives(int numberOfObjectives) {
@@ -98,6 +99,7 @@ public class MOEAVRPDRT implements Problem {
 
         //problem = new VRPDRT(instance, path, rankedList);
         ProblemSolution ps = problem.buildRandomSolution();
+//        System.out.println(ps);
         int arraySize = ps.getLinkedRouteList().size();
         int[] array = copyListToArrayInteger(ps.getLinkedRouteList());
         Permutation permutation = new Permutation(array);

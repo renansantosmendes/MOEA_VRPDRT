@@ -129,35 +129,56 @@ public class MOEAVRPDRTTest {
             public Variation getVariation(String name, Properties properties, Problem problem) {
                 if (name.equalsIgnoreCase("Shuffle2")) {
                     TypedProperties typedProperties = new TypedProperties(properties);
-                    return new Shuffle2(typedProperties.getDouble("Shuffle.rate", 1.0));
+                    return new Shuffle2(typedProperties.getDouble("Shuffle.rate", 0.7));
                 } else {
                     return null;
                 }
             }
         });
 
-        NondominatedPopulation result = new Executor()
+//        NondominatedPopulation result = new Executor()
+//                .withProblemClass(MOEAVRPDRT.class)
+//                .withAlgorithm("NSGAII")
+//                .withMaxEvaluations(2000)
+//                .withProperty("populationSize", 100)
+//                .withProperty("operator", "2x+swap")
+//                .withProperty("swap.rate", 0.02)
+//                .withProperty("2x.rate", 0.7)
+//                .runExperiment(3);
+        
+        List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
-                .withMaxEvaluations(2000)
+                .withMaxEvaluations(1000)
                 .withProperty("populationSize", 100)
-                .withProperty("operator", "2x+Shuffle2")
-//                .withProperty("operator", "Shuffle2")
-                .withProperty("Shuffle2.rate", 0.02)
+                .withProperty("operator", "2x+swap")
+                .withProperty("swap.rate", 0.05)
                 .withProperty("2x.rate", 0.7)
-                .runExperiment();
+                .runSeeds(30);
 
         System.out.format("Objective1  Objective2%n");
-        for (Solution solution : result) {
-            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
-
-            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-            //initializeData();
-            //ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-            //System.out.println("after rebuilding = " + ps);
-
+        NondominatedPopulation combinedPareto = new NondominatedPopulation();
+        
+        for(NondominatedPopulation population : result){
+            for (Solution solution : population) {
+                combinedPareto.add(solution);
+                System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+            }
         }
+        System.out.println("combined pareto");
+        for(Solution solution: combinedPareto){
+            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+        }
+//        for (Solution solution : result) {
+//            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+//
+//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+//            //initializeData();
+//            //ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
+//            //System.out.println("after rebuilding = " + ps);
+//
+//        }
 
 //        for (Solution solution : result) {
         //System.out.println(solution.getObjectives());
