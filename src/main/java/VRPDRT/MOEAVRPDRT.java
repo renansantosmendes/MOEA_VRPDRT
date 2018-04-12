@@ -24,6 +24,7 @@ public class MOEAVRPDRT implements Problem {
     private int numberOfVariables = 1;
     private int numberOfObjectives = 2;
     private int numberOfConstraints = 0;
+    private DataOutput dataOutput;
 
     public MOEAVRPDRT() {
         instance.setNumberOfRequests(50)
@@ -41,6 +42,7 @@ public class MOEAVRPDRT implements Problem {
 
         problem = new VRPDRT(instance, path, rankedList);
         problem.startSeed();
+        dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
     }
 
     public MOEAVRPDRT setNumberOfObjectives(int numberOfObjectives) {
@@ -82,7 +84,6 @@ public class MOEAVRPDRT implements Problem {
     public void evaluate(Solution solution) {
         int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
         List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-
 
         //problem = new VRPDRT(instance, path);
         ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getRequestListCopy());

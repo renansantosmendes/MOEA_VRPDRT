@@ -5,6 +5,7 @@
  */
 package VRPDRT;
 
+import InstanceReader.DataOutput;
 import InstanceReader.Instance;
 import ProblemRepresentation.ProblemSolution;
 import ProblemRepresentation.RankedList;
@@ -73,121 +74,43 @@ public class MOEAVRPDRTTest {
         return list;
     }
 
-    @Test
-    public void nsgaiiTest() {
-//        NondominatedPopulation result = new Executor()
-//                .withProblemClass(MOEAVRPDRT.class)
-//                .withAlgorithm("NSGAII")
-//                .withMaxEvaluations(10)
-//                .withProperty("populationSize", 10000)
-//                .withProperty("operator", "2X+swap")
-//                .withProperty("swap.rate", 0.02)
-//                .withProperty("2X.rate", 0.7)
-//                .runExperiment();
-//
-//        System.out.format("Objective1  Objective2%n");
-//        for (Solution solution : result) {
-//            System.out.format("%.4f      %.4f%n",
-//                    solution.getObjective(0),
-//                    solution.getObjective(1));
-//
-//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-//            initializeData();
-//            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-//            System.out.println("after rebuilding = " + ps);
-//
-//        }
-//        
-//        for (Solution solution : result) {
-//            System.out.format("%.4f      %.4f%n",
-//                    solution.getObjective(0),
-//                    solution.getObjective(1));
-
-//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-//            initializeData();
-//            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-//            System.out.println("after rebuilding = " + ps);
-//        }
+    public ProblemSolution convertSolution(Solution solution) {
+        initializeData();
+        ProblemSolution ps = subProblem
+                .rebuildSolution(copyArrayToListInteger(EncodingUtils.getPermutation(solution.getVariable(0))),
+                        subProblem.getData().getRequests());
+        return ps;
     }
 
     @Test
     public void moeadTest() {
-        OperatorFactory.getInstance().addProvider(new OperatorProvider() {
-            @Override
-            public String getMutationHint(Problem problem) {
-                return null;
-            }
-
-            @Override
-            public String getVariationHint(Problem problem) {
-                return null;
-            }
-
-            @Override
-            public Variation getVariation(String name, Properties properties, Problem problem) {
-                if (name.equalsIgnoreCase("Shuffle2")) {
-                    TypedProperties typedProperties = new TypedProperties(properties);
-                    return new Shuffle2(typedProperties.getDouble("Shuffle.rate", 0.7));
-                } else {
-                    return null;
-                }
-            }
-        });
-
-//        NondominatedPopulation result = new Executor()
-//                .withProblemClass(MOEAVRPDRT.class)
-//                .withAlgorithm("NSGAII")
-//                .withMaxEvaluations(2000)
-//                .withProperty("populationSize", 100)
-//                .withProperty("operator", "2x+swap")
-//                .withProperty("swap.rate", 0.02)
-//                .withProperty("2x.rate", 0.7)
-//                .runExperiment(3);
-        
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
-                .withMaxEvaluations(1000)
-                .withProperty("populationSize", 100)
+                .withMaxEvaluations(2000)
+                .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")
-                .withProperty("swap.rate", 0.05)
+                .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
-                .runSeeds(30);
+                .runSeeds(3);
 
-        System.out.format("Objective1  Objective2%n");
+        DataOutput dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
+        List<ProblemSolution> solutionPopulation = new ArrayList<>();
         
-        for(NondominatedPopulation population : result){
+        for (NondominatedPopulation population : result) {
             for (Solution solution : population) {
                 combinedPareto.add(solution);
                 System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             }
         }
+        
         System.out.println("combined pareto");
-        for(Solution solution: combinedPareto){
+        for (Solution solution : combinedPareto) {
             System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+            solutionPopulation.add(convertSolution(solution));
         }
-//        for (Solution solution : result) {
-//            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
-//
-//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-//            //initializeData();
-//            //ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-//            //System.out.println("after rebuilding = " + ps);
-//
-//        }
-
-//        for (Solution solution : result) {
-        //System.out.println(solution.getObjectives());
-//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-//            initializeData();
-//            ProblemSolution ps = subProblem.rebuildSolution(solutionRepresentation, subProblem.getData().getRequests());
-//            System.out.println("after rebuilding = " + ps);
-//        }
+        dataOutput.savePopulation(solutionPopulation);
     }
 
 }
