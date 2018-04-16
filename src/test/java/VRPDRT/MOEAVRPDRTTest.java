@@ -79,31 +79,17 @@ public class MOEAVRPDRTTest {
     @Test
     public void moeadTest() throws FileNotFoundException {
 
-        Instrumenter instrumenter = new Instrumenter()
-                .withProblemClass(MOEAVRPDRT.class)
-                .withFrequency(100)
-                .withReferenceSet(new File("/home/renansantos/NetBeansProjects/MOEA_VRPDRT_Refactoring/ReferenceSet.txt"))
-                .attachHypervolumeCollector();
-
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("NSGAII")
+                .withAlgorithm("MOEAD")
                 .withMaxEvaluations(1000)
                 .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
-//                .withInstrumenter(instrumenter)
                 .runSeeds(3);
 
-        Accumulator accumulator = instrumenter.getLastAccumulator();
-
-        for (int i = 0; i < accumulator.size("NFE"); i++) {
-            System.out.println(accumulator.get("NFE", i) + "\t"
-                    + accumulator.get("GenerationalDistance", i));
-        }
-
-        DataOutput dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
+        DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
         List<ProblemSolution> solutionPopulation = new ArrayList<>();
 
@@ -116,13 +102,14 @@ public class MOEAVRPDRTTest {
 
         System.out.println("combined pareto");
         for (Solution solution : combinedPareto) {
-            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+//            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             solutionPopulation.add(convertSolution(solution));
         }
         dataOutput.savePopulation(solutionPopulation);
         
-        double[] referencePoint = {1000000.0, 1000000.0};
-        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
+//        double[] referencePoint = {100000.0, 100000.0};
+//        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
+//        System.out.println(hp.evaluate(combinedPareto));
     }
 
 }

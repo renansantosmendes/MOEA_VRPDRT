@@ -22,7 +22,7 @@ public class MOEAVRPDRT implements Problem {
     private VRPDRT problem;
     private RankedList rankedList;
     private int numberOfVariables = 1;
-    private int numberOfObjectives = 2;
+    private int numberOfObjectives = 9;
     private int numberOfConstraints = 0;
     private DataOutput dataOutput;
 
