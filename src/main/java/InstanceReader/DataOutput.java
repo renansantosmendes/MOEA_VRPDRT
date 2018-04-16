@@ -79,8 +79,8 @@ public class DataOutput {
 
     public void saveBestSolutionFoundInTxtFile(ProblemSolution solution) {
         this.streamForCombinedPareto.print(solution + "\n");
-        this.streamForCombinedParetoObjectives.print(solution.getObjectives() + "\n");
-        this.streamForCombinedParetoReducedObjectives.print(solution.getStringWithAllNonReducedObjectives() + "\n");
+        this.streamForCombinedParetoObjectives.print(solution.getStringWithAllNonReducedObjectives() + "\n");
+        this.streamForCombinedParetoReducedObjectives.print(solution.getObjectives() + "\n");
     }
     
     public void savePopulation(List<ProblemSolution> population){

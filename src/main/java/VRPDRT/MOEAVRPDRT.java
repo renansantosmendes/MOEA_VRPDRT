@@ -84,8 +84,6 @@ public class MOEAVRPDRT implements Problem {
     public void evaluate(Solution solution) {
         int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
         List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-
-        //problem = new VRPDRT(instance, path);
         ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getRequestListCopy());
         solution.setObjectives(copyListToArrayDouble(ps.getObjectives()));
     }
@@ -98,9 +96,7 @@ public class MOEAVRPDRT implements Problem {
                 .setAlphaT(0.10)
                 .setAlphaV(0.55);
 
-        //problem = new VRPDRT(instance, path, rankedList);
         ProblemSolution ps = problem.buildRandomSolution();
-//        System.out.println(ps);
         int arraySize = ps.getLinkedRouteList().size();
         int[] array = copyListToArrayInteger(ps.getLinkedRouteList());
         Permutation permutation = new Permutation(array);

@@ -5,25 +5,19 @@
  */
 package VRPDRT;
 
-import InstanceReader.DataOutput;
-import InstanceReader.Instance;
-import ProblemRepresentation.ProblemSolution;
-import ProblemRepresentation.RankedList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import InstanceReader.*;
+import ProblemRepresentation.*;
+import java.io.FileNotFoundException;
+import java.util.*;
 import org.junit.Test;
-import org.moeaframework.Executor;
-import org.moeaframework.core.NondominatedPopulation;
-import org.moeaframework.core.Problem;
-import org.moeaframework.core.Solution;
-import org.moeaframework.core.Variation;
-import org.moeaframework.core.operator.permutation.Shuffle2;
-import org.moeaframework.core.spi.OperatorFactory;
-import org.moeaframework.core.spi.OperatorProvider;
+import org.moeaframework.*;
+import org.moeaframework.core.*;
 
 import org.moeaframework.core.variable.EncodingUtils;
-import org.moeaframework.util.TypedProperties;
+import org.moeaframework.util.*;
+import java.io.File;
+import org.moeaframework.analysis.collector.Accumulator;
+import org.moeaframework.core.indicator.Hypervolume;
 
 /**
  *
@@ -83,34 +77,52 @@ public class MOEAVRPDRTTest {
     }
 
     @Test
-    public void moeadTest() {
+    public void moeadTest() throws FileNotFoundException {
+
+        Instrumenter instrumenter = new Instrumenter()
+                .withProblemClass(MOEAVRPDRT.class)
+                .withFrequency(100)
+                .withReferenceSet(new File("/home/renansantos/NetBeansProjects/MOEA_VRPDRT_Refactoring/ReferenceSet.txt"))
+                .attachHypervolumeCollector();
+
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("NSGAII")
-                .withMaxEvaluations(2000)
+                .withMaxEvaluations(1000)
                 .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
+//                .withInstrumenter(instrumenter)
                 .runSeeds(3);
+
+        Accumulator accumulator = instrumenter.getLastAccumulator();
+
+        for (int i = 0; i < accumulator.size("NFE"); i++) {
+            System.out.println(accumulator.get("NFE", i) + "\t"
+                    + accumulator.get("GenerationalDistance", i));
+        }
 
         DataOutput dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
         List<ProblemSolution> solutionPopulation = new ArrayList<>();
-        
+
         for (NondominatedPopulation population : result) {
             for (Solution solution : population) {
                 combinedPareto.add(solution);
                 System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             }
         }
-        
+
         System.out.println("combined pareto");
         for (Solution solution : combinedPareto) {
             System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             solutionPopulation.add(convertSolution(solution));
         }
         dataOutput.savePopulation(solutionPopulation);
+        
+        double[] referencePoint = {1000000.0, 1000000.0};
+        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
     }
 
 }
