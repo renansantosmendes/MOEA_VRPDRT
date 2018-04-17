@@ -711,7 +711,7 @@ public class Executor extends ProblemBuilder {
         for (int i = 0; i < numberOfSeeds && !isCanceled.get(); i++) {
             NondominatedPopulation result = runSingleSeed(i + 1, numberOfSeeds,
                     createTerminationCondition());
-
+            System.out.println("Seed number = " + i);
             if (result != null) {
                 results.add(result);
                 progress.nextSeed();

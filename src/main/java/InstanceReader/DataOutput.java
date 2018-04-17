@@ -9,7 +9,9 @@ import ProblemRepresentation.ProblemSolution;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
+import org.moeaframework.core.Solution;
 
 /**
  *
@@ -83,9 +85,31 @@ public class DataOutput {
         this.streamForCombinedParetoReducedObjectives.print(solution.getObjectives() + "\n");
     }
     
+    public void saveBestSolutionFoundInTxtFile(Solution solution) {
+        this.streamForCombinedPareto.print(copyArrayToListDouble(solution.getObjectives()) + "\n");
+//        this.streamForCombinedParetoObjectives.print(solution.getStringWithAllNonReducedObjectives() + "\n");
+//        this.streamForCombinedParetoReducedObjectives.print(solution.getObjectives() + "\n");
+    }
+    
     public void savePopulation(List<ProblemSolution> population){
         for(ProblemSolution solution: population){
             saveBestSolutionFoundInTxtFile(solution);
         }
+    }
+    
+    public void savePopulationOfSolutions(List<Solution> population){
+        for(Solution solution: population){
+            saveBestSolutionFoundInTxtFile(solution);
+        }
+    }
+    
+    private List<Double> copyArrayToListDouble(double[] array) {
+        List<Double> list = new ArrayList<>();
+        int size = array.length;
+
+        for (int i = 0; i < size; i++) {
+            list.add(array[i]);
+        }
+        return list;
     }
 }

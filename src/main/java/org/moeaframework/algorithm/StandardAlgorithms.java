@@ -266,6 +266,10 @@ public class StandardAlgorithms extends AlgorithmProvider {
                     || name.equalsIgnoreCase("NSGA-II")
                     || name.equalsIgnoreCase("NSGA2")) {
                 return newNSGAII(typedProperties, problem);
+            }else if (name.equalsIgnoreCase("CLNSGAII")
+                    || name.equalsIgnoreCase("CLNSGA-II")
+                    || name.equalsIgnoreCase("CLNSGA2")) {
+                return newCLNSGAII(typedProperties, problem);
             } else if (name.equalsIgnoreCase("NSGAIII")
                     || name.equalsIgnoreCase("NSGA-III")
                     || name.equalsIgnoreCase("NSGA3")) {
@@ -413,6 +417,30 @@ public class StandardAlgorithms extends AlgorithmProvider {
                 properties, problem);
 
         return new NSGAII(problem, population, null, selection, variation,
+                initialization);
+    }
+    
+    private Algorithm newCLNSGAII(TypedProperties properties, Problem problem) {
+        int populationSize = (int) properties.getDouble("populationSize", 100);
+
+        Initialization initialization = new RandomInitialization(problem,
+                populationSize);
+
+        NondominatedSortingPopulation population
+                = new NondominatedSortingPopulation();
+
+        TournamentSelection selection = null;
+
+        if (properties.getBoolean("withReplacement", true)) {
+            selection = new TournamentSelection(2, new ChainedComparator(
+                    new ParetoDominanceComparator(),
+                    new CrowdingComparator()));
+        }
+
+        Variation variation = OperatorFactory.getInstance().getVariation(null,
+                properties, problem);
+
+        return new CLNSGAII(problem, population, null, selection, variation,
                 initialization);
     }
 

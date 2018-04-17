@@ -67,6 +67,16 @@ public class MOEAVRPDRTTest {
         }
         return list;
     }
+    
+    private List<Double> copyArrayToListDouble(double[] array) {
+        List<Double> list = new ArrayList<>();
+        int size = array.length;
+
+        for (int i = 0; i < size; i++) {
+            list.add(array[i]);
+        }
+        return list;
+    }
 
     public ProblemSolution convertSolution(Solution solution) {
         initializeData();
@@ -81,7 +91,7 @@ public class MOEAVRPDRTTest {
 
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("MOEAD")
+                .withAlgorithm("CLNSGAII")
                 .withMaxEvaluations(1000)
                 .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")
@@ -103,10 +113,11 @@ public class MOEAVRPDRTTest {
         System.out.println("combined pareto");
         for (Solution solution : combinedPareto) {
 //            System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+            System.out.println(copyArrayToListDouble(solution.getObjectives()));
             solutionPopulation.add(convertSolution(solution));
         }
         dataOutput.savePopulation(solutionPopulation);
-        
+
 //        double[] referencePoint = {100000.0, 100000.0};
 //        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
 //        System.out.println(hp.evaluate(combinedPareto));
