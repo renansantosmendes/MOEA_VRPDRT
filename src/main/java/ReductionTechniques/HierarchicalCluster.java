@@ -311,11 +311,6 @@ public class HierarchicalCluster {
     }
 
     public HierarchicalCluster reduce() {
-//        if(this.data == null){
-//            createMatrix();
-//            calculateSilimarity();
-//            calculateDissilimarity();
-//        }
         Matrix m = new Matrix(this.data);
         int numberOfColumns = this.numberOfColumns;
         List<List<Integer>> columns = new ArrayList<>();

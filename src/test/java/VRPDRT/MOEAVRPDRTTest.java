@@ -92,11 +92,12 @@ public class MOEAVRPDRTTest {
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLNSGAII")
-                .withMaxEvaluations(1000)
+                .withMaxEvaluations(3000)
                 .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
+                .withProperty("updateUtility", 100)
                 .runSeeds(3);
 
         DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());

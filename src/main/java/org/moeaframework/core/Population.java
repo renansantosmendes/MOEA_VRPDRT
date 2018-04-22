@@ -31,275 +31,274 @@ import java.util.NoSuchElementException;
  */
 public class Population implements Iterable<Solution> {
 
-	/**
-	 * The internal data storage for solutions.
-	 */
-	private final List<Solution> data;
+    /**
+     * The internal data storage for solutions.
+     */
+    private final List<Solution> data;
 
-	/**
-	 * Constructs an empty population.
-	 */
-	public Population() {
-		super();
+    /**
+     * Constructs an empty population.
+     */
+    public Population() {
+        super();
 
-		data = new ArrayList<Solution>();
-	}
+        data = new ArrayList<Solution>();
+    }
 
-	/**
-	 * Constructs a population initialized with a collection of solutions.
-	 * 
-	 * @param iterable the collection of solutions for initializing this
-	 *        population
-	 */
-	public Population(Iterable<? extends Solution> iterable) {
-		this();
+    /**
+     * Constructs a population initialized with a collection of solutions.
+     *
+     * @param iterable the collection of solutions for initializing this
+     * population
+     */
+    public Population(Iterable<? extends Solution> iterable) {
+        this();
 
-		addAll(iterable);
-	}
+        addAll(iterable);
+    }
 
-	/**
-	 * Constructs a population initialized with an array of solutions.
-	 * 
-	 * @param solutions the array of solutions for initializing this
-	 *        population
-	 */
-	public <T extends Solution> Population(T[] solutions) {
-		this(Arrays.asList(solutions));
-	}
+    /**
+     * Constructs a population initialized with an array of solutions.
+     *
+     * @param solutions the array of solutions for initializing this population
+     */
+    public <T extends Solution> Population(T[] solutions) {
+        this(Arrays.asList(solutions));
+    }
 
-	/**
-	 * Returns the solution at the specified index in this population.
-	 * 
-	 * @param index the index of the solution to be returned
-	 * @return the solution at the specified index
-	 * @throws IndexOutOfBoundsException if the index is out of range
-	 *         {@code (index < 0) || (index >= size())}
-	 */
-	public Solution get(int index) {
-		return data.get(index);
-	}
+    /**
+     * Returns the solution at the specified index in this population.
+     *
+     * @param index the index of the solution to be returned
+     * @return the solution at the specified index
+     * @throws IndexOutOfBoundsException if the index is out of range
+     * {@code (index < 0) || (index >= size())}
+     */
+    public Solution get(int index) {
+        return data.get(index);
+    }
 
-	/**
-	 * Removes the solution at the specified index from this population.
-	 * 
-	 * @param index the index of the solution to be removed
-	 * @throws IndexOutOfBoundsException if the index is out of range
-	 *         {@code (index < 0) || (index >= size())}
-	 */
-	public void remove(int index) {
-		modCount++;
-		data.remove(index);
-	}
+    /**
+     * Removes the solution at the specified index from this population.
+     *
+     * @param index the index of the solution to be removed
+     * @throws IndexOutOfBoundsException if the index is out of range
+     * {@code (index < 0) || (index >= size())}
+     */
+    public void remove(int index) {
+        modCount++;
+        data.remove(index);
+    }
 
-	/**
-	 * Returns the index of the specified solution in this population.
-	 * Invocations of certain methods on this population may alter the ordering
-	 * of solutions, so the index returned should be used immediately by the
-	 * {@code get} or {@code remove} methods.
-	 * 
-	 * @param solution the solution whose index is to be returned
-	 * @return the index of the specified solution
-	 */
-	public int indexOf(Solution solution) {
-		return data.indexOf(solution);
-	}
+    /**
+     * Returns the index of the specified solution in this population.
+     * Invocations of certain methods on this population may alter the ordering
+     * of solutions, so the index returned should be used immediately by the
+     * {@code get} or {@code remove} methods.
+     *
+     * @param solution the solution whose index is to be returned
+     * @return the index of the specified solution
+     */
+    public int indexOf(Solution solution) {
+        return data.indexOf(solution);
+    }
 
-	/**
-	 * Adds the specified solution to this population.
-	 * 
-	 * @param solution the solution to be added
-	 * @return {@code true} if the population was modified as a result of this
-	 *         method; {@code false} otherwise.
-	 */
-	public boolean add(Solution solution) {
-		return data.add(solution);
-	}
+    /**
+     * Adds the specified solution to this population.
+     *
+     * @param solution the solution to be added
+     * @return {@code true} if the population was modified as a result of this
+     * method; {@code false} otherwise.
+     */
+    public boolean add(Solution solution) {
+        return data.add(solution);
+    }
 
-	/**
-	 * Adds a collection of solutions to this population.
-	 * 
-	 * @param iterable the collection of solutions to be added
-	 * @return {@code true} if the population was modified as a result of this
-	 *         method; {@code false} otherwise
-	 */
-	public boolean addAll(Iterable<? extends Solution> iterable) {
-		boolean changed = false;
+    /**
+     * Adds a collection of solutions to this population.
+     *
+     * @param iterable the collection of solutions to be added
+     * @return {@code true} if the population was modified as a result of this
+     * method; {@code false} otherwise
+     */
+    public boolean addAll(Iterable<? extends Solution> iterable) {
+        boolean changed = false;
 
-		for (Solution solution : iterable) {
-			changed |= add(solution);
-		}
+        for (Solution solution : iterable) {
+            changed |= add(solution);
+        }
 
-		return changed;
-	}
+        return changed;
+    }
 
-	/**
-	 * Adds an array of solutions to this population.
-	 * 
-	 * @param solutions the solutions to be added
-	 * @return {@code true} if the population was modified as a result of this
-	 *         method; {@code false} otherwise
-	 */
-	public <T extends Solution> boolean addAll(T[] solutions) {
-		return addAll(Arrays.asList(solutions));
-	}
-	
-	/**
-	 * Replaces the solution at the given index.
-	 * 
-	 * @param index the index to replace
-	 * @param solution the new solution
-	 */
-	public void replace(int index, Solution solution) {
-		data.set(index, solution);
-	}
+    /**
+     * Adds an array of solutions to this population.
+     *
+     * @param solutions the solutions to be added
+     * @return {@code true} if the population was modified as a result of this
+     * method; {@code false} otherwise
+     */
+    public <T extends Solution> boolean addAll(T[] solutions) {
+        return addAll(Arrays.asList(solutions));
+    }
 
-	/**
-	 * Removes all solutions from this population.
-	 */
-	public void clear() {
-		modCount++;
-		data.clear();
-	}
+    /**
+     * Replaces the solution at the given index.
+     *
+     * @param index the index to replace
+     * @param solution the new solution
+     */
+    public void replace(int index, Solution solution) {
+        data.set(index, solution);
+    }
 
-	/**
-	 * Returns {@code true} if this population contains the specified solution;
-	 * {@code false} otherwise.
-	 * 
-	 * @param solution the solution whose presence is tested
-	 * @return {@code true} if this population contains the specified
-	 *         solution; {@code false} otherwise
-	 */
-	public boolean contains(Solution solution) {
-		return data.contains(solution);
-	}
+    /**
+     * Removes all solutions from this population.
+     */
+    public void clear() {
+        modCount++;
+        data.clear();
+    }
 
-	/**
-	 * Returns {@code true} if this population contains all the solutions in the
-	 * specified collection; {@code false} otherwise.
-	 * 
-	 * @param iterable the collection whose presence is tested
-	 * @return {@code true} if this population contains all the solutions in the
-	 *         specified collection; {@code false} otherwise
-	 */
-	public boolean containsAll(Iterable<? extends Solution> iterable) {
-		boolean missing = false;
+    /**
+     * Returns {@code true} if this population contains the specified solution;
+     * {@code false} otherwise.
+     *
+     * @param solution the solution whose presence is tested
+     * @return {@code true} if this population contains the specified solution;
+     * {@code false} otherwise
+     */
+    public boolean contains(Solution solution) {
+        return data.contains(solution);
+    }
 
-		for (Solution solution : iterable) {
-			missing |= !contains(solution);
-		}
+    /**
+     * Returns {@code true} if this population contains all the solutions in the
+     * specified collection; {@code false} otherwise.
+     *
+     * @param iterable the collection whose presence is tested
+     * @return {@code true} if this population contains all the solutions in the
+     * specified collection; {@code false} otherwise
+     */
+    public boolean containsAll(Iterable<? extends Solution> iterable) {
+        boolean missing = false;
 
-		return !missing;
-	}
+        for (Solution solution : iterable) {
+            missing |= !contains(solution);
+        }
 
-	/**
-	 * Returns {@code true} if this population contains all the solutions in the
-	 * specified array; {@code false} otherwise.
-	 * 
-	 * @param solutions the array whose presence is tested
-	 * @return {@code true} if this population contains all the solutions in the
-	 *         specified array; {@code false} otherwise
-	 */
-	public <T extends Solution> boolean containsAll(T[] solutions) {
-		return containsAll(Arrays.asList(solutions));
-	}
+        return !missing;
+    }
 
-	/**
-	 * Returns {@code true} if this population contains no solutions;
-	 * {@code false} otherwise.
-	 * 
-	 * @return {@code true} if this population contains no solutions;
-	 *         {@code false} otherwise.
-	 */
-	public boolean isEmpty() {
-		return data.isEmpty();
-	}
+    /**
+     * Returns {@code true} if this population contains all the solutions in the
+     * specified array; {@code false} otherwise.
+     *
+     * @param solutions the array whose presence is tested
+     * @return {@code true} if this population contains all the solutions in the
+     * specified array; {@code false} otherwise
+     */
+    public <T extends Solution> boolean containsAll(T[] solutions) {
+        return containsAll(Arrays.asList(solutions));
+    }
 
-	/**
-	 * Returns an iterator for accessing the solutions in this population.
-	 */
-	@Override
-	public Iterator<Solution> iterator() {
-		return new PopulationIterator();
-	}
+    /**
+     * Returns {@code true} if this population contains no solutions;
+     * {@code false} otherwise.
+     *
+     * @return {@code true} if this population contains no solutions;
+     * {@code false} otherwise.
+     */
+    public boolean isEmpty() {
+        return data.isEmpty();
+    }
 
-	/**
-	 * Removes the specified solution from this population, if present.
-	 * 
-	 * @param solution the solution to be removed
-	 * @return {@code true} if this population was modified as a result of this
-	 *         method; {@code false} otherwise
-	 */
-	public boolean remove(Solution solution) {
-		modCount++;
-		return data.remove(solution);
-	}
+    /**
+     * Returns an iterator for accessing the solutions in this population.
+     */
+    @Override
+    public Iterator<Solution> iterator() {
+        return new PopulationIterator();
+    }
 
-	/**
-	 * Removes all solutions in the specified collection from this population.
-	 * 
-	 * @param iterable the collection of solutions to be removed
-	 * @return {@code true} if this population was modified as a result of this
-	 *         method; {@code false} otherwise
-	 */
-	public boolean removeAll(Iterable<? extends Solution> iterable) {
-		boolean changed = false;
+    /**
+     * Removes the specified solution from this population, if present.
+     *
+     * @param solution the solution to be removed
+     * @return {@code true} if this population was modified as a result of this
+     * method; {@code false} otherwise
+     */
+    public boolean remove(Solution solution) {
+        modCount++;
+        return data.remove(solution);
+    }
 
-		for (Solution solution : iterable) {
-			changed |= remove(solution);
-		}
+    /**
+     * Removes all solutions in the specified collection from this population.
+     *
+     * @param iterable the collection of solutions to be removed
+     * @return {@code true} if this population was modified as a result of this
+     * method; {@code false} otherwise
+     */
+    public boolean removeAll(Iterable<? extends Solution> iterable) {
+        boolean changed = false;
 
-		return changed;
-	}
+        for (Solution solution : iterable) {
+            changed |= remove(solution);
+        }
 
-	/**
-	 * Removes all solutions in the specified array from this population.
-	 * 
-	 * @param solutions the array of solutions to be removed
-	 * @return {@code true} if this population was modified as a result of this
-	 *         method; {@code false} otherwise
-	 */
-	public <T extends Solution> boolean removeAll(T[] solutions) {
-		return removeAll(Arrays.asList(solutions));
-	}
+        return changed;
+    }
 
-	/**
-	 * Returns the number of solutions in this population.
-	 * 
-	 * @return the number of solutions in this population
-	 */
-	public int size() {
-		return data.size();
-	}
+    /**
+     * Removes all solutions in the specified array from this population.
+     *
+     * @param solutions the array of solutions to be removed
+     * @return {@code true} if this population was modified as a result of this
+     * method; {@code false} otherwise
+     */
+    public <T extends Solution> boolean removeAll(T[] solutions) {
+        return removeAll(Arrays.asList(solutions));
+    }
 
-	/**
-	 * Sorts the solutions in this population using the specified comparator.
-	 * Invocations of certain methods on this population may alter the ordering
-	 * of solutions, so the {@code get}, {@code remove} and iteration methods
-	 * should be called immediately after invoking this method.
-	 * 
-	 * @param comparator the comparator to be used for sorting
-	 */
-	public void sort(Comparator<? super Solution> comparator) {
-		Collections.sort(data, comparator);
-	}
+    /**
+     * Returns the number of solutions in this population.
+     *
+     * @return the number of solutions in this population
+     */
+    public int size() {
+        return data.size();
+    }
 
-	/**
-	 * Sorts this population using the specified comparator and removes the last
-	 * (maximum) solutions until this population's size is within the specified
-	 * size.
-	 * 
-	 * @param size the target population size after truncation
-	 * @param comparator the comparator to be used for truncation
-	 */
-	public void truncate(int size, Comparator<? super Solution> comparator) {
-		sort(comparator);
+    /**
+     * Sorts the solutions in this population using the specified comparator.
+     * Invocations of certain methods on this population may alter the ordering
+     * of solutions, so the {@code get}, {@code remove} and iteration methods
+     * should be called immediately after invoking this method.
+     *
+     * @param comparator the comparator to be used for sorting
+     */
+    public void sort(Comparator<? super Solution> comparator) {
+        Collections.sort(data, comparator);
+    }
 
-		while (data.size() > size) {
-			data.remove(data.size() - 1);
-		}
-	}
+    /**
+     * Sorts this population using the specified comparator and removes the last
+     * (maximum) solutions until this population's size is within the specified
+     * size.
+     *
+     * @param size the target population size after truncation
+     * @param comparator the comparator to be used for truncation
+     */
+    public void truncate(int size, Comparator<? super Solution> comparator) {
+        sort(comparator);
 
-	/*
+        while (data.size() > size) {
+            data.remove(data.size() - 1);
+        }
+    }
+
+    /*
 	 * The following code is based on the Apache Commons Collections library.
 	 * This is to provide a similar iterator behavior to other collection
 	 * classes without requiring the Population to implement all collection
@@ -319,101 +318,100 @@ public class Population implements Iterable<Solution> {
 	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 	 * See the License for the specific language governing permissions and
 	 * limitations under the License.
-	 */
-	
-	/**
-	 * The modification count.
-	 */
-	private int modCount;
+     */
+    /**
+     * The modification count.
+     */
+    private int modCount;
 
-	/**
-	 * An iterator over the solutions in a population.
-	 */
-	private class PopulationIterator implements Iterator<Solution> {
+    /**
+     * An iterator over the solutions in a population.
+     */
+    private class PopulationIterator implements Iterator<Solution> {
 
-		/**
-		 * The index of the next node to be returned.
-		 */
-		private int nextIndex;
+        /**
+         * The index of the next node to be returned.
+         */
+        private int nextIndex;
 
-		/**
-		 * The index of the last node that was returned.  Set to {@code -1}
-		 * if the iterator is not positioned at a valid node (i.e., at
-		 * initialization or after an element is removed).
-		 */
-		private int currentIndex;
+        /**
+         * The index of the last node that was returned. Set to {@code -1} if
+         * the iterator is not positioned at a valid node (i.e., at
+         * initialization or after an element is removed).
+         */
+        private int currentIndex;
 
-		/**
+        /**
          * The modification count that the list is expected to have. If the list
          * doesn't have this count, then a
          * {@link java.util.ConcurrentModificationException} may be thrown by
          * the operations.
          */
-		private int expectedModCount;
-		
-		/**
-		 * Constructs a population iterator.
-		 */
-		public PopulationIterator() {
-			super();
-			
-			nextIndex = 0;
-			currentIndex = -1;
-			expectedModCount = modCount;
-		}
+        private int expectedModCount;
 
-		@Override
-		public boolean hasNext() {
-			return nextIndex != size();
-		}
+        /**
+         * Constructs a population iterator.
+         */
+        public PopulationIterator() {
+            super();
 
-		@Override
-		public Solution next() {
-			checkModCount();
-			
-			if (!hasNext()) {
-				throw new NoSuchElementException();
-			}
-			
-			try {
-				Solution value = get(nextIndex);
-				currentIndex = nextIndex++;
-				return value;
-			} catch (IndexOutOfBoundsException e) {
-				throw new ConcurrentModificationException();
-			}
-		}
+            nextIndex = 0;
+            currentIndex = -1;
+            expectedModCount = modCount;
+        }
 
-		@Override
-		public void remove() {
-			checkModCount();
-			
-			if (currentIndex == -1) {
-				throw new IllegalStateException();
-			}
+        @Override
+        public boolean hasNext() {
+            return nextIndex != size();
+        }
 
-			try {
-				Population.this.remove(currentIndex);
-				nextIndex--;
-				currentIndex = -1;
-				expectedModCount++;
-			} catch (IndexOutOfBoundsException e) {
-				throw new ConcurrentModificationException();
-			}
-		}
+        @Override
+        public Solution next() {
+            checkModCount();
 
-		/**
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            try {
+                Solution value = get(nextIndex);
+                currentIndex = nextIndex++;
+                return value;
+            } catch (IndexOutOfBoundsException e) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        @Override
+        public void remove() {
+            checkModCount();
+
+            if (currentIndex == -1) {
+                throw new IllegalStateException();
+            }
+
+            try {
+                Population.this.remove(currentIndex);
+                nextIndex--;
+                currentIndex = -1;
+                expectedModCount++;
+            } catch (IndexOutOfBoundsException e) {
+                throw new ConcurrentModificationException();
+            }
+        }
+
+        /**
          * Checks the modification count of the list is the value that this
          * object expects.
-         * 
+         *
          * @throws ConcurrentModificationException if the list's modification
-         *         count is not the value that was expected
+         * count is not the value that was expected
          */
-		private void checkModCount() {
-			if (modCount != expectedModCount) {
-				throw new ConcurrentModificationException();
-			}
-		}
-	}
+        private void checkModCount() {
+            if (modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
 
 }

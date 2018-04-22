@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.moeaframework.Executor;
+import org.moeaframework.Instrumenter;
+import org.moeaframework.analysis.collector.Accumulator;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
 
@@ -22,7 +24,13 @@ public class MaOO_Test {
 
     @Test
     public void maooTest() {
-        String problemName = "ZDT3";
+        String problemName = "WFG1_2";
+
+        Instrumenter instrumenter = new Instrumenter()
+                .withProblem(problemName)
+                .withFrequency(100)
+                .attachAll();
+
         List<NondominatedPopulation> result = new Executor()
                 .withProblem(problemName)
                 .withAlgorithm("CLNSGAII")
@@ -30,7 +38,15 @@ public class MaOO_Test {
                 .withProperty("populationSize", 100)
                 .withProperty("sbx.rate", 0.7)
                 .withProperty("pm.rate", 0.01)
+                .withInstrumenter(instrumenter)
                 .runSeeds(1);
+
+        Accumulator accumulator = instrumenter.getLastAccumulator();
+
+        for (int i = 0; i < accumulator.size("NFE"); i++) {
+            System.out.println(accumulator.get("NFE", i) + "\t"
+                    + accumulator.get("Hypervolume", i));
+        }
 
         DataOutput dataOutput = new DataOutput("CLNSGAII", problemName);
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
