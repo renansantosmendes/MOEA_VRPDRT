@@ -31,87 +31,85 @@ import org.moeaframework.algorithm.AlgorithmException;
  */
 public interface Algorithm {
 
-	/**
-	 * Returns the problem being solved by this algorithm.
-	 * 
-	 * @return the problem being solved by this algorithm
-	 */
-	public Problem getProblem();
+    /**
+     * Returns the problem being solved by this algorithm.
+     *
+     * @return the problem being solved by this algorithm
+     */
+    public Problem getProblem();
 
-	/**
-	 * Returns the current best-known result.
-	 * 
-	 * @return the current best-known result
-	 */
-	public NondominatedPopulation getResult();
+    /**
+     * Returns the current best-known result.
+     *
+     * @return the current best-known result
+     */
+    public NondominatedPopulation getResult();
 
-	/**
-	 * Performs one logical step of this algorithm. The amount of work performed
-	 * depends on the implementation. One invocation of this method may produce
-	 * one or many trial solutions.
-	 * <p>
-	 * This method should not be invoked when {@link #isTerminated()} returns
-	 * {@code true}.
-	 */
-	public void step();
+    /**
+     * Performs one logical step of this algorithm. The amount of work performed
+     * depends on the implementation. One invocation of this method may produce
+     * one or many trial solutions.
+     * <p>
+     * This method should not be invoked when {@link #isTerminated()} returns
+     * {@code true}.
+     */
+    public void step();
 
-	/**
-	 * Evaluates the specified solution for the problem being solved by this
-	 * algorithm.
-	 * 
-	 * @param solution the solution to be evaluated
-	 * @see Problem#evaluate(Solution)
-	 */
-	public void evaluate(Solution solution);
+    /**
+     * Evaluates the specified solution for the problem being solved by this
+     * algorithm.
+     *
+     * @param solution the solution to be evaluated
+     * @see Problem#evaluate(Solution)
+     */
+    public void evaluate(Solution solution);
 
-	/**
-	 * Returns the number of times the {@code evaluate} method was invoked. This
-	 * is the primary measure of runtime for optimization algorithms.
-	 * 
-	 * @return the number of times the {@code evaluate} method was invoked
-	 */
-	public int getNumberOfEvaluations();
+    /**
+     * Returns the number of times the {@code evaluate} method was invoked. This
+     * is the primary measure of runtime for optimization algorithms.
+     *
+     * @return the number of times the {@code evaluate} method was invoked
+     */
+    public int getNumberOfEvaluations();
 
-	/**
-	 * Returns {@code true} if this algorithm is terminated; {@code false}
-	 * otherwise.
-	 * 
-	 * @return {@code true} if this algorithm is terminated; {@code false}
-	 *         otherwise
-	 * @see #terminate()
-	 */
-	public boolean isTerminated();
+    /**
+     * Returns {@code true} if this algorithm is terminated; {@code false}
+     * otherwise.
+     *
+     * @return {@code true} if this algorithm is terminated; {@code false}
+     * otherwise
+     * @see #terminate()
+     */
+    public boolean isTerminated();
 
-	/**
-	 * Terminates this algorithm. Implementations should use this method to
-	 * free any underlying resources; however, the {@link #getResult()} and
-	 * {@link #getNumberOfEvaluations()} methods are still required to work
-	 * after termination.
-	 */
-	public void terminate();
-	
-	/**
-	 * Returns a {@code Serializable} object representing the internal state of
-	 * this algorithm.
-	 * 
-	 * @return a {@code Serializable} object representing the internal state of
-	 *         this algorithm
-	 * @throws NotSerializableException if this algorithm does not support
-	 *         serialization
-	 * @throws AlgorithmException if this algorithm has not yet been
-	 *         initialized
-	 */
-	public Serializable getState() throws NotSerializableException;
+    /**
+     * Terminates this algorithm. Implementations should use this method to free
+     * any underlying resources; however, the {@link #getResult()} and
+     * {@link #getNumberOfEvaluations()} methods are still required to work
+     * after termination.
+     */
+    public void terminate();
 
-	/**
-	 * Sets the internal state of of this algorithm.
-	 * 
-	 * @param state the internal state of this algorithm
-	 * @throws NotSerializableException if this algorithm does not support
-	 *         serialization
-	 * @throws AlgorithmException if this algorithm has already been
-	 *         initialized
-	 */
-	public void setState(Object state) throws NotSerializableException;
+    /**
+     * Returns a {@code Serializable} object representing the internal state of
+     * this algorithm.
+     *
+     * @return a {@code Serializable} object representing the internal state of
+     * this algorithm
+     * @throws NotSerializableException if this algorithm does not support
+     * serialization
+     * @throws AlgorithmException if this algorithm has not yet been initialized
+     */
+    public Serializable getState() throws NotSerializableException;
+
+    /**
+     * Sets the internal state of of this algorithm.
+     *
+     * @param state the internal state of this algorithm
+     * @throws NotSerializableException if this algorithm does not support
+     * serialization
+     * @throws AlgorithmException if this algorithm has already been initialized
+     */
+    public void setState(Object state) throws NotSerializableException;
 
 }

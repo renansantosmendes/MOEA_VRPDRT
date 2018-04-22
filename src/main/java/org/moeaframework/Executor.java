@@ -188,7 +188,6 @@ public class Executor extends ProblemBuilder {
      */
     public Executor withInstrumenter(Instrumenter instrumenter) {
         this.instrumenter = instrumenter;
-
         return this;
     }
 
@@ -425,7 +424,6 @@ public class Executor extends ProblemBuilder {
      */
     public Executor withProperty(String key, String value) {
         properties.setString(key, value);
-
         return this;
     }
 

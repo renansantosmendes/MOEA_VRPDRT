@@ -21,6 +21,15 @@ public class Instance {
     String instanceName;
     private int numberOfVehicles = numberOfRequests;
 
+    public Instance() {
+        
+    }
+    
+    public Instance(String instanceName) {
+        this.instanceName = instanceName;
+        removeInformationFromInstanceName();
+    }
+    
     public Instance setNumberOfRequests(int numberOfRequests) {
         this.numberOfRequests = numberOfRequests;
         return this;
@@ -95,6 +104,11 @@ public class Instance {
         this.instanceName = this.buildInstaceNames();
         return instanceName;
     }
+    
+    public String getFullInstanceName(){
+        this.build();
+        return instanceName + "k" + this.vehicleCapacity + this.instanceSize;
+    }
 
     public int getNumberOfVehicles() {
         return numberOfVehicles;
@@ -128,7 +142,28 @@ public class Instance {
         return instanceName;
     }
 
+    
+    public Instance build(){
+        this.instanceName = this.buildInstaceNames();
+        return this;
+    }
+    
     public String toString() {
         return this.instanceName;
+    }
+    
+    private void removeInformationFromInstanceName(){
+        String numberOfRequestsString = this.instanceName.substring(1, 4);
+        String numberOfNodesString = this.instanceName.substring(5, 7);
+        String requestTimeWindowsString  = this.instanceName.substring(9, 11);
+        this.numberOfRequests = Integer.parseInt(numberOfRequestsString);
+        this.numberOfNodes = Integer.parseInt(numberOfNodesString);
+        this.requestTimeWindows = Integer.parseInt(requestTimeWindowsString);
+        if(this.instanceName.length() > 11){
+            this.vehicleCapacity = Integer.parseInt(this.instanceName.substring(12,13));
+            this.instanceSize = this.instanceName.substring(13,14);
+            this.instanceName = buildInstaceNames();
+            int i = 0;
+        }
     }
 }

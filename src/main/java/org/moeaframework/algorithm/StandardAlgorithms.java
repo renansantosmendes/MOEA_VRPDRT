@@ -266,7 +266,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
                     || name.equalsIgnoreCase("NSGA-II")
                     || name.equalsIgnoreCase("NSGA2")) {
                 return newNSGAII(typedProperties, problem);
-            }else if (name.equalsIgnoreCase("CLNSGAII")
+            } else if (name.equalsIgnoreCase("CLNSGAII")
                     || name.equalsIgnoreCase("CLNSGA-II")
                     || name.equalsIgnoreCase("CLNSGA2")) {
                 return newCLNSGAII(typedProperties, problem);
@@ -419,7 +419,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
         return new NSGAII(problem, population, null, selection, variation,
                 initialization);
     }
-    
+
     private Algorithm newCLNSGAII(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
@@ -440,8 +440,11 @@ public class StandardAlgorithms extends AlgorithmProvider {
         Variation variation = OperatorFactory.getInstance().getVariation(null,
                 properties, problem);
 
-        return new CLNSGAII(problem, population, null, selection, variation,
+//        return new CLNSGAII(problem, population, null, selection, variation,
+//                initialization);
+        return new CLNSGAII(problem, properties.getProperties().getProperty("instance"), population, null, selection, variation,
                 initialization);
+
     }
 
     /**

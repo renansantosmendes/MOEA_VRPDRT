@@ -67,7 +67,7 @@ public class MOEAVRPDRTTest {
         }
         return list;
     }
-    
+
     private List<Double> copyArrayToListDouble(double[] array) {
         List<Double> list = new ArrayList<>();
         int size = array.length;
@@ -89,6 +89,16 @@ public class MOEAVRPDRTTest {
     @Test
     public void moeadTest() throws FileNotFoundException {
 
+        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+
+        Instance instance = new Instance();
+        instance.setNumberOfRequests(50)
+                .setRequestTimeWindows(10)
+                .setInstanceSize("s")
+                .setNumberOfNodes(12)
+                .setNumberOfVehicles(250)
+                .setVehicleCapacity(4);
+
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLNSGAII")
@@ -98,6 +108,7 @@ public class MOEAVRPDRTTest {
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("updateUtility", 100)
+                .withProperty("instance", instance.getFullInstanceName())
                 .runSeeds(3);
 
         DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());

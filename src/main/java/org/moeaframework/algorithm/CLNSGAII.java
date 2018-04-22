@@ -5,8 +5,8 @@
  */
 package org.moeaframework.algorithm;
 
-import static Algorithms.EvolutionaryAlgorithms.getMatrixOfObjetives;
-import ProblemRepresentation.ProblemSolution;
+import InstanceReader.Instance;
+import ProblemRepresentation.*;
 import ReductionTechniques.*;
 import java.util.*;
 import org.moeaframework.core.*;
@@ -19,7 +19,7 @@ import org.moeaframework.core.operator.*;
  */
 public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         EpsilonBoxEvolutionaryAlgorithm {
-    
+
     /**
      * The selection operator. If {@code null}, this algorithm uses binary
      * tournament selection without replacement, replicating the behavior of the
@@ -31,6 +31,9 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
      * The variation operator.
      */
     private final Variation variation;
+    private final String instanceName;
+    private Instance instance;
+    private Parameters parameters;
 
     /**
      * Constructs the NSGA-II algorithm with the specified components.
@@ -42,12 +45,23 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
      * @param variation the variation operator
      * @param initialization the initialization method
      */
-    public CLNSGAII(Problem problem, NondominatedSortingPopulation population,
+//    public CLNSGAII(Problem problem, NondominatedSortingPopulation population,
+//            EpsilonBoxDominanceArchive archive, Selection selection,
+//            Variation variation, Initialization initialization) {
+//        super(problem, instanceName, population, archive, initialization);
+//        this.selection = selection;
+//        this.variation = variation;
+//        generation = 0;
+//    }
+    public CLNSGAII(Problem problem, String instanceName, NondominatedSortingPopulation population,
             EpsilonBoxDominanceArchive archive, Selection selection,
             Variation variation, Initialization initialization) {
         super(problem, population, archive, initialization);
         this.selection = selection;
         this.variation = variation;
+        this.instanceName = instanceName;
+        this.instance = new Instance(this.instanceName);
+        this.parameters = new Parameters(this.instance);
         generation = 0;
     }
 
@@ -60,10 +74,11 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         Population offspring = new Population();
         int populationSize = population.size();
 
-        HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionList(population)), 2);
-                hc.setCorrelation(CorrelationType.KENDALL).reduce()
-                        .getTransfomationList().forEach(System.out::println);
-        
+        HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionList(population),
+                parameters.getParameters()), 2);
+        hc.setCorrelation(CorrelationType.KENDALL).reduce()
+                .getTransfomationList().forEach(System.out::println);
+
         if (selection == null) {
             // recreate the original NSGA-II implementation using binary
             // tournament selection without replacement; this version works by
@@ -131,19 +146,19 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         return (NondominatedSortingPopulation) super.getPopulation();
     }
 
-    public double[][] getMatrixOfObjetives(List<ProblemSolution> population, List<Double> parameters) {
+    public double[][] getMatrixOfObjetives(List<Solution> population, List<Double> parameters) {
         int rows = population.size();
-        int columns = population.get(0).getObjectives().size();
+        int columns = population.get(0).getObjectives().length;
         double[][] matrix = new double[rows][columns];
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                matrix[i][j] = population.get(i).getObjectives().get(j) * parameters.get(j);
+                matrix[i][j] = population.get(i).getObjectives()[j] * parameters.get(j);
             }
         }
         return matrix;
     }
-    
+
     public double[][] getMatrixOfObjetives(List<Solution> population) {
         int rows = population.size();
         int columns = population.get(0).getObjectives().length;
@@ -156,10 +171,10 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         }
         return matrix;
     }
-    
-    public List<Solution> getSolutionList(NondominatedSortingPopulation population){
+
+    public List<Solution> getSolutionList(NondominatedSortingPopulation population) {
         List<Solution> populationList = new ArrayList<>();
-        for(Solution solution: population){
+        for (Solution solution : population) {
             populationList.add(solution);
         }
         return populationList;
