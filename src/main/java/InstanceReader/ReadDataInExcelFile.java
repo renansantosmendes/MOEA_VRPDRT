@@ -131,7 +131,14 @@ public class ReadDataInExcelFile {
         WorkbookSettings conf = new WorkbookSettings();
         conf.setEncoding("ISO-8859-1");
         Workbook workbook = null;
-        workbook = tryToReadWorkbook(workbook, conf);
+        try {
+            workbook = Workbook.getWorkbook(new File(this.filePath + this.nodesFile), conf);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (BiffException ex) {
+            ex.printStackTrace();
+        }
+        //workbook = tryToReadWorkbook(workbook, conf);
         Sheet sheet = workbook.getSheet(nodesData);
         int rows = sheet.getRows();
         int columns = sheet.getColumns();

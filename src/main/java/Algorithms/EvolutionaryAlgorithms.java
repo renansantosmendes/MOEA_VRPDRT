@@ -401,11 +401,11 @@ public class EvolutionaryAlgorithms {
                     dominanceAlgorithm(offspring, nonDominatedSolutions);
                     fileWithSolutions.addAll(nonDominatedSolutions);
 
-                    if (actualGeneration % 5 == 0) {
-                        hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters);
-                        hc.setCorrelation(CorrelationType.KENDALL).reduce()
-                                .getTransfomationList().forEach(System.out::println);
-                    }
+//                    if (actualGeneration % 5 == 0) {
+//                        hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters);
+//                        hc.setCorrelation(CorrelationType.KENDALL).reduce()
+//                                .getTransfomationList().forEach(System.out::println);
+//                    }
                     nonDominatedFrontiersSortingAlgorithm(offspring, nonDominatedFronts);
                     fitnessEvaluationForMultiObjectiveOptimization(offspring);
                     parentsAndOffspring.clear();

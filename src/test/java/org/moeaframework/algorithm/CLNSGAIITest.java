@@ -3,40 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package VRPDRT;
+package org.moeaframework.algorithm;
 
-import InstanceReader.*;
-import ProblemRepresentation.*;
+import InstanceReader.DataOutput;
+import InstanceReader.Instance;
+import ProblemRepresentation.ProblemSolution;
+import ProblemRepresentation.RankedList;
+import VRPDRT.MOEAVRPDRT;
+import VRPDRT.VRPDRT;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
-import org.moeaframework.*;
-import org.moeaframework.core.*;
-
+import org.moeaframework.Executor;
+import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
-import org.moeaframework.util.*;
 
 /**
  *
  * @author renansantos
  */
-public class MOEAVRPDRTTest {
-
-    private MOEAVRPDRT problem;
-    private VRPDRT subProblem;
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-    private RankedList rankedList;
-    private Instance instance = new Instance();
-
-    public MOEAVRPDRTTest() {
+public class CLNSGAIITest {
+    
+    public CLNSGAIITest() {
         problem = new MOEAVRPDRT()
                 .setNumberOfObjectives(9)
                 .setNumberOfVariables(1)
                 .setNumberOfConstraints(0);
 
         initializeData();
-
     }
+
+    private MOEAVRPDRT problem;
+    private VRPDRT subProblem;
+    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private RankedList rankedList;
+    private Instance instance = new Instance();
 
     private void initializeData() {
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
@@ -125,9 +129,11 @@ public class MOEAVRPDRTTest {
         }
         dataOutput.savePopulation(solutionPopulation);
 
+        Assert.assertEquals(path, "x");
 //        double[] referencePoint = {100000.0, 100000.0};
 //        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
 //        System.out.println(hp.evaluate(combinedPareto));
     }
 
+    
 }

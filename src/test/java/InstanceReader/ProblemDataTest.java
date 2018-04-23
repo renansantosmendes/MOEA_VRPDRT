@@ -21,19 +21,19 @@ public class ProblemDataTest {
     @Test
     public void test1() {
         
-        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-        Instance instance = new Instance();
-        instance.setNumberOfRequests(50)
-                .setRequestTimeWindows(10)
-                .setInstanceSize("s")
-                .setNumberOfNodes(12)
-                .setNumberOfVehicles(250)
-                .setVehicleCapacity(4);
-
-        ReadDataInExcelFile reader = new ReadDataInExcelFile(path, instance);
-        System.out.println(reader.getAdjacenciesListOfTimes());
-        System.out.println(reader.getListOfNodes());
-        Assert.assertEquals(12, reader.getListOfNodes().size());
+//        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//        Instance instance = new Instance();
+//        instance.setNumberOfRequests(50)
+//                .setRequestTimeWindows(10)
+//                .setInstanceSize("s")
+//                .setNumberOfNodes(12)
+//                .setNumberOfVehicles(250)
+//                .setVehicleCapacity(4);
+//
+//        ReadDataInExcelFile reader = new ReadDataInExcelFile(path, instance);
+//        System.out.println(reader.getAdjacenciesListOfTimes());
+//        System.out.println(reader.getListOfNodes());
+//        Assert.assertEquals(12, reader.getListOfNodes().size());
     }
 
 }

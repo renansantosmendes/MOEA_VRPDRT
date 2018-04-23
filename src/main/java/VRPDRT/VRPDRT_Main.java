@@ -50,8 +50,8 @@ public class VRPDRT_Main {
 
     public static void main(String[] args) throws ApiException, InterruptedException, IOException, BiffException {
         String directionsApiKey = "AIzaSyD9W0em7H723uVOMD6QFe_1Mns71XAi5JU";
-        String filePath = "/home/renansantos/Área de Trabalho/Excel Instances/";
-//        String filePath = "/home/rmendes/VRPDRT/";
+//        String filePath = "/home/renansantos/Área de Trabalho/Excel Instances/";
+        String filePath = "/home/rmendes/VRPDRT/";
 
         int numberOfRequests = 50;
         int requestTimeWindows = 10;
@@ -66,8 +66,8 @@ public class VRPDRT_Main {
         final Integer numberOfVehicles = 50;
 
         Integer populationSize = 100;
-        Integer maximumNumberOfGenerations = 10;
-        Integer maximumNumberOfExecutions = 1;
+        Integer maximumNumberOfGenerations = 1000;
+        Integer maximumNumberOfExecutions = 30;
         double probabilityOfMutation = 0.02;
         double probabilityOfCrossover = 0.7;
         int fileSize = populationSize;
@@ -79,12 +79,12 @@ public class VRPDRT_Main {
 //        
         new ScriptGenerator(instanceName, instanceSize, vehicleCapacity).generate("1d", "large");
 
-        numberOfNodes = readProblemData(instanceName, nodesData, adjacenciesData, requests, distanceBetweenNodes,
-                timeBetweenNodes, Pmais, Pmenos, requestsWhichBoardsInNode, requestsWhichLeavesInNode, setOfNodes,
-                numberOfNodes, loadIndexList);
-//        numberOfNodes = readProblemUsingExcelData(filePath, instanceName, nodesData, adjacenciesData, requests, distanceBetweenNodes,
+//        numberOfNodes = readProblemData(instanceName, nodesData, adjacenciesData, requests, distanceBetweenNodes,
 //                timeBetweenNodes, Pmais, Pmenos, requestsWhichBoardsInNode, requestsWhichLeavesInNode, setOfNodes,
 //                numberOfNodes, loadIndexList);
+        numberOfNodes = readProblemUsingExcelData(filePath, instanceName, nodesData, adjacenciesData, requests, distanceBetweenNodes,
+                timeBetweenNodes, Pmais, Pmenos, requestsWhichBoardsInNode, requestsWhichLeavesInNode, setOfNodes,
+                numberOfNodes, loadIndexList);
 
         Algorithms.printProblemInformations(requests, numberOfVehicles, vehicleCapacity, instanceName, adjacenciesData, nodesData);
         Methods.initializeFleetOfVehicles(setOfVehicles, numberOfVehicles);
