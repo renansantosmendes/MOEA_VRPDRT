@@ -17,8 +17,10 @@
  */
 package org.moeaframework.core;
 
+import ProblemRepresentation.Parameters;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -45,7 +47,7 @@ public class Solution implements Serializable {
     /**
      * The objectives of this solution.
      */
-    private final double[] objectives;
+    private double[] objectives;
 
     /**
      * The constraints of this solution.
@@ -230,13 +232,43 @@ public class Solution implements Serializable {
      *         getNumberOfObjectives()}
      */
     public void setObjectives(double[] objectives) {
+        this.objectives = new double[objectives.length];
+        
         if (objectives.length != this.objectives.length) {
-            throw new IllegalArgumentException("invalid number of objectives");
+            //throw new IllegalArgumentException("invalid number of objectives");
         }
 
         for (int i = 0; i < objectives.length; i++) {
             this.objectives[i] = objectives[i];
         }
+    }
+    
+    public void reduceObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
+        
+        List<Double> parameters = parametersOriginal.getParameters();
+//        ProblemSolution ps2 = 
+        double[] newObjectives = new double[newDimension];
+        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * getObjective(0)
+                + parameters.get(1) * matrix.get(0).get(1) * getObjective(1)
+                + parameters.get(2) * matrix.get(0).get(2) * getObjective(2)
+                + parameters.get(3) * matrix.get(0).get(3) * getObjective(3)
+                + parameters.get(4) * matrix.get(0).get(4) * getObjective(4)
+                + parameters.get(5) * matrix.get(0).get(5) * getObjective(5)
+                + parameters.get(6) * matrix.get(0).get(6) * getObjective(6)
+                + parameters.get(7) * matrix.get(0).get(7) * getObjective(7)
+                + parameters.get(8) * matrix.get(0).get(8) * getObjective(8);
+
+        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * getObjective(0)
+                + parameters.get(1) * matrix.get(1).get(1) * getObjective(1)
+                + parameters.get(2) * matrix.get(1).get(2) * getObjective(2)
+                + parameters.get(3) * matrix.get(1).get(3) * getObjective(3)
+                + parameters.get(4) * matrix.get(1).get(4) * getObjective(4)
+                + parameters.get(5) * matrix.get(1).get(5) * getObjective(5)
+                + parameters.get(6) * matrix.get(1).get(6) * getObjective(6)
+                + parameters.get(7) * matrix.get(1).get(7) * getObjective(7)
+                + parameters.get(8) * matrix.get(1).get(8) * getObjective(8);
+
+        this.objectives = newObjectives;
     }
 
     /**

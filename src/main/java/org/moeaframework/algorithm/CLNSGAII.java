@@ -63,14 +63,13 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         generation = 0;
 
         instance.setNumberOfVehicles(250);
-        
+
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
         rankedList.setAlphaD(0.20)
                 .setAlphaP(0.15)
                 .setAlphaT(0.10)
                 .setAlphaV(0.55);
 
-        
         problemTest = new VRPDRT(instance, path, rankedList);
     }
 
@@ -88,11 +87,9 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         hc.setCorrelation(CorrelationType.KENDALL).reduce()
                 .getTransfomationList().forEach(System.out::println);
 
-        Solution solutionTest = population.get(0);
-        int[] array = EncodingUtils.getPermutation(solutionTest.getVariable(0));
-        List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-        ProblemSolution ps = problemTest.rebuildSolution(solutionRepresentation, problemTest.getRequestListCopy());
-        
+        population.forEach(s -> s.reduceObjectives(parameters, hc.getTransfomationList(), 2));
+       
+
         if (selection == null) {
             // recreate the original NSGA-II implementation using binary
             // tournament selection without replacement; this version works by
@@ -202,29 +199,30 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         return populationList;
     }
 
-    public void evaluateAggregatedObjectiveFunctions(List<Double> parameters, List<List<Integer>> matrix, Solution solution, ProblemSolution ps) {
+    public void evaluateAggregatedObjectiveFunctions(List<List<Integer>> matrix, Solution solution) {
 
+        List<Double> parameters = this.parameters.getParameters();
 //        ProblemSolution ps2 = 
         double[] objectives = new double[2];
-        objectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.getTotalDistance()
-                + parameters.get(1) * matrix.get(0).get(1) * ps.getTotalDeliveryDelay()
-                + parameters.get(2) * matrix.get(0).get(2) * ps.getTotalRouteTimeChargeBanlance()
-                + parameters.get(3) * matrix.get(0).get(3) * ps.getNumberOfNonAttendedRequests()
-                + parameters.get(4) * matrix.get(0).get(4) * ps.getNumberOfVehicles()
-                + parameters.get(5) * matrix.get(0).get(5) * ps.getTotalTravelTime()
-                + parameters.get(6) * matrix.get(0).get(6) * ps.getTotalWaintingTime()
-                + parameters.get(7) * matrix.get(0).get(7) * ps.getDeliveryTimeWindowAntecipation()
-                + parameters.get(8) * matrix.get(0).get(8) * ps.getTotalOccupationRate();
+        objectives[0] = parameters.get(0) * matrix.get(0).get(0) * solution.getObjective(0)
+                + parameters.get(1) * matrix.get(0).get(1) * solution.getObjective(1)
+                + parameters.get(2) * matrix.get(0).get(2) * solution.getObjective(2)
+                + parameters.get(3) * matrix.get(0).get(3) * solution.getObjective(3)
+                + parameters.get(4) * matrix.get(0).get(4) * solution.getObjective(4)
+                + parameters.get(5) * matrix.get(0).get(5) * solution.getObjective(5)
+                + parameters.get(6) * matrix.get(0).get(6) * solution.getObjective(6)
+                + parameters.get(7) * matrix.get(0).get(7) * solution.getObjective(7)
+                + parameters.get(8) * matrix.get(0).get(8) * solution.getObjective(8);
 
-        objectives[1] = parameters.get(0) * matrix.get(1).get(0) * ps.getTotalDistance()
-                + parameters.get(1) * matrix.get(1).get(1) * ps.getTotalDeliveryDelay()
-                + parameters.get(2) * matrix.get(1).get(2) * ps.getTotalRouteTimeChargeBanlance()
-                + parameters.get(3) * matrix.get(1).get(3) * ps.getNumberOfNonAttendedRequests()
-                + parameters.get(4) * matrix.get(1).get(4) * ps.getNumberOfVehicles()
-                + parameters.get(5) * matrix.get(1).get(5) * ps.getTotalTravelTime()
-                + parameters.get(6) * matrix.get(1).get(6) * ps.getTotalWaintingTime()
-                + parameters.get(7) * matrix.get(1).get(7) * ps.getDeliveryTimeWindowAntecipation()
-                + parameters.get(8) * matrix.get(1).get(8) * ps.getTotalOccupationRate();
+        objectives[1] = parameters.get(0) * matrix.get(1).get(0) * solution.getObjective(0)
+                + parameters.get(1) * matrix.get(1).get(1) * solution.getObjective(1)
+                + parameters.get(2) * matrix.get(1).get(2) * solution.getObjective(2)
+                + parameters.get(3) * matrix.get(1).get(3) * solution.getObjective(3)
+                + parameters.get(4) * matrix.get(1).get(4) * solution.getObjective(4)
+                + parameters.get(5) * matrix.get(1).get(5) * solution.getObjective(5)
+                + parameters.get(6) * matrix.get(1).get(6) * solution.getObjective(6)
+                + parameters.get(7) * matrix.get(1).get(7) * solution.getObjective(7)
+                + parameters.get(8) * matrix.get(1).get(8) * solution.getObjective(8);
 
         solution.setObjectives(objectives);
 
