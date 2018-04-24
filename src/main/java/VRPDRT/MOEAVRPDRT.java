@@ -86,6 +86,7 @@ public class MOEAVRPDRT implements Problem {
         List<Integer> solutionRepresentation = copyArrayToListInteger(array);
         ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getRequestListCopy());
         solution.setObjectives(copyListToArrayDouble(ps.getObjectives()));
+        solution.setProblemSolution(ps);
     }
 
     @Override

@@ -137,8 +137,11 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
             }
         }
 
+        
         evaluateAll(offspring);
-
+        offspring.forEach(s -> s.reduceObjectives(parameters, hc.getTransfomationList(), 2));
+        //System.out.println(offspring.get(0).getObjective(4));
+        
         if (archive != null) {
             archive.addAll(offspring);
         }

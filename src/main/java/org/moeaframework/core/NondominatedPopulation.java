@@ -232,6 +232,10 @@ public class NondominatedPopulation extends Population {
     protected static double distance(Solution s1, Solution s2) {
         double distance = 0.0;
 
+        if(s1.getNumberOfObjectives() == 2){
+            int i = 0;
+        }
+        
         for (int i = 0; i < s1.getNumberOfObjectives(); i++) {
             distance += Math.pow(s1.getObjective(i) - s2.getObjective(i), 2.0);
         }

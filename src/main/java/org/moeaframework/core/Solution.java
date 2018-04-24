@@ -18,6 +18,7 @@
 package org.moeaframework.core;
 
 import ProblemRepresentation.Parameters;
+import ProblemRepresentation.ProblemSolution;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,7 @@ public class Solution implements Serializable {
      */
     private final Map<String, Serializable> attributes;
 
+    private ProblemSolution ps = new ProblemSolution();
     /**
      * Constructs a solution with the specified number of variables and
      * objectives with no constraints.
@@ -243,30 +245,56 @@ public class Solution implements Serializable {
         }
     }
     
+    public void setProblemSolution(ProblemSolution solution){
+        this.ps.setSolution(solution);
+    }
+    
     public void reduceObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
         
         List<Double> parameters = parametersOriginal.getParameters();
 //        ProblemSolution ps2 = 
         double[] newObjectives = new double[newDimension];
-        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * getObjective(0)
-                + parameters.get(1) * matrix.get(0).get(1) * getObjective(1)
-                + parameters.get(2) * matrix.get(0).get(2) * getObjective(2)
-                + parameters.get(3) * matrix.get(0).get(3) * getObjective(3)
-                + parameters.get(4) * matrix.get(0).get(4) * getObjective(4)
-                + parameters.get(5) * matrix.get(0).get(5) * getObjective(5)
-                + parameters.get(6) * matrix.get(0).get(6) * getObjective(6)
-                + parameters.get(7) * matrix.get(0).get(7) * getObjective(7)
-                + parameters.get(8) * matrix.get(0).get(8) * getObjective(8);
+//        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.get
+//                + parameters.get(1) * matrix.get(0).get(1) * getObjective(1)
+//                + parameters.get(2) * matrix.get(0).get(2) * getObjective(2)
+//                + parameters.get(3) * matrix.get(0).get(3) * getObjective(3)
+//                + parameters.get(4) * matrix.get(0).get(4) * getObjective(4)
+//                + parameters.get(5) * matrix.get(0).get(5) * getObjective(5)
+//                + parameters.get(6) * matrix.get(0).get(6) * getObjective(6)
+//                + parameters.get(7) * matrix.get(0).get(7) * getObjective(7)
+//                + parameters.get(8) * matrix.get(0).get(8) * getObjective(8);
+//
+//        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * getObjective(0)
+//                + parameters.get(1) * matrix.get(1).get(1) * getObjective(1)
+//                + parameters.get(2) * matrix.get(1).get(2) * getObjective(2)
+//                + parameters.get(3) * matrix.get(1).get(3) * getObjective(3)
+//                + parameters.get(4) * matrix.get(1).get(4) * getObjective(4)
+//                + parameters.get(5) * matrix.get(1).get(5) * getObjective(5)
+//                + parameters.get(6) * matrix.get(1).get(6) * getObjective(6)
+//                + parameters.get(7) * matrix.get(1).get(7) * getObjective(7)
+//                + parameters.get(8) * matrix.get(1).get(8) * getObjective(8);
+        
+        
+        
+        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.getTotalDistance()
+                + parameters.get(1) * matrix.get(0).get(1) * ps.getTotalDeliveryDelay()
+                + parameters.get(2) * matrix.get(0).get(2) * ps.getTotalRouteTimeChargeBanlance()
+                + parameters.get(3) * matrix.get(0).get(3) * ps.getNumberOfNonAttendedRequests()
+                + parameters.get(4) * matrix.get(0).get(4) * ps.getNumberOfVehicles()
+                + parameters.get(5) * matrix.get(0).get(5) * ps.getTotalTravelTime()
+                + parameters.get(6) * matrix.get(0).get(6) * ps.getTotalWaintingTime()
+                + parameters.get(7) * matrix.get(0).get(7) * ps.getDeliveryTimeWindowAntecipation()
+                + parameters.get(8) * matrix.get(0).get(8) * ps.getTotalOccupationRate();
 
-        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * getObjective(0)
-                + parameters.get(1) * matrix.get(1).get(1) * getObjective(1)
-                + parameters.get(2) * matrix.get(1).get(2) * getObjective(2)
-                + parameters.get(3) * matrix.get(1).get(3) * getObjective(3)
-                + parameters.get(4) * matrix.get(1).get(4) * getObjective(4)
-                + parameters.get(5) * matrix.get(1).get(5) * getObjective(5)
-                + parameters.get(6) * matrix.get(1).get(6) * getObjective(6)
-                + parameters.get(7) * matrix.get(1).get(7) * getObjective(7)
-                + parameters.get(8) * matrix.get(1).get(8) * getObjective(8);
+        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * ps.getTotalDistance()
+                + parameters.get(1) * matrix.get(1).get(1) * ps.getTotalDeliveryDelay()
+                + parameters.get(2) * matrix.get(1).get(2) * ps.getTotalRouteTimeChargeBanlance()
+                + parameters.get(3) * matrix.get(1).get(3) * ps.getNumberOfNonAttendedRequests()
+                + parameters.get(4) * matrix.get(1).get(4) * ps.getNumberOfVehicles()
+                + parameters.get(5) * matrix.get(1).get(5) * ps.getTotalTravelTime()
+                + parameters.get(6) * matrix.get(1).get(6) * ps.getTotalWaintingTime()
+                + parameters.get(7) * matrix.get(1).get(7) * ps.getDeliveryTimeWindowAntecipation()
+                + parameters.get(8) * matrix.get(1).get(8) * ps.getTotalOccupationRate();
 
         this.objectives = newObjectives;
     }
