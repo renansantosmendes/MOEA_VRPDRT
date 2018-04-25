@@ -7,6 +7,7 @@ package VRPDRT;
 
 import InstanceReader.*;
 import ProblemRepresentation.*;
+import ReductionTechniques.HierarchicalCluster;
 import java.util.*;
 import org.moeaframework.core.*;
 import org.moeaframework.core.variable.*;
@@ -109,6 +110,10 @@ public class MOEAVRPDRT implements Problem {
         return solution;
     }
 
+    public void setHierarchicalCluster(HierarchicalCluster hc){
+        
+    }
+    
     private int[] copyListToArrayInteger(List<Integer> list) {
         int size = list.size();
         int[] array = new int[size];

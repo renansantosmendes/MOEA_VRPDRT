@@ -5,6 +5,12 @@
  */
 package org.moeaframework.algorithm;
 
+import InstanceReader.Instance;
+import ProblemRepresentation.Parameters;
+import ProblemRepresentation.RankedList;
+import ReductionTechniques.CorrelationType;
+import ReductionTechniques.HierarchicalCluster;
+import VRPDRT.VRPDRT;
 import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,11 +18,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.math3.util.MathArrays;
 import org.moeaframework.core.FrameworkException;
 import org.moeaframework.core.Initialization;
 import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.NondominatedSortingPopulation;
 import org.moeaframework.core.PRNG;
+import org.moeaframework.core.Population;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variation;
@@ -30,7 +39,8 @@ import org.moeaframework.util.weights.WeightGenerator;
  * @author renansantos
  */
 public class CLMOEAD extends AbstractAlgorithm {
-     private static class Individual implements Serializable {
+
+    private static class Individual implements Serializable {
 
         private static final long serialVersionUID = 868794189268472009L;
 
@@ -191,7 +201,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         }
 
     }
-    
+
     /**
      * The current population.
      */
@@ -252,6 +262,16 @@ public class CLMOEAD extends AbstractAlgorithm {
      */
     private int generation;
 
+    private Instance instance;
+    private Parameters parameters;
+    private  int numberOfReducedObjectives = 2;
+    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private VRPDRT problemTest;
+    private RankedList rankedList;
+    private String instanceName;
+    private HierarchicalCluster hc;
+    
+
     /**
      * Constructs the MOEA/D algorithm with the specified components. This
      * version of MOEA/D uses utility-based search as described in [2].
@@ -268,10 +288,10 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta, int updateUtility) {
-        this(problem, neighborhoodSize, null, initialization, variation, delta,
+        this(problem, instance, clusters, neighborhoodSize, null, initialization, variation, delta,
                 eta, updateUtility);
     }
 
@@ -289,10 +309,10 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta) {
-        this(problem, neighborhoodSize, initialization, variation, delta, eta,
+        this(problem, instance, clusters, neighborhoodSize, initialization, variation, delta, eta,
                 -1);
     }
 
@@ -314,7 +334,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instanceName, int clusters, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta, int updateUtility) {
         super(problem);
@@ -335,6 +355,19 @@ public class CLMOEAD extends AbstractAlgorithm {
         } else {
             useDE = false;
         }
+        this.instanceName = instanceName;
+        this.instance = new Instance(this.instanceName);
+        this.parameters = new Parameters(this.instance);
+        this.numberOfReducedObjectives = clusters;
+        instance.setNumberOfVehicles(250);
+
+        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+        rankedList.setAlphaD(0.20)
+                .setAlphaP(0.15)
+                .setAlphaT(0.10)
+                .setAlphaV(0.55);
+
+        problemTest = new VRPDRT(instance, path, rankedList);
     }
 
     /**
@@ -353,13 +386,13 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta) {
-        this(problem, neighborhoodSize, weightGenerator, initialization,
+        this(problem, instance, clusters, neighborhoodSize, weightGenerator, initialization,
                 variation, delta, eta, -1);
     }
-    
+
     @Override
     public void initialize() {
         super.initialize();
@@ -367,7 +400,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         Solution[] initialSolutions = initialization.initialize();
 
         initializePopulation(initialSolutions.length);
-        
+
         initializeNeighborhoods();
         initializeIdealPoint();
         evaluateAll(initialSolutions);
@@ -383,9 +416,15 @@ public class CLMOEAD extends AbstractAlgorithm {
                     population.get(i).getSolution(),
                     population.get(i).getWeights()));
         }
-        
-        System.out.println("initial population");
-        population.forEach(ind -> System.out.println(ind.solution));
+
+//        System.out.println("initial population");
+//        population.forEach(ind -> System.out.println(ind.solution));
+        hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromPopulationIndividuals(population),
+                parameters.getParameters()), this.numberOfReducedObjectives);
+
+        hc.setCorrelation(CorrelationType.KENDALL);
+        hc.reduce().getTransfomationList().forEach(System.out::println);
+        //this.problem.setHierarchicalCluster(hc);
     }
 
     /**
@@ -794,4 +833,66 @@ public class CLMOEAD extends AbstractAlgorithm {
         numberOfEvaluations = state.getNumberOfEvaluations();
         generation = state.getGeneration();
     }
+
+    public double[][] getMatrixOfObjetives(List<Solution> population, List<Double> parameters) {
+        int rows = population.size();
+        int columns = population.get(0).getObjectives().length;
+        double[][] matrix = new double[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrix[i][j] = population.get(i).getObjectives()[j] * parameters.get(j);
+            }
+        }
+        return matrix;
+    }
+
+    public double[][] getMatrixOfObjetives(List<Solution> population) {
+        int rows = population.size();
+        int columns = population.get(0).getObjectives().length;
+        double[][] matrix = new double[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrix[i][j] = population.get(i).getObjectives()[j];
+            }
+        }
+        return matrix;
+    }
+
+    private void printMatrix(double[][] matrix) {
+        int rows = population.size();
+        int columns = population.get(0).getSolution().getNumberOfObjectives();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public List<Solution> getSolutionList(NondominatedSortingPopulation population) {
+        List<Solution> populationList = new ArrayList<>();
+        for (Solution solution : population) {
+            populationList.add(solution);
+        }
+        return populationList;
+    }
+
+    public List<Solution> getSolutionListFromPopulation(Population population) {
+        List<Solution> populationList = new ArrayList<>();
+        for (Solution solution : population) {
+            populationList.add(solution);
+        }
+        return populationList;
+    }
+
+    public List<Solution> getSolutionListFromPopulationIndividuals(List<CLMOEAD.Individual> population) {
+        List<Solution> populationList = new ArrayList<>();
+        for (CLMOEAD.Individual solution : population) {
+            populationList.add(solution.getSolution());
+        }
+        return populationList;
+    }
+
 }

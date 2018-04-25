@@ -634,7 +634,10 @@ public class StandardAlgorithms extends AlgorithmProvider {
 
         CLMOEAD algorithm = new CLMOEAD(
                 problem,
+                properties.getProperties().getProperty("instance"),
+                properties.getInt("clusters",2),
                 neighborhoodSize,
+                null,
                 initialization,
                 variation,
                 properties.getDouble("delta", 0.9),

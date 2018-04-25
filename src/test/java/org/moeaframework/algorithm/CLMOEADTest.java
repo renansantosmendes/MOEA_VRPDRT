@@ -88,7 +88,7 @@ public class CLMOEADTest {
     }
 
     @Test
-    public void moeadTest() throws FileNotFoundException {
+    public void clmoeadTest() throws FileNotFoundException {
 
         String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
 
@@ -104,11 +104,12 @@ public class CLMOEADTest {
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLMOEAD")
                 .withMaxEvaluations(300)
-                .withProperty("populationSize", 10)
+                .withProperty("populationSize", 20)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
+                .withProperty("clusters", 6)
                 .runSeeds(3);
 
         DataOutput dataOutput = new DataOutput("CLMOEAD", instance.getInstanceName());
