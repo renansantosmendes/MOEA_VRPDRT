@@ -84,7 +84,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
 
         HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromPopulation(population),
                 parameters.getParameters()), this.numberOfReducedObjectives);
-        
+        hc.printDissimilarity();
         hc.setCorrelation(CorrelationType.KENDALL);
         hc.reduce().getTransfomationList().forEach(System.out::println);
 
@@ -149,7 +149,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         population.addAll(offspring);
         population.truncate(populationSize);
         
-       // population.forEach(System.out::println);
+        //population.forEach(System.out::println);
         population.forEach(s -> s.increaseNumberOfObjectives());
         //population.forEach(System.out::println);
     }

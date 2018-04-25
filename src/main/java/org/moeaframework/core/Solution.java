@@ -249,8 +249,6 @@ public class Solution implements Serializable {
 
     public void setProblemSolution(ProblemSolution solution) {
         this.ps.setSolution((ProblemSolution) solution.clone());
-//        this.ps.setSolution(solution);
-        System.out.println("hasCode() = " +ps.hashCode());
     }
 
     public void reduceNumberOfObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {

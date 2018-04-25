@@ -27,6 +27,28 @@ public class Route implements Comparable<Route> {
         occupationRate = route.getOccupationRate();
     }
 
+    public Route(List<Integer> nodesVisitationList, List<Integer> vehicleOccupationWhenLeavesNode, 
+            List<Long> timeListTheVehicleLeavesTheNode, List<Request> requestAttendanceList, Integer tempoExtra, 
+            double occupationRate) {
+        
+        this();
+        this.nodesVisitationList.clear();
+        this.nodesVisitationList.addAll(nodesVisitationList);
+        
+        this.vehicleOccupationWhenLeavesNode.clear();
+        this.vehicleOccupationWhenLeavesNode.addAll(vehicleOccupationWhenLeavesNode);
+        
+        this.timeListTheVehicleLeavesTheNode.clear();
+        this.timeListTheVehicleLeavesTheNode.addAll(timeListTheVehicleLeavesTheNode);
+        
+        this.requestAttendanceList.clear();
+        this.requestAttendanceList.addAll(requestAttendanceList);
+        this.tempoExtra = tempoExtra;
+        this.occupationRate = occupationRate;
+    }
+    
+    
+
     public List<Integer> getNodesVisitationList() {
         return nodesVisitationList;
     }
@@ -225,6 +247,20 @@ public class Route implements Comparable<Route> {
             return -1;
         }
         return 0;
+    }
+    
+    @Override
+    public Object clone(){
+        
+        List<Request> requestListClone = new ArrayList<>();
+        
+        for(Request request: this.requestAttendanceList){
+            requestListClone.add(request);
+        }
+        
+        return new Route( nodesVisitationList, vehicleOccupationWhenLeavesNode, 
+            timeListTheVehicleLeavesTheNode, requestListClone,  tempoExtra, 
+             occupationRate);
     }
 
 }

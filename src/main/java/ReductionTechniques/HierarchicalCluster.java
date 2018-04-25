@@ -238,7 +238,11 @@ public class HierarchicalCluster {
         dissimilarity = new double[similarity.length][similarity.length];
         for (int j = 0; j < similarity.length; j++) {
             for (int i = 0; i < similarity.length; i++) {
-                dissimilarity[j][i] = 1 - similarity[j][i];
+                if(similarity[j][i] != Double.NaN){
+                    dissimilarity[j][i] = 1 - similarity[j][i];
+                }else{
+                    dissimilarity[j][i] = 1;
+                }
             }
         }
     }
@@ -268,6 +272,7 @@ public class HierarchicalCluster {
         if(column == 0 && row == 0){
             System.out.println("problem with dissimilarity = " + minDissimilarity);
             this.printMatrixData();
+            this.printDissimilarity();
         }
         list.add(row);
         list.add(column);

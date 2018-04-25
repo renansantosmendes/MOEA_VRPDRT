@@ -846,7 +846,13 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 
     @Override
     public Object clone() {
-        return new ProblemSolution(objectives, setOfRoutes, objectiveFunction, totalDistance,
+        
+        Set<Route> routesClone = new HashSet<>();
+        for (Route route : setOfRoutes) {
+            routesClone.add((Route) route.clone());
+        }
+        
+        return new ProblemSolution(objectives, routesClone, objectiveFunction, totalDistance,
                 totalDeliveryDelay, numberOfNonAttendedRequests, numberOfVehicles, totalTravelTime,
                 totalWaintingTime, deliveryTimeWindowAntecipation, totalRouteTimeChargeBanlance,
                 totalOccupationRate, totalDistanceNormalized, totalDeliveryDelayNormalized,
