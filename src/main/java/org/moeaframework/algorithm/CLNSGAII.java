@@ -84,11 +84,12 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
 
         HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromPopulation(population),
                 parameters.getParameters()), this.numberOfReducedObjectives);
-        hc.setCorrelation(CorrelationType.KENDALL).reduce()
-                .getTransfomationList().forEach(System.out::println);
+        
+        hc.setCorrelation(CorrelationType.KENDALL);
+        hc.reduce().getTransfomationList().forEach(System.out::println);
 
-        population.forEach(s -> s.reduceObjectives(parameters, hc.getTransfomationList(), 2));
-       
+        population.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
+        
 
         if (selection == null) {
             // recreate the original NSGA-II implementation using binary
@@ -136,11 +137,8 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
                 offspring.addAll(variation.evolve(parents));
             }
         }
-
-        
         evaluateAll(offspring);
-        offspring.forEach(s -> s.reduceObjectives(parameters, hc.getTransfomationList(), 2));
-        //System.out.println(offspring.get(0).getObjective(4));
+        offspring.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
         
         if (archive != null) {
             archive.addAll(offspring);
@@ -148,6 +146,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
 
         population.addAll(offspring);
         population.truncate(populationSize);
+        population.forEach(s -> s.increaseNumberOfObjectives());
     }
 
     @Override
@@ -184,6 +183,17 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
             }
         }
         return matrix;
+    }
+    
+    private void printMatrix(double[][] matrix){
+        int rows = population.size();
+        int columns = population.get(0).getNumberOfObjectives();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     public List<Solution> getSolutionList(NondominatedSortingPopulation population) {

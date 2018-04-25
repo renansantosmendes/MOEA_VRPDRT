@@ -129,7 +129,7 @@ public class CLNSGAIITest {
         }
         dataOutput.savePopulation(solutionPopulation);
 
-        Assert.assertEquals(path, "x");
+        //Assert.assertEquals(path, "x");
 //        double[] referencePoint = {100000.0, 100000.0};
 //        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
 //        System.out.println(hp.evaluate(combinedPareto));

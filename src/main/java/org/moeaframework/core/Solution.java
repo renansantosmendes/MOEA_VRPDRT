@@ -249,33 +249,11 @@ public class Solution implements Serializable {
         this.ps.setSolution(solution);
     }
     
-    public void reduceObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
+    public void reduceNumberOfObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
         
         List<Double> parameters = parametersOriginal.getParameters();
-//        ProblemSolution ps2 = 
         double[] newObjectives = new double[newDimension];
-//        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.get
-//                + parameters.get(1) * matrix.get(0).get(1) * getObjective(1)
-//                + parameters.get(2) * matrix.get(0).get(2) * getObjective(2)
-//                + parameters.get(3) * matrix.get(0).get(3) * getObjective(3)
-//                + parameters.get(4) * matrix.get(0).get(4) * getObjective(4)
-//                + parameters.get(5) * matrix.get(0).get(5) * getObjective(5)
-//                + parameters.get(6) * matrix.get(0).get(6) * getObjective(6)
-//                + parameters.get(7) * matrix.get(0).get(7) * getObjective(7)
-//                + parameters.get(8) * matrix.get(0).get(8) * getObjective(8);
-//
-//        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * getObjective(0)
-//                + parameters.get(1) * matrix.get(1).get(1) * getObjective(1)
-//                + parameters.get(2) * matrix.get(1).get(2) * getObjective(2)
-//                + parameters.get(3) * matrix.get(1).get(3) * getObjective(3)
-//                + parameters.get(4) * matrix.get(1).get(4) * getObjective(4)
-//                + parameters.get(5) * matrix.get(1).get(5) * getObjective(5)
-//                + parameters.get(6) * matrix.get(1).get(6) * getObjective(6)
-//                + parameters.get(7) * matrix.get(1).get(7) * getObjective(7)
-//                + parameters.get(8) * matrix.get(1).get(8) * getObjective(8);
-        
-        
-        
+
         newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.getTotalDistance()
                 + parameters.get(1) * matrix.get(0).get(1) * ps.getTotalDeliveryDelay()
                 + parameters.get(2) * matrix.get(0).get(2) * ps.getTotalRouteTimeChargeBanlance()
@@ -299,6 +277,11 @@ public class Solution implements Serializable {
         this.objectives = newObjectives;
     }
 
+    
+    public void increaseNumberOfObjectives(){
+        this.objectives = this.ps.getObjectivesArray();
+    }
+    
     /**
      * Returns an array containing the objectives of this solution. Modifying
      * the returned array will not modify the internal state of this solution.

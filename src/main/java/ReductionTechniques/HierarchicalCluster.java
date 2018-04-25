@@ -74,7 +74,7 @@ public class HierarchicalCluster {
         this.clusters = new ArrayList<>();
         this.listData = readData();
     }
-    
+
     public List<List<Double>> getListData() {
         return listData;
     }
@@ -98,16 +98,16 @@ public class HierarchicalCluster {
     public List<List<Integer>> getTransfomationList() {
         return transformationList;
     }
-    
-    public void printTransformationList(){
+
+    public void printTransformationList() {
         System.out.println(this.transformationList);
     }
-    
-    public HierarchicalCluster setCorrelation(CorrelationType correlationType){
+
+    public HierarchicalCluster setCorrelation(CorrelationType correlationType) {
         this.correlationType = correlationType;
         return this;
     }
-    
+
     private List<List<Double>> readData() throws FileNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         List<List<Double>> listData = new ArrayList<>();
@@ -194,32 +194,32 @@ public class HierarchicalCluster {
     }
 
     private void calculateSilimarity() {
-        if(this.correlationType == CorrelationType.PEARSON){
+        if (this.correlationType == CorrelationType.PEARSON) {
             PearsonsCorrelation corr = new PearsonsCorrelation(this.data);
             this.similarity = corr.getCorrelationMatrix().getData();
-        }else if(this.correlationType == CorrelationType.SPEARMAN){
+        } else if (this.correlationType == CorrelationType.SPEARMAN) {
             SpearmansCorrelation corr = new SpearmansCorrelation();
             this.similarity = corr.computeCorrelationMatrix(this.data).getData();
-        }else if(this.correlationType == CorrelationType.KENDALL){
+        } else if (this.correlationType == CorrelationType.KENDALL) {
             KendallsCorrelation corr = new KendallsCorrelation(this.data);
             this.similarity = corr.getCorrelationMatrix().getData();
-        }else{
+        } else {
             PearsonsCorrelation corr = new PearsonsCorrelation(this.data);
             this.similarity = corr.getCorrelationMatrix().getData();
         }
     }
 
     private double[][] calculateSilimarity(double[][] data) {
-        if(this.correlationType == CorrelationType.PEARSON){
+        if (this.correlationType == CorrelationType.PEARSON) {
             PearsonsCorrelation corr = new PearsonsCorrelation(data);
             return corr.getCorrelationMatrix().getData();
-        }else if(this.correlationType == CorrelationType.SPEARMAN){
+        } else if (this.correlationType == CorrelationType.SPEARMAN) {
             SpearmansCorrelation corr = new SpearmansCorrelation();
             return corr.computeCorrelationMatrix(data).getData();
-        }else if(this.correlationType == CorrelationType.KENDALL){
+        } else if (this.correlationType == CorrelationType.KENDALL) {
             KendallsCorrelation corr = new KendallsCorrelation(data);
             return corr.getCorrelationMatrix().getData();
-        }else{
+        } else {
             PearsonsCorrelation corr = new PearsonsCorrelation(data);
             return corr.getCorrelationMatrix().getData();
         }
@@ -252,7 +252,7 @@ public class HierarchicalCluster {
     }
 
     public List<Integer> findMinDissimilarity(int rows, int columns) {
-        double minDissimilarity = 2.0;
+        double minDissimilarity = 20.0;
         List<Integer> list = new ArrayList<>();
         int column = 0;
         int row = 0;
@@ -265,6 +265,10 @@ public class HierarchicalCluster {
                 }
             }
         }
+//        if(column == 0 && row == 0){
+//            System.out.println("problem with dissimilarity = " + minDissimilarity);
+//            this.printMatrixData();
+//        }
         list.add(row);
         list.add(column);
         list.sort(Comparator.naturalOrder());
@@ -289,13 +293,19 @@ public class HierarchicalCluster {
         Matrix reducedData;
         int numberOfObjectives = this.numberOfColumns;
 
-        reducedData = new Matrix(m.getRowDimension(), m.getColumnDimension() - 1);
-        reducedData.setMatrix(0, m.getRowDimension() - 1, 0, column1 - 1, m.getMatrix(0, m.getRowDimension() - 1, 0, column1 - 1));
-        reducedData.setMatrix(0, m.getRowDimension() - 1, column1, column1, m.getMatrix(0, m.getRowDimension() - 1, column1, column1)
-                .plus(m.getMatrix(0, m.getRowDimension() - 1, column2, column2)));
-        reducedData.setMatrix(0, m.getRowDimension() - 1, column1 + 1, column2 - 1, m.getMatrix(0, m.getRowDimension() - 1, column1 + 1, column2 - 1));
-        reducedData.setMatrix(0, m.getRowDimension() - 1, column2, m.getColumnDimension() - 2, m.getMatrix(0, m.getRowDimension() - 1, column2 + 1, m.getColumnDimension() - 1));
+        reducedData = null;
 
+//        System.out.println("column1 " + column1 + " column2 " + column2);
+//        try {
+            reducedData = new Matrix(m.getRowDimension(), m.getColumnDimension() - 1);
+            reducedData.setMatrix(0, m.getRowDimension() - 1, 0, column1 - 1, m.getMatrix(0, m.getRowDimension() - 1, 0, column1 - 1));
+            reducedData.setMatrix(0, m.getRowDimension() - 1, column1, column1, m.getMatrix(0, m.getRowDimension() - 1, column1, column1)
+                    .plus(m.getMatrix(0, m.getRowDimension() - 1, column2, column2)));
+            reducedData.setMatrix(0, m.getRowDimension() - 1, column1 + 1, column2 - 1, m.getMatrix(0, m.getRowDimension() - 1, column1 + 1, column2 - 1));
+            reducedData.setMatrix(0, m.getRowDimension() - 1, column2, m.getColumnDimension() - 2, m.getMatrix(0, m.getRowDimension() - 1, column2 + 1, m.getColumnDimension() - 1));
+//        } catch (NegativeArraySizeException e) {
+//            e.printStackTrace();
+//        }
         return reducedData;
     }
 

@@ -669,6 +669,15 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 
         return stringWithObjectives;
     }
+    
+    public double[] getObjectivesArray() {
+        int size = objectives.size();
+        double[] array = new double[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = objectives.get(i);
+        }
+        return array;
+    }
 
     @Override
     public String toString() {
