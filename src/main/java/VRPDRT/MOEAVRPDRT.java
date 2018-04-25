@@ -81,6 +81,9 @@ public class MOEAVRPDRT implements Problem {
         return this.numberOfConstraints;
     }
 
+    public VRPDRT getProblem(){
+        return this.problem;
+    }
     @Override
     public void evaluate(Solution solution) {
         int[] array = EncodingUtils.getPermutation(solution.getVariable(0));

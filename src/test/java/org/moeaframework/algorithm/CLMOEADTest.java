@@ -103,13 +103,13 @@ public class CLMOEADTest {
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLMOEAD")
-                .withMaxEvaluations(3000)
+                .withMaxEvaluations(300)
                 .withProperty("populationSize", 20)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
-                .withProperty("clusters", 6)
+                .withProperty("clusters", 9)
                 .runSeeds(3);
 
         DataOutput dataOutput = new DataOutput("CLMOEAD", instance.getInstanceName());
@@ -128,8 +128,13 @@ public class CLMOEADTest {
             System.out.println(copyArrayToListDouble(solution.getObjectives()));
             solutionPopulation.add(convertSolution(solution));
         }
+        for (Solution solution : combinedPareto) {
+            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
+            System.out.println("solution = " + ps);
+        }
         dataOutput.savePopulation(solutionPopulation);
-
         //Assert.assertEquals(path, "x");
 //        double[] referencePoint = {100000.0, 100000.0};
 //        Hypervolume hp = new Hypervolume(problem, combinedPareto, referencePoint);
