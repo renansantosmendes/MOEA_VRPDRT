@@ -238,10 +238,10 @@ public class HierarchicalCluster {
         dissimilarity = new double[similarity.length][similarity.length];
         for (int j = 0; j < similarity.length; j++) {
             for (int i = 0; i < similarity.length; i++) {
-                if(similarity[j][i] != Double.NaN){
+                if(!Double.isNaN(similarity[j][i])){
                     dissimilarity[j][i] = 1 - similarity[j][i];
                 }else{
-                    dissimilarity[j][i] = 1;
+                    dissimilarity[j][i] = 20;
                 }
             }
         }

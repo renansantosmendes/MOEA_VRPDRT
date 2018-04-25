@@ -14,8 +14,8 @@ import VRPDRT.VRPDRT;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
@@ -25,9 +25,15 @@ import org.moeaframework.core.variable.EncodingUtils;
  *
  * @author renansantos
  */
-public class CLNSGAIITest {
-    
-    public CLNSGAIITest() {
+public class CLMOEADTest {
+
+    private MOEAVRPDRT problem;
+    private VRPDRT subProblem;
+    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private RankedList rankedList;
+    private Instance instance = new Instance();
+
+    public CLMOEADTest() {
         problem = new MOEAVRPDRT()
                 .setNumberOfObjectives(9)
                 .setNumberOfVariables(1)
@@ -35,12 +41,6 @@ public class CLNSGAIITest {
 
         initializeData();
     }
-
-    private MOEAVRPDRT problem;
-    private VRPDRT subProblem;
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-    private RankedList rankedList;
-    private Instance instance = new Instance();
 
     private void initializeData() {
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
@@ -102,16 +102,16 @@ public class CLNSGAIITest {
 
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("CLNSGAII")
-                .withMaxEvaluations(3000)
-                .withProperty("populationSize", 20)
+                .withAlgorithm("CLMOEAD")
+                .withMaxEvaluations(300)
+                .withProperty("populationSize", 10)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
                 .runSeeds(3);
 
-        DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());
+        DataOutput dataOutput = new DataOutput("CLMOEAD", instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
         List<ProblemSolution> solutionPopulation = new ArrayList<>();
 
@@ -135,5 +135,4 @@ public class CLNSGAIITest {
 //        System.out.println(hp.evaluate(combinedPareto));
     }
 
-    
 }

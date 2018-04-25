@@ -13,7 +13,6 @@ import java.util.*;
 import org.moeaframework.core.*;
 import org.moeaframework.core.comparator.*;
 import org.moeaframework.core.operator.*;
-import org.moeaframework.core.variable.EncodingUtils;
 
 /**
  *

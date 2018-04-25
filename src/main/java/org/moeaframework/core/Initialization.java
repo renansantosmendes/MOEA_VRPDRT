@@ -23,11 +23,11 @@ package org.moeaframework.core;
  */
 public interface Initialization {
 
-	/**
-	 * Returns an array of solutions to become the initial population.
-	 * 
-	 * @return an array of solutions to become the initial population
-	 */
-	public Solution[] initialize();
+    /**
+     * Returns an array of solutions to become the initial population.
+     *
+     * @return an array of solutions to become the initial population
+     */
+    public Solution[] initialize();
 
 }

@@ -21,50 +21,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.math3.util.CombinatoricsUtils;
-import org.moeaframework.algorithm.pso.OMOPSO;
-import org.moeaframework.algorithm.pso.SMPSO;
-import org.moeaframework.algorithm.single.DifferentialEvolution;
-import org.moeaframework.algorithm.single.EvolutionStrategy;
-import org.moeaframework.algorithm.single.GeneticAlgorithm;
-import org.moeaframework.algorithm.single.RepeatedSingleObjective;
-import org.moeaframework.algorithm.single.AggregateObjectiveComparator;
-import org.moeaframework.algorithm.single.MinMaxDominanceComparator;
-import org.moeaframework.algorithm.single.LinearDominanceComparator;
-import org.moeaframework.algorithm.single.SelfAdaptiveNormalVariation;
+import org.moeaframework.algorithm.pso.*;
+import org.moeaframework.algorithm.single.*;
 import org.moeaframework.analysis.sensitivity.EpsilonHelper;
-import org.moeaframework.core.Algorithm;
-import org.moeaframework.core.EpsilonBoxDominanceArchive;
-import org.moeaframework.core.FitnessEvaluator;
-import org.moeaframework.core.FrameworkException;
-import org.moeaframework.core.Initialization;
-import org.moeaframework.core.NondominatedPopulation;
-import org.moeaframework.core.NondominatedSortingPopulation;
-import org.moeaframework.core.PRNG;
-import org.moeaframework.core.Population;
-import org.moeaframework.core.Problem;
-import org.moeaframework.core.Selection;
-import org.moeaframework.core.Solution;
-import org.moeaframework.core.Variable;
-import org.moeaframework.core.Variation;
-import org.moeaframework.core.comparator.AggregateConstraintComparator;
-import org.moeaframework.core.comparator.ChainedComparator;
-import org.moeaframework.core.comparator.CrowdingComparator;
-import org.moeaframework.core.comparator.DominanceComparator;
-import org.moeaframework.core.comparator.ParetoDominanceComparator;
-import org.moeaframework.core.fitness.AdditiveEpsilonIndicatorFitnessEvaluator;
-import org.moeaframework.core.fitness.HypervolumeContributionFitnessEvaluator;
-import org.moeaframework.core.fitness.HypervolumeFitnessEvaluator;
-import org.moeaframework.core.fitness.IndicatorFitnessEvaluator;
-import org.moeaframework.core.operator.RandomInitialization;
-import org.moeaframework.core.operator.TournamentSelection;
-import org.moeaframework.core.operator.UniformSelection;
-import org.moeaframework.core.operator.real.DifferentialEvolutionSelection;
-import org.moeaframework.core.operator.real.DifferentialEvolutionVariation;
-import org.moeaframework.core.operator.real.UM;
-import org.moeaframework.core.spi.AlgorithmProvider;
-import org.moeaframework.core.spi.OperatorFactory;
-import org.moeaframework.core.spi.ProviderLookupException;
-import org.moeaframework.core.spi.ProviderNotFoundException;
+import org.moeaframework.core.*;
+import org.moeaframework.core.comparator.*;
+import org.moeaframework.core.fitness.*;
+import org.moeaframework.core.operator.*;
+import org.moeaframework.core.operator.real.*;
+import org.moeaframework.core.spi.*;
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.util.TypedProperties;
 import org.moeaframework.util.Vector;
@@ -260,6 +225,9 @@ public class StandardAlgorithms extends AlgorithmProvider {
             if (name.equalsIgnoreCase("MOEAD")
                     || name.equalsIgnoreCase("MOEA/D")) {
                 return newMOEAD(typedProperties, problem);
+            } else if (name.equalsIgnoreCase("CLMOEAD")
+                    || name.equalsIgnoreCase("CLMOEA/D")) {
+                return newCLMOEAD(typedProperties, problem);
             } else if (name.equalsIgnoreCase("GDE3")) {
                 return newGDE3(typedProperties, problem);
             } else if (name.equalsIgnoreCase("NSGAII")
@@ -440,8 +408,6 @@ public class StandardAlgorithms extends AlgorithmProvider {
         Variation variation = OperatorFactory.getInstance().getVariation(null,
                 properties, problem);
 
-//        return new CLNSGAII(problem, population, null, selection, variation,
-//                initialization);
         return new CLNSGAII(problem, properties.getProperties().getProperty("instance"), population, null, selection, variation,
                 initialization);
 
@@ -615,6 +581,58 @@ public class StandardAlgorithms extends AlgorithmProvider {
         }
 
         MOEAD algorithm = new MOEAD(
+                problem,
+                neighborhoodSize,
+                initialization,
+                variation,
+                properties.getDouble("delta", 0.9),
+                eta,
+                (int) properties.getDouble("updateUtility", -1));
+
+        return algorithm;
+    }
+
+    private Algorithm newCLMOEAD(TypedProperties properties, Problem problem) {
+        int populationSize = (int) properties.getDouble("populationSize", 100);
+
+        //enforce population size lower bound
+        if (populationSize < problem.getNumberOfObjectives()) {
+            System.err.println("increasing CLMOEA/D population size");
+            populationSize = problem.getNumberOfObjectives();
+        }
+
+        Initialization initialization = new RandomInitialization(problem,
+                populationSize);
+
+        //default to de+pm for real-encodings
+        String operator = properties.getString("operator", null);
+
+        if ((operator == null) && checkType(RealVariable.class, problem)) {
+            operator = "de+pm";
+        }
+
+        Variation variation = OperatorFactory.getInstance().getVariation(
+                operator, properties, problem);
+
+        int neighborhoodSize = 20;
+        int eta = 2;
+
+        if (properties.contains("neighborhoodSize")) {
+            neighborhoodSize = Math.max(2,
+                    (int) (properties.getDouble("neighborhoodSize", 0.1)
+                    * populationSize));
+        }
+
+        if (neighborhoodSize > populationSize) {
+            neighborhoodSize = populationSize;
+        }
+
+        if (properties.contains("eta")) {
+            eta = Math.max(2, (int) (properties.getDouble("eta", 0.01)
+                    * populationSize));
+        }
+
+        CLMOEAD algorithm = new CLMOEAD(
                 problem,
                 neighborhoodSize,
                 initialization,
@@ -1286,7 +1304,8 @@ public class StandardAlgorithms extends AlgorithmProvider {
         DifferentialEvolutionVariation variation = (DifferentialEvolutionVariation) OperatorFactory.getInstance()
                 .getVariation("de", properties, problem);
 
-        return new DifferentialEvolution(problem, comparator, initialization, selection, variation);
+        //return new DifferentialEvolution(problem, comparator, initialization, selection, variation);
+        return null;
     }
 
 }
