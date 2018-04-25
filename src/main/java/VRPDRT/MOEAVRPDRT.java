@@ -87,6 +87,8 @@ public class MOEAVRPDRT implements Problem {
         ProblemSolution ps = problem.rebuildSolution(solutionRepresentation, problem.getRequestListCopy());
         solution.setObjectives(copyListToArrayDouble(ps.getObjectives()));
         solution.setProblemSolution(ps);
+//        System.out.println("solution " + ps.getLinkedRouteList());
+//        System.out.println("informations " + ps);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class MOEAVRPDRT implements Problem {
                 .setAlphaV(0.55);
 
         ProblemSolution ps = problem.buildRandomSolution();
-        int arraySize = ps.getLinkedRouteList().size();
+//        int arraySize = ps.getLinkedRouteList().size();
         int[] array = copyListToArrayInteger(ps.getLinkedRouteList());
         Permutation permutation = new Permutation(array);
 

@@ -100,7 +100,7 @@ public class MOEAVRPDRTTest {
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLNSGAII")
                 .withMaxEvaluations(200000)
-                .withProperty("populationSize", 200)
+                .withProperty("populationSize", 20)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)

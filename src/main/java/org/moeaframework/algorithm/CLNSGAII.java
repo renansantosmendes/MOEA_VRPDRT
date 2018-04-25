@@ -88,8 +88,9 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         hc.setCorrelation(CorrelationType.KENDALL);
         hc.reduce().getTransfomationList().forEach(System.out::println);
 
+        //population.forEach(System.out::println);
         population.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
-        
+        //population.forEach(System.out::println);
 
         if (selection == null) {
             // recreate the original NSGA-II implementation using binary
@@ -138,15 +139,19 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
             }
         }
         evaluateAll(offspring);
+        //offspring.forEach(System.out::println);
         offspring.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
-        
+        //offspring.forEach(System.out::println);
         if (archive != null) {
             archive.addAll(offspring);
         }
 
         population.addAll(offspring);
         population.truncate(populationSize);
+        
+       // population.forEach(System.out::println);
         population.forEach(s -> s.increaseNumberOfObjectives());
+        //population.forEach(System.out::println);
     }
 
     @Override

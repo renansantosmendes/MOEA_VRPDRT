@@ -92,6 +92,66 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         logger = "";
     }
 
+    public ProblemSolution(List<Double> objectives, Set<Route> setOfRoutes, double objectiveFunction, long totalDistance,
+            long totalDeliveryDelay, int numberOfNonAttendedRequests, int numberOfVehicles, long totalTravelTime,
+            long totalWaintingTime, long deliveryTimeWindowAntecipation, long totalRouteTimeChargeBanlance,
+            double totalOccupationRate, double totalDistanceNormalized, double totalDeliveryDelayNormalized,
+            double numberOfNonAttendedRequestsNormalized, double numberOfVehiclesNormalized, double totalTravelTimeNormalized,
+            double totalWaintingTimeNormalized, double deliveryTimeWindowAntecipationNormalized,
+            double totalRouteTimeChargeBanlanceNormalized, double totalOccupationRateNormalized, double aggregatedObjective1,
+            double aggregatedObjective2, double aggregatedObjective1Normalized, double aggregatedObjective2Normalized,
+            int numberOfDominatedSolutionsByThisSolution, int numberOfSolutionsWichDomineThisSolution,
+            List<Integer> listOfSolutionsDominatedByThisSolution, double fitness, int dif, double crowdDistance, int S,
+            int R, List<Request> nonAttendedRequestsList, List<Integer> linkedRouteList, String logger, int tempoExtraTotal) {
+
+        this();
+        this.objectives.clear();
+        this.objectives.addAll(objectives);
+        this.setOfRoutes.clear();
+        this.setOfRoutes.addAll(setOfRoutes);
+        this.objectiveFunction = objectiveFunction;
+        this.totalDistance = totalDistance;
+        this.totalDeliveryDelay = totalDeliveryDelay;
+        this.numberOfNonAttendedRequests = numberOfNonAttendedRequests;
+        this.numberOfVehicles = numberOfVehicles;
+        this.totalTravelTime = totalTravelTime;
+        this.totalWaintingTime = totalWaintingTime;
+        this.deliveryTimeWindowAntecipation = deliveryTimeWindowAntecipation;
+        this.totalRouteTimeChargeBanlance = totalRouteTimeChargeBanlance;
+        this.totalOccupationRate = totalOccupationRate;
+        this.totalDistanceNormalized = totalDistanceNormalized;
+        this.totalDeliveryDelayNormalized = totalDeliveryDelayNormalized;
+        this.numberOfNonAttendedRequestsNormalized = numberOfNonAttendedRequestsNormalized;
+        this.numberOfVehiclesNormalized = numberOfVehiclesNormalized;
+        this.totalTravelTimeNormalized = totalTravelTimeNormalized;
+        this.totalWaintingTimeNormalized = totalWaintingTimeNormalized;
+        this.deliveryTimeWindowAntecipationNormalized = deliveryTimeWindowAntecipationNormalized;
+        this.totalRouteTimeChargeBanlanceNormalized = totalRouteTimeChargeBanlanceNormalized;
+        this.totalOccupationRateNormalized = totalOccupationRateNormalized;
+        this.aggregatedObjective1 = aggregatedObjective1;
+        this.aggregatedObjective2 = aggregatedObjective2;
+        this.aggregatedObjective1Normalized = aggregatedObjective1Normalized;
+        this.aggregatedObjective2Normalized = aggregatedObjective2Normalized;
+        this.numberOfDominatedSolutionsByThisSolution = numberOfDominatedSolutionsByThisSolution;
+        this.numberOfSolutionsWichDomineThisSolution = numberOfSolutionsWichDomineThisSolution;
+        
+        this.listOfSolutionsDominatedByThisSolution.clear();
+        this.listOfSolutionsDominatedByThisSolution.addAll(listOfSolutionsDominatedByThisSolution);
+        this.fitness = fitness;
+        this.dif = dif;
+        this.crowdDistance = crowdDistance;
+        this.S = S;
+        this.R = R;
+        
+        this.nonAttendedRequestsList.clear();
+        this.nonAttendedRequestsList.addAll(nonAttendedRequestsList);
+        
+        this.linkedRouteList.clear();
+        this.linkedRouteList.addAll(linkedRouteList);
+        this.logger = logger;
+        this.tempoExtraTotal = tempoExtraTotal;
+    }
+
     public ProblemSolution(ProblemSolution solution) {
         setOfRoutes = new HashSet<Route>(solution.getSetOfRoutes());
         listOfSolutionsDominatedByThisSolution = new ArrayList<>(solution.getListOfSolutionsDominatedByThisSolution());
@@ -127,6 +187,11 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         nonAttendedRequestsList = new ArrayList<Request>(solution.getNonAttendedRequestsList());
         linkedRouteList = new ArrayList<Integer>(solution.getLinkedRouteList());
         logger = new String(solution.getLogger());
+    }
+
+    public ProblemSolution(List<Integer> concatenatedRoutes) {
+        this.linkedRouteList.addAll(linkedRouteList);
+
     }
 
     public void setSolution(ProblemSolution solution) {
@@ -669,7 +734,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
 
         return stringWithObjectives;
     }
-    
+
     public double[] getObjectivesArray() {
         int size = objectives.size();
         double[] array = new double[size];
@@ -777,6 +842,22 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
             return -1;
         }
         return 0;
+    }
+
+    @Override
+    public Object clone() {
+        return new ProblemSolution(objectives, setOfRoutes, objectiveFunction, totalDistance,
+                totalDeliveryDelay, numberOfNonAttendedRequests, numberOfVehicles, totalTravelTime,
+                totalWaintingTime, deliveryTimeWindowAntecipation, totalRouteTimeChargeBanlance,
+                totalOccupationRate, totalDistanceNormalized, totalDeliveryDelayNormalized,
+                numberOfNonAttendedRequestsNormalized, numberOfVehiclesNormalized, totalTravelTimeNormalized,
+                totalWaintingTimeNormalized, deliveryTimeWindowAntecipationNormalized,
+                totalRouteTimeChargeBanlanceNormalized, totalOccupationRateNormalized, aggregatedObjective1,
+                aggregatedObjective2, aggregatedObjective1Normalized, aggregatedObjective2Normalized,
+                numberOfDominatedSolutionsByThisSolution, numberOfSolutionsWichDomineThisSolution,
+                listOfSolutionsDominatedByThisSolution, fitness, dif, crowdDistance, S,
+                R, nonAttendedRequestsList, linkedRouteList, logger, tempoExtraTotal
+        );
     }
 
     public void evaluate(List<List<Long>> distanceBetweenNodes, Integer vehicleCapacity) {

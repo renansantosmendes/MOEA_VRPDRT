@@ -265,10 +265,10 @@ public class HierarchicalCluster {
                 }
             }
         }
-//        if(column == 0 && row == 0){
-//            System.out.println("problem with dissimilarity = " + minDissimilarity);
-//            this.printMatrixData();
-//        }
+        if(column == 0 && row == 0){
+            System.out.println("problem with dissimilarity = " + minDissimilarity);
+            this.printMatrixData();
+        }
         list.add(row);
         list.add(column);
         list.sort(Comparator.naturalOrder());

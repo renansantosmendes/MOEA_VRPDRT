@@ -20,6 +20,7 @@ package org.moeaframework.core;
 import ProblemRepresentation.Parameters;
 import ProblemRepresentation.ProblemSolution;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class Solution implements Serializable {
     private final Map<String, Serializable> attributes;
 
     private ProblemSolution ps = new ProblemSolution();
+
     /**
      * Constructs a solution with the specified number of variables and
      * objectives with no constraints.
@@ -235,7 +237,7 @@ public class Solution implements Serializable {
      */
     public void setObjectives(double[] objectives) {
         this.objectives = new double[objectives.length];
-        
+
         if (objectives.length != this.objectives.length) {
             //throw new IllegalArgumentException("invalid number of objectives");
         }
@@ -244,13 +246,15 @@ public class Solution implements Serializable {
             this.objectives[i] = objectives[i];
         }
     }
-    
-    public void setProblemSolution(ProblemSolution solution){
-        this.ps.setSolution(solution);
+
+    public void setProblemSolution(ProblemSolution solution) {
+        this.ps.setSolution((ProblemSolution) solution.clone());
+//        this.ps.setSolution(solution);
+        System.out.println("hasCode() = " +ps.hashCode());
     }
-    
+
     public void reduceNumberOfObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
-        
+
         List<Double> parameters = parametersOriginal.getParameters();
         double[] newObjectives = new double[newDimension];
 
@@ -277,11 +281,14 @@ public class Solution implements Serializable {
         this.objectives = newObjectives;
     }
 
-    
-    public void increaseNumberOfObjectives(){
+    public void increaseNumberOfObjectives() {
         this.objectives = this.ps.getObjectivesArray();
     }
-    
+
+    public String toString() {
+        return this.getObjectivesList().toString();
+    }
+
     /**
      * Returns an array containing the objectives of this solution. Modifying
      * the returned array will not modify the internal state of this solution.
@@ -290,6 +297,14 @@ public class Solution implements Serializable {
      */
     public double[] getObjectives() {
         return objectives.clone();
+    }
+
+    public List<Double> getObjectivesList() {
+        List<Double> obj = new ArrayList<>();
+        for (int i = 0; i < this.objectives.length; i++) {
+            obj.add(this.objectives[i]);
+        }
+        return obj;
     }
 
     /**
