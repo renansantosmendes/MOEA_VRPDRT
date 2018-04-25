@@ -264,13 +264,12 @@ public class CLMOEAD extends AbstractAlgorithm {
 
     private Instance instance;
     private Parameters parameters;
-    private  int numberOfReducedObjectives = 2;
+    private int numberOfReducedObjectives = 2;
     private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
     private VRPDRT problemTest;
     private RankedList rankedList;
     private String instanceName;
     private HierarchicalCluster hc;
-    
 
     /**
      * Constructs the MOEA/D algorithm with the specified components. This
@@ -405,6 +404,15 @@ public class CLMOEAD extends AbstractAlgorithm {
         initializeIdealPoint();
         evaluateAll(initialSolutions);
 
+        hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
+                parameters.getParameters()), this.numberOfReducedObjectives);
+        hc.setCorrelation(CorrelationType.KENDALL);
+        hc.reduce().getTransfomationList().forEach(System.out::println);
+        hc.printDissimilarity();
+
+        reduceDimensionOfInitialSolutions(initialSolutions);
+        initializeIdealPoint();
+        
         for (int i = 0; i < initialSolutions.length; i++) {
             Solution solution = initialSolutions[i];
             updateIdealPoint(solution);
@@ -419,12 +427,17 @@ public class CLMOEAD extends AbstractAlgorithm {
 
 //        System.out.println("initial population");
 //        population.forEach(ind -> System.out.println(ind.solution));
-        hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromPopulationIndividuals(population),
-                parameters.getParameters()), this.numberOfReducedObjectives);
-
-        hc.setCorrelation(CorrelationType.KENDALL);
-        hc.reduce().getTransfomationList().forEach(System.out::println);
+//        hc.setCorrelation(CorrelationType.KENDALL);
+//        hc.reduce().getTransfomationList().forEach(System.out::println);
+//        population.forEach(s -> s.getSolution().reduceNumberOfObjectives(parameters,
+//                hc.getTransfomationList(), numberOfReducedObjectives));
         //this.problem.setHierarchicalCluster(hc);
+    }
+
+    private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions) {
+        for (Solution solution : initialSolutions) {
+            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives);
+        }
     }
 
     /**
@@ -488,6 +501,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * @param solution the solution
      */
     private void updateIdealPoint(Solution solution) {
+        idealPoint = new double[solution.getNumberOfObjectives()];
         for (int i = 0; i < solution.getNumberOfObjectives(); i++) {
             idealPoint[i] = Math.min(idealPoint[i], solution.getObjective(i));
         }
@@ -708,6 +722,7 @@ public class CLMOEAD extends AbstractAlgorithm {
 
             for (Solution child : offspring) {
                 evaluate(child);
+                child.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), numberOfReducedObjectives);
                 updateIdealPoint(child);
                 updateSolution(child, matingIndices);
             }
@@ -882,6 +897,14 @@ public class CLMOEAD extends AbstractAlgorithm {
     public List<Solution> getSolutionListFromPopulation(Population population) {
         List<Solution> populationList = new ArrayList<>();
         for (Solution solution : population) {
+            populationList.add(solution);
+        }
+        return populationList;
+    }
+
+    public List<Solution> getSolutionListFromSolutionArray(Solution[] solutions) {
+        List<Solution> populationList = new ArrayList<>();
+        for (Solution solution : solutions) {
             populationList.add(solution);
         }
         return populationList;

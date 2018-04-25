@@ -103,7 +103,7 @@ public class CLMOEADTest {
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
                 .withAlgorithm("CLMOEAD")
-                .withMaxEvaluations(300)
+                .withMaxEvaluations(3000)
                 .withProperty("populationSize", 20)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
@@ -119,7 +119,7 @@ public class CLMOEADTest {
         for (NondominatedPopulation population : result) {
             for (Solution solution : population) {
                 combinedPareto.add(solution);
-                System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+                //System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             }
         }
 
