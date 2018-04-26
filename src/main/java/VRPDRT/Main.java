@@ -1,4 +1,4 @@
-package Main;
+package VRPDRT;
 
 import InstanceReader.DataOutput;
 import InstanceReader.Instance;
@@ -27,8 +27,8 @@ public class Main {
 
     private static MOEAVRPDRT problem;
     private static VRPDRT subProblem;
-//    private static String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-    private static String path = "/home/rmendes/VRPDRT/";
+    private static String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//    private static String path = "/home/rmendes/VRPDRT/";
     private static RankedList rankedList;
     private static Instance instance = new Instance();
 
@@ -87,8 +87,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-//        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-        String path = "/home/rmendes/VRPDRT/";
+        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//        String path = "/home/rmendes/VRPDRT/";
 
         Instance instance = new Instance();
         instance.setNumberOfRequests(50)
@@ -98,7 +98,7 @@ public class Main {
                 .setNumberOfVehicles(250)
                 .setVehicleCapacity(4);
 
-        int reducedDimensionality = 3;
+        int reducedDimensionality = 2;
         String composedName = "CLMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);
         new ScriptGenerator(composedName, composedName)
@@ -135,8 +135,8 @@ public class Main {
         for (Solution solution : combinedPareto) {
             int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
             List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
-            System.out.println("solution = " + ps);
+//            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
+//            System.out.println("solution = " + ps);
         }
         dataOutput.savePopulation(solutionPopulation);
 

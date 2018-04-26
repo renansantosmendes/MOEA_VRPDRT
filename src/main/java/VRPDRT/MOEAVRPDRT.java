@@ -23,8 +23,8 @@ import org.moeaframework.core.variable.Permutation;
 public class MOEAVRPDRT implements Problem {
 
     private Instance instance = new Instance();
-//    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-    private String path = "/home/rmendes/VRPDRT/";
+    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//    private String path = "/home/rmendes/VRPDRT/";
     private VRPDRT problem;
     private RankedList rankedList;
     private int numberOfVariables = 1;

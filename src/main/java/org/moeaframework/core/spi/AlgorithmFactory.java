@@ -147,6 +147,7 @@ public class AlgorithmFactory {
         }
 
         // always ensure we check the standard algorithms
+        System.out.println("has standard algorithm = " + hasStandardAlgorithms);
         if (!hasStandardAlgorithms) {
             Algorithm algorithm = instantiateAlgorithm(
                     new StandardAlgorithms(), name, properties, problem);
