@@ -27,68 +27,68 @@ import org.moeaframework.core.variable.EncodingUtils;
  */
 public class CLMOEADTest {
 
-    private MOEAVRPDRT problem;
-    private VRPDRT subProblem;
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-    private RankedList rankedList;
-    private Instance instance = new Instance();
-
-    public CLMOEADTest() {
-        problem = new MOEAVRPDRT()
-                .setNumberOfObjectives(9)
-                .setNumberOfVariables(1)
-                .setNumberOfConstraints(0);
-
-        initializeData();
-    }
-
-    private void initializeData() {
-        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
-        rankedList.setAlphaD(0.20)
-                .setAlphaP(0.15)
-                .setAlphaT(0.10)
-                .setAlphaV(0.55);
-
-        instance.setNumberOfRequests(50)
-                .setRequestTimeWindows(10)
-                .setInstanceSize("s")
-                .setNumberOfNodes(12)
-                .setNumberOfVehicles(250)
-                .setVehicleCapacity(4);
-
-        subProblem = new VRPDRT(instance, path, rankedList);
-    }
-
-    private List<Integer> copyArrayToListInteger(int[] array) {
-        List<Integer> list = new ArrayList<>();
-        int size = array.length;
-
-        for (int i = 0; i < size; i++) {
-            list.add(array[i]);
-        }
-        return list;
-    }
-
-    private List<Double> copyArrayToListDouble(double[] array) {
-        List<Double> list = new ArrayList<>();
-        int size = array.length;
-
-        for (int i = 0; i < size; i++) {
-            list.add(array[i]);
-        }
-        return list;
-    }
-
-    public ProblemSolution convertSolution(Solution solution) {
-        initializeData();
-        ProblemSolution ps = subProblem
-                .rebuildSolution(copyArrayToListInteger(EncodingUtils.getPermutation(solution.getVariable(0))),
-                        subProblem.getData().getRequests());
-        return ps;
-    }
-
-    @Test
-    public void clmoeadTest() throws FileNotFoundException {
+//    private MOEAVRPDRT problem;
+//    private VRPDRT subProblem;
+//    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//    private RankedList rankedList;
+//    private Instance instance = new Instance();
+//
+//    public CLMOEADTest() {
+//        problem = new MOEAVRPDRT()
+//                .setNumberOfObjectives(9)
+//                .setNumberOfVariables(1)
+//                .setNumberOfConstraints(0);
+//
+//        initializeData();
+//    }
+//
+//    private void initializeData() {
+//        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+//        rankedList.setAlphaD(0.20)
+//                .setAlphaP(0.15)
+//                .setAlphaT(0.10)
+//                .setAlphaV(0.55);
+//
+//        instance.setNumberOfRequests(50)
+//                .setRequestTimeWindows(10)
+//                .setInstanceSize("s")
+//                .setNumberOfNodes(12)
+//                .setNumberOfVehicles(250)
+//                .setVehicleCapacity(4);
+//
+//        subProblem = new VRPDRT(instance, path, rankedList);
+//    }
+//
+//    private List<Integer> copyArrayToListInteger(int[] array) {
+//        List<Integer> list = new ArrayList<>();
+//        int size = array.length;
+//
+//        for (int i = 0; i < size; i++) {
+//            list.add(array[i]);
+//        }
+//        return list;
+//    }
+//
+//    private List<Double> copyArrayToListDouble(double[] array) {
+//        List<Double> list = new ArrayList<>();
+//        int size = array.length;
+//
+//        for (int i = 0; i < size; i++) {
+//            list.add(array[i]);
+//        }
+//        return list;
+//    }
+//
+//    public ProblemSolution convertSolution(Solution solution) {
+//        initializeData();
+//        ProblemSolution ps = subProblem
+//                .rebuildSolution(copyArrayToListInteger(EncodingUtils.getPermutation(solution.getVariable(0))),
+//                        subProblem.getData().getRequests());
+//        return ps;
+//    }
+//
+//    @Test
+//    public void clmoeadTest() throws FileNotFoundException {
 
 //        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
 //
@@ -138,6 +138,6 @@ public class CLMOEADTest {
 //            System.out.println("solution = " + ps);
 //        }
 //        dataOutput.savePopulation(solutionPopulation);
-    }
+//    }
 
 }

@@ -9,8 +9,12 @@ import InstanceReader.*;
 import ProblemRepresentation.*;
 import ReductionTechniques.HierarchicalCluster;
 import java.util.*;
-import org.moeaframework.core.*;
-import org.moeaframework.core.variable.*;
+import org.moeaframework.core.Problem;
+import org.moeaframework.core.Solution;
+import org.moeaframework.core.variable.EncodingUtils;
+import org.moeaframework.core.variable.Permutation;
+
+
 
 /**
  *
@@ -19,7 +23,8 @@ import org.moeaframework.core.variable.*;
 public class MOEAVRPDRT implements Problem {
 
     private Instance instance = new Instance();
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private String path = "/home/rmendes/VRPDRT/";
     private VRPDRT problem;
     private RankedList rankedList;
     private int numberOfVariables = 1;

@@ -27,7 +27,7 @@ public class Main {
 
     private static MOEAVRPDRT problem;
     private static VRPDRT subProblem;
-    //private static String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//    private static String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
     private static String path = "/home/rmendes/VRPDRT/";
     private static RankedList rankedList;
     private static Instance instance = new Instance();
