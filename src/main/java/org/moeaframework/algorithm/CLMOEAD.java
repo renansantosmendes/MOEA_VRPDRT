@@ -265,7 +265,7 @@ public class CLMOEAD extends AbstractAlgorithm {
     private Instance instance;
     private Parameters parameters;
     private int numberOfReducedObjectives = 2;
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private String path = "";//"/home/renansantos/Área de Trabalho/Excel Instances/"
     private VRPDRT problemTest;
     private RankedList rankedList;
     private String instanceName;
@@ -287,10 +287,10 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta, int updateUtility) {
-        this(problem, instance, clusters, neighborhoodSize, null, initialization, variation, delta,
+        this(problem, instance, clusters, path, neighborhoodSize, null, initialization, variation, delta,
                 eta, updateUtility);
     }
 
@@ -308,10 +308,10 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta) {
-        this(problem, instance, clusters, neighborhoodSize, initialization, variation, delta, eta,
+        this(problem, instance, clusters, path, neighborhoodSize, initialization, variation, delta, eta,
                 -1);
     }
 
@@ -333,7 +333,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, String instanceName, int clusters, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instanceName, int clusters, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta, int updateUtility) {
         super(problem);
@@ -358,6 +358,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         this.instance = new Instance(this.instanceName);
         this.parameters = new Parameters(this.instance);
         this.numberOfReducedObjectives = clusters;
+        this.path = path;
         instance.setNumberOfVehicles(250);
 
         RankedList rankedList = new RankedList(instance.getNumberOfNodes());
@@ -385,10 +386,10 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, int neighborhoodSize,
+    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta) {
-        this(problem, instance, clusters, neighborhoodSize, weightGenerator, initialization,
+        this(problem, instance, clusters, path, neighborhoodSize, weightGenerator, initialization,
                 variation, delta, eta, -1);
     }
 
@@ -408,11 +409,11 @@ public class CLMOEAD extends AbstractAlgorithm {
                 parameters.getParameters()), this.numberOfReducedObjectives);
         hc.setCorrelation(CorrelationType.KENDALL);
         hc.reduce().getTransfomationList().forEach(System.out::println);
-        hc.printDissimilarity();
+//        hc.printDissimilarity();
 
         reduceDimensionOfInitialSolutions(initialSolutions);
         initializeIdealPoint();
-        
+
         for (int i = 0; i < initialSolutions.length; i++) {
             Solution solution = initialSolutions[i];
             updateIdealPoint(solution);
