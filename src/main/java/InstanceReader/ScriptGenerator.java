@@ -8,6 +8,8 @@ package InstanceReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +28,12 @@ public class ScriptGenerator {
         this.fileName = "script_" + this.instanceFullName + ".sh";
         createFolder();
     }
+    
+    public ScriptGenerator(String fileName, String executableName) {
+        this.instanceFullName = executableName;
+        this.fileName = "script_" + fileName + ".sh";
+        createFolder();
+    }
 
     private void createFolder() {
         boolean success = (new File(folder)).mkdirs();
@@ -34,8 +42,13 @@ public class ScriptGenerator {
         }
     }
 
-    public void generate(String timeOfExecution, String partition) throws FileNotFoundException {
-        PrintStream printStream = new PrintStream(folder + "/" + fileName);
+    public void generate(String timeOfExecution, String partition) {
+        PrintStream printStream = null;
+        try {
+            printStream = new PrintStream(folder + "/" + fileName);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
         printStream.print("#!/bin/bash \n");
         printStream.print("#SBATCH --qos=part" + timeOfExecution + "\n");
         printStream.print("#SBATCH --partition=" + partition + "\n");

@@ -90,44 +90,44 @@ public class CLNSGAIITest {
     @Test
     public void moeadTest() throws FileNotFoundException {
 
-        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-
-        Instance instance = new Instance();
-        instance.setNumberOfRequests(50)
-                .setRequestTimeWindows(10)
-                .setInstanceSize("s")
-                .setNumberOfNodes(12)
-                .setNumberOfVehicles(250)
-                .setVehicleCapacity(4);
-
-        List<NondominatedPopulation> result = new Executor()
-                .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("CLNSGAII")
-                .withMaxEvaluations(3000)
-                .withProperty("populationSize", 20)
-                .withProperty("operator", "2x+swap")
-                .withProperty("swap.rate", 0.1)
-                .withProperty("2x.rate", 0.7)
-                .withProperty("instance", instance.getFullInstanceName())
-                .runSeeds(3);
-
-        DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());
-        NondominatedPopulation combinedPareto = new NondominatedPopulation();
-        List<ProblemSolution> solutionPopulation = new ArrayList<>();
-
-        for (NondominatedPopulation population : result) {
-            for (Solution solution : population) {
-                combinedPareto.add(solution);
-                System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
-            }
-        }
-
-        System.out.println("combined pareto");
-        for (Solution solution : combinedPareto) {
-            System.out.println(copyArrayToListDouble(solution.getObjectives()));
-            solutionPopulation.add(convertSolution(solution));
-        }
-        dataOutput.savePopulation(solutionPopulation);
+//        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//
+//        Instance instance = new Instance();
+//        instance.setNumberOfRequests(50)
+//                .setRequestTimeWindows(10)
+//                .setInstanceSize("s")
+//                .setNumberOfNodes(12)
+//                .setNumberOfVehicles(250)
+//                .setVehicleCapacity(4);
+//
+//        List<NondominatedPopulation> result = new Executor()
+//                .withProblemClass(MOEAVRPDRT.class)
+//                .withAlgorithm("CLNSGAII")
+//                .withMaxEvaluations(3000)
+//                .withProperty("populationSize", 20)
+//                .withProperty("operator", "2x+swap")
+//                .withProperty("swap.rate", 0.1)
+//                .withProperty("2x.rate", 0.7)
+//                .withProperty("instance", instance.getFullInstanceName())
+//                .runSeeds(3);
+//
+//        DataOutput dataOutput = new DataOutput("MOEAD", instance.getInstanceName());
+//        NondominatedPopulation combinedPareto = new NondominatedPopulation();
+//        List<ProblemSolution> solutionPopulation = new ArrayList<>();
+//
+//        for (NondominatedPopulation population : result) {
+//            for (Solution solution : population) {
+//                combinedPareto.add(solution);
+//                System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+//            }
+//        }
+//
+//        System.out.println("combined pareto");
+//        for (Solution solution : combinedPareto) {
+//            System.out.println(copyArrayToListDouble(solution.getObjectives()));
+//            solutionPopulation.add(convertSolution(solution));
+//        }
+//        dataOutput.savePopulation(solutionPopulation);
 
         //Assert.assertEquals(path, "x");
 //        double[] referencePoint = {100000.0, 100000.0};

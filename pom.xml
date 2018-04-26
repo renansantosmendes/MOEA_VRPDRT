@@ -7,7 +7,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>VRPDRT.VRPDRT_Main</mainClass>
+                            <mainClass>Main.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
