@@ -38,7 +38,7 @@ import org.moeaframework.util.weights.WeightGenerator;
  *
  * @author renansantos
  */
-public class CLMOEAD extends AbstractAlgorithm {
+public class OffCLMOEAD extends AbstractAlgorithm {
 
     private static class Individual implements Serializable {
 
@@ -205,7 +205,7 @@ public class CLMOEAD extends AbstractAlgorithm {
     /**
      * The current population.
      */
-    private List<CLMOEAD.Individual> population;
+    private List<OffCLMOEAD.Individual> population;
 
     /**
      * The ideal point; each index stores the best observed value for each
@@ -287,7 +287,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OffCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta, int updateUtility) {
         this(problem, instance, clusters, path, neighborhoodSize, null, initialization, variation, delta,
@@ -308,7 +308,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OffCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta) {
         this(problem, instance, clusters, path, neighborhoodSize, initialization, variation, delta, eta,
@@ -333,7 +333,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public CLMOEAD(Problem problem, String instanceName, int clusters, String path, int neighborhoodSize,
+    public OffCLMOEAD(Problem problem, String instanceName, int clusters, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta, int updateUtility) {
         super(problem);
@@ -386,7 +386,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public CLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OffCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta) {
         this(problem, instance, clusters, path, neighborhoodSize, weightGenerator, initialization,
@@ -455,7 +455,7 @@ public class CLMOEAD extends AbstractAlgorithm {
                     problem.getNumberOfObjectives(), populationSize).generate();
 
             for (double[] weight : weights) {
-                population.add(new CLMOEAD.Individual(weight));
+                population.add(new OffCLMOEAD.Individual(weight));
             }
         } else {
             List<double[]> weights = weightGenerator.generate();
@@ -466,7 +466,7 @@ public class CLMOEAD extends AbstractAlgorithm {
             }
 
             for (double[] weight : weights) {
-                population.add(new CLMOEAD.Individual(weight));
+                population.add(new OffCLMOEAD.Individual(weight));
             }
         }
     }
@@ -476,11 +476,11 @@ public class CLMOEAD extends AbstractAlgorithm {
      * on the distances between weights.
      */
     private void initializeNeighborhoods() {
-        List<CLMOEAD.Individual> sortedPopulation = new ArrayList<>(
+        List<OffCLMOEAD.Individual> sortedPopulation = new ArrayList<>(
                 population);
 
-        for (CLMOEAD.Individual individual : population) {
-            Collections.sort(sortedPopulation, new CLMOEAD.WeightSorter(individual));
+        for (OffCLMOEAD.Individual individual : population) {
+            Collections.sort(sortedPopulation, new OffCLMOEAD.WeightSorter(individual));
 
             for (int i = 0; i < neighborhoodSize; i++) {
                 individual.addNeighbor(sortedPopulation.get(i));
@@ -513,7 +513,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         NondominatedPopulation result = new NondominatedPopulation();
 
         if (population != null) {
-            for (CLMOEAD.Individual individual : population) {
+            for (OffCLMOEAD.Individual individual : population) {
                 result.add(individual.getSolution());
             }
         }
@@ -577,7 +577,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         List<Integer> matingIndices = new ArrayList<Integer>();
 
         if (PRNG.nextDouble() <= delta) {
-            for (CLMOEAD.Individual individual : population.get(index).getNeighbors()) {
+            for (OffCLMOEAD.Individual individual : population.get(index).getNeighbors()) {
                 matingIndices.add(population.indexOf(individual));
             }
         } else {
@@ -637,7 +637,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         PRNG.shuffle(matingIndices);
 
         for (int i = 0; i < matingIndices.size(); i++) {
-            CLMOEAD.Individual individual = population.get(matingIndices.get(i));
+            OffCLMOEAD.Individual individual = population.get(matingIndices.get(i));
             boolean canReplace = false;
 
             if (solution.violatesConstraints()
@@ -673,7 +673,7 @@ public class CLMOEAD extends AbstractAlgorithm {
      * Updates the utility of each individual.
      */
     protected void updateUtility() {
-        for (CLMOEAD.Individual individual : population) {
+        for (OffCLMOEAD.Individual individual : population) {
             double oldFitness = individual.getFitness();
             double newFitness = fitness(individual.getSolution(), idealPoint);
             double relativeDecrease = (oldFitness - newFitness) / oldFitness;
@@ -748,7 +748,7 @@ public class CLMOEAD extends AbstractAlgorithm {
         /**
          * The {@code population} from the {@code MOEAD} instance.
          */
-        private final List<CLMOEAD.Individual> population;
+        private final List<OffCLMOEAD.Individual> population;
 
         /**
          * The value of the {@code idealPoint} from the {@code MOEAD} instance.
@@ -779,7 +779,7 @@ public class CLMOEAD extends AbstractAlgorithm {
          * @param generation the value of {@code generation} from the
          * {@code MOEAD} instance
          */
-        public MOEADState(List<CLMOEAD.Individual> population, double[] idealPoint,
+        public MOEADState(List<OffCLMOEAD.Individual> population, double[] idealPoint,
                 int numberOfEvaluations, int generation) {
             super();
             this.population = population;
@@ -793,7 +793,7 @@ public class CLMOEAD extends AbstractAlgorithm {
          *
          * @return the {@code population} from the {@code MOEAD} instance
          */
-        public List<CLMOEAD.Individual> getPopulation() {
+        public List<OffCLMOEAD.Individual> getPopulation() {
             return population;
         }
 
@@ -911,9 +911,9 @@ public class CLMOEAD extends AbstractAlgorithm {
         return populationList;
     }
 
-    public List<Solution> getSolutionListFromPopulationIndividuals(List<CLMOEAD.Individual> population) {
+    public List<Solution> getSolutionListFromPopulationIndividuals(List<OffCLMOEAD.Individual> population) {
         List<Solution> populationList = new ArrayList<>();
-        for (CLMOEAD.Individual solution : population) {
+        for (OffCLMOEAD.Individual solution : population) {
             populationList.add(solution.getSolution());
         }
         return populationList;

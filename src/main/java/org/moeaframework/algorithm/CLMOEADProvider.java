@@ -76,7 +76,7 @@ public class CLMOEADProvider extends AlgorithmProvider {
                     * populationSize));
         }
 
-        CLMOEAD algorithm = new CLMOEAD(
+        OffCLMOEAD algorithm = new OffCLMOEAD(
                 problem,
                 properties.getProperties().getProperty("instance"),
                 properties.getInt("clusters", 2),

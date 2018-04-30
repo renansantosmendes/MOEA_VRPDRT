@@ -62,7 +62,6 @@ import org.moeaframework.core.spi.OperatorFactory;
 import org.moeaframework.core.spi.ProviderLookupException;
 import org.moeaframework.core.spi.ProviderNotFoundException;
 
-
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.util.TypedProperties;
 import org.moeaframework.util.Vector;
@@ -258,9 +257,12 @@ public class StandardAlgorithms extends AlgorithmProvider {
             if (name.equalsIgnoreCase("MOEAD")
                     || name.equalsIgnoreCase("MOEA/D")) {
                 return newMOEAD(typedProperties, problem);
-            } else if (name.equalsIgnoreCase("CLMOEAD")
-                    || name.equalsIgnoreCase("CLMOEA/D")) {
-                return newCLMOEAD(typedProperties, problem);
+            } else if (name.equalsIgnoreCase("OffCLMOEAD")
+                    || name.equalsIgnoreCase("OffCLMOEA/D")) {
+                return newOffCLMOEAD(typedProperties, problem);
+            } else if (name.equalsIgnoreCase("OnCLMOEAD")
+                    || name.equalsIgnoreCase("OnCLMOEA/D")) {
+                return newOnCLMOEAD(typedProperties, problem);
             } else if (name.equalsIgnoreCase("GDE3")) {
                 return newGDE3(typedProperties, problem);
             } else if (name.equalsIgnoreCase("NSGAII")
@@ -625,7 +627,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
         return algorithm;
     }
 
-    private Algorithm newCLMOEAD(TypedProperties properties, Problem problem) {
+    private Algorithm newOffCLMOEAD(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         //enforce population size lower bound
@@ -665,10 +667,66 @@ public class StandardAlgorithms extends AlgorithmProvider {
                     * populationSize));
         }
 
-        CLMOEAD algorithm = new CLMOEAD(
+        OffCLMOEAD algorithm = new OffCLMOEAD(
                 problem,
                 properties.getProperties().getProperty("instance"),
-                properties.getInt("clusters",2),
+                properties.getInt("clusters", 2),
+                properties.getProperties().getProperty("filePath"),
+                neighborhoodSize,
+                null,
+                initialization,
+                variation,
+                properties.getDouble("delta", 0.9),
+                eta,
+                (int) properties.getDouble("updateUtility", -1));
+
+        return algorithm;
+    }
+    
+    private Algorithm newOnCLMOEAD(TypedProperties properties, Problem problem) {
+        int populationSize = (int) properties.getDouble("populationSize", 100);
+
+        //enforce population size lower bound
+        if (populationSize < problem.getNumberOfObjectives()) {
+            System.err.println("increasing CLMOEA/D population size");
+            populationSize = problem.getNumberOfObjectives();
+        }
+
+        Initialization initialization = new RandomInitialization(problem,
+                populationSize);
+
+        //default to de+pm for real-encodings
+        String operator = properties.getString("operator", null);
+
+        if ((operator == null) && checkType(RealVariable.class, problem)) {
+            operator = "de+pm";
+        }
+
+        Variation variation = OperatorFactory.getInstance().getVariation(
+                operator, properties, problem);
+
+        int neighborhoodSize = 20;
+        int eta = 2;
+
+        if (properties.contains("neighborhoodSize")) {
+            neighborhoodSize = Math.max(2,
+                    (int) (properties.getDouble("neighborhoodSize", 0.1)
+                    * populationSize));
+        }
+
+        if (neighborhoodSize > populationSize) {
+            neighborhoodSize = populationSize;
+        }
+
+        if (properties.contains("eta")) {
+            eta = Math.max(2, (int) (properties.getDouble("eta", 0.01)
+                    * populationSize));
+        }
+
+        OnCLMOEAD algorithm = new OnCLMOEAD(
+                problem,
+                properties.getProperties().getProperty("instance"),
+                properties.getInt("clusters", 2),
                 properties.getProperties().getProperty("filePath"),
                 neighborhoodSize,
                 null,
