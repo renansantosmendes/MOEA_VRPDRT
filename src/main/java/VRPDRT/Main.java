@@ -27,18 +27,12 @@ public class Main {
 
     private static MOEAVRPDRT problem;
     private static VRPDRT subProblem;
-    private static String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-//    private static String path = "/home/rmendes/VRPDRT/";
+    private static String path;
     private static RankedList rankedList;
     private static Instance instance = new Instance();
 
     public Main() {
-        problem = new MOEAVRPDRT()
-                .setNumberOfObjectives(9)
-                .setNumberOfVariables(1)
-                .setNumberOfConstraints(0);
 
-        initializeData();
     }
 
     private static void initializeData() {
@@ -56,6 +50,12 @@ public class Main {
                 .setVehicleCapacity(4);
 
         subProblem = new VRPDRT(instance, path, rankedList);
+
+        problem = new MOEAVRPDRT()
+                .setNumberOfObjectives(9)
+                .setNumberOfVariables(1)
+                .setNumberOfConstraints(0)
+                .setPath(path);
     }
 
     private static List<Integer> copyArrayToListInteger(int[] array) {
@@ -87,8 +87,16 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-//        String path = "/home/rmendes/VRPDRT/";
+//        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+        path = "/home/rmendes/VRPDRT/";
+        int reducedDimensionality = 3;
+        
+        String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
+        System.out.println("Algorithm = " + composedName);
+        new ScriptGenerator(composedName, composedName)
+                .generate("2d", "large");
+
+        initializeData();
 
         Instance instance = new Instance();
         instance.setNumberOfRequests(50)
@@ -98,15 +106,9 @@ public class Main {
                 .setNumberOfVehicles(250)
                 .setVehicleCapacity(4);
 
-        int reducedDimensionality = 2;
-        String composedName = "CLMOEAD" + "_R" + reducedDimensionality;
-        System.out.println("Algorithm = " + composedName);
-        new ScriptGenerator(composedName, composedName)
-                .generate("2d", "large");
-
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("CLMOEAD")
+                .withAlgorithm("OnCLMOEAD")
                 .withMaxEvaluations(200000)
                 .withProperty("populationSize", 200)
                 .withProperty("operator", "2x+swap")

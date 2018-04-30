@@ -26,20 +26,15 @@ import org.moeaframework.core.variable.EncodingUtils;
  * @author renansantos
  */
 public class OnCLMOEADTest {
-    
-     private MOEAVRPDRT problem;
+
+    private MOEAVRPDRT problem;
     private VRPDRT subProblem;
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private String path;
     private RankedList rankedList;
     private Instance instance = new Instance();
 
     public OnCLMOEADTest() {
-        problem = new MOEAVRPDRT()
-                .setNumberOfObjectives(9)
-                .setNumberOfVariables(1)
-                .setNumberOfConstraints(0);
-
-        initializeData();
+        
     }
 
     private void initializeData() {
@@ -57,6 +52,11 @@ public class OnCLMOEADTest {
                 .setVehicleCapacity(4);
 
         subProblem = new VRPDRT(instance, path, rankedList);
+        problem = new MOEAVRPDRT()
+                .setNumberOfObjectives(9)
+                .setNumberOfVariables(1)
+                .setNumberOfConstraints(0)
+                .setPath(path);
     }
 
     private List<Integer> copyArrayToListInteger(int[] array) {
@@ -86,10 +86,12 @@ public class OnCLMOEADTest {
                         subProblem.getData().getRequests());
         return ps;
     }
+
     @Test
     public void clmoeadTest() throws FileNotFoundException {
+        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
 
-        String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+        initializeData();
 
         Instance instance = new Instance();
         instance.setNumberOfRequests(50)
@@ -114,7 +116,7 @@ public class OnCLMOEADTest {
                 .withProperty("filePath", path)
                 .runSeeds(3);
 
-        DataOutput dataOutput = new DataOutput("OnCLMOEAD"+"_R"+reducedDimensionality, instance.getInstanceName());
+        DataOutput dataOutput = new DataOutput("OnCLMOEAD" + "_R" + reducedDimensionality, instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
         List<ProblemSolution> solutionPopulation = new ArrayList<>();
 
@@ -138,5 +140,5 @@ public class OnCLMOEADTest {
         }
         dataOutput.savePopulation(solutionPopulation);
     }
-    
+
 }

@@ -702,10 +702,10 @@ public class OnCLMOEAD extends AbstractAlgorithm {
 
         increaseDimension(population);
 
-        HierarchicalCluster hc2 = new HierarchicalCluster(getMatrixOfObjetivesFromIndividuals(population,
+        hc = new HierarchicalCluster(getMatrixOfObjetivesFromIndividuals(population,
                 parameters.getParameters()), this.numberOfReducedObjectives);
-        hc2.setCorrelation(CorrelationType.KENDALL);
-        hc2.reduce().getTransfomationList().forEach(System.out::println);
+        hc.setCorrelation(CorrelationType.KENDALL);
+        hc.reduce().getTransfomationList().forEach(System.out::println);
 
         reduceDimensionOfCurrentPopulation(population);
 

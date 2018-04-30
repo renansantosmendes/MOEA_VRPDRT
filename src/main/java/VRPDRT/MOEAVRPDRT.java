@@ -65,6 +65,11 @@ public class MOEAVRPDRT implements Problem {
         this.numberOfConstraints = numberOfConstraints;
         return this;
     }
+    
+    public MOEAVRPDRT setPath(String path){
+        this.path = path;
+        return this;
+    }
 
     @Override
     public String getName() {

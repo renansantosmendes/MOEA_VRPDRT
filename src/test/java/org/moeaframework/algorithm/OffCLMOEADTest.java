@@ -101,42 +101,42 @@ public class OffCLMOEADTest {
 
         int reducedDimensionality = 2;
 
-        List<NondominatedPopulation> result = new Executor()
-                .withProblemClass(MOEAVRPDRT.class)
-                .withAlgorithm("OffCLMOEAD")
-                .withMaxEvaluations(200000)
-                .withProperty("populationSize", 200)
-                .withProperty("operator", "2x+swap")
-                .withProperty("swap.rate", 0.1)
-                .withProperty("2x.rate", 0.7)
-                .withProperty("instance", instance.getFullInstanceName())
-                .withProperty("clusters", reducedDimensionality)
-                .withProperty("filePath", path)
-                .runSeeds(30);
-
-        DataOutput dataOutput = new DataOutput("OffCLMOEAD"+"_R"+reducedDimensionality, instance.getInstanceName());
-        NondominatedPopulation combinedPareto = new NondominatedPopulation();
-        List<ProblemSolution> solutionPopulation = new ArrayList<>();
-
-        for (NondominatedPopulation population : result) {
-            for (Solution solution : population) {
-                combinedPareto.add(solution);
-                //System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
-            }
-        }
-
-        System.out.println("combined pareto");
-        for (Solution solution : combinedPareto) {
-            System.out.println(copyArrayToListDouble(solution.getObjectives()));
-            solutionPopulation.add(convertSolution(solution));
-        }
-        for (Solution solution : combinedPareto) {
-            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
-            System.out.println("solution = " + ps);
-        }
-        dataOutput.savePopulation(solutionPopulation);
+//        List<NondominatedPopulation> result = new Executor()
+//                .withProblemClass(MOEAVRPDRT.class)
+//                .withAlgorithm("OffCLMOEAD")
+//                .withMaxEvaluations(200000)
+//                .withProperty("populationSize", 200)
+//                .withProperty("operator", "2x+swap")
+//                .withProperty("swap.rate", 0.1)
+//                .withProperty("2x.rate", 0.7)
+//                .withProperty("instance", instance.getFullInstanceName())
+//                .withProperty("clusters", reducedDimensionality)
+//                .withProperty("filePath", path)
+//                .runSeeds(30);
+//
+//        DataOutput dataOutput = new DataOutput("OffCLMOEAD"+"_R"+reducedDimensionality, instance.getInstanceName());
+//        NondominatedPopulation combinedPareto = new NondominatedPopulation();
+//        List<ProblemSolution> solutionPopulation = new ArrayList<>();
+//
+//        for (NondominatedPopulation population : result) {
+//            for (Solution solution : population) {
+//                combinedPareto.add(solution);
+//                //System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
+//            }
+//        }
+//
+//        System.out.println("combined pareto");
+//        for (Solution solution : combinedPareto) {
+//            System.out.println(copyArrayToListDouble(solution.getObjectives()));
+//            solutionPopulation.add(convertSolution(solution));
+//        }
+//        for (Solution solution : combinedPareto) {
+//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+//            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
+//            System.out.println("solution = " + ps);
+//        }
+//        dataOutput.savePopulation(solutionPopulation);
     }
 
 }
