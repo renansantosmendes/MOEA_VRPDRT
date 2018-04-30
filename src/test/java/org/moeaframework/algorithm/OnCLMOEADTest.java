@@ -34,7 +34,7 @@ public class OnCLMOEADTest {
     private Instance instance = new Instance();
 
     public OnCLMOEADTest() {
-        
+
     }
 
     private void initializeData() {
@@ -52,7 +52,7 @@ public class OnCLMOEADTest {
                 .setVehicleCapacity(4);
 
         subProblem = new VRPDRT(instance, path, rankedList);
-        problem = new MOEAVRPDRT()
+        problem = new MOEAVRPDRT(path)
                 .setNumberOfObjectives(9)
                 .setNumberOfVariables(1)
                 .setNumberOfConstraints(0)
@@ -104,7 +104,7 @@ public class OnCLMOEADTest {
         int reducedDimensionality = 4;
 
         List<NondominatedPopulation> result = new Executor()
-                .withProblemClass(MOEAVRPDRT.class)
+                .withProblemClass(MOEAVRPDRT.class, path)
                 .withAlgorithm("OnCLMOEAD")
                 .withMaxEvaluations(300)
                 .withProperty("populationSize", 20)
@@ -123,10 +123,8 @@ public class OnCLMOEADTest {
         for (NondominatedPopulation population : result) {
             for (Solution solution : population) {
                 combinedPareto.add(solution);
-                //System.out.println(solution.getObjective(0) + "," + solution.getObjective(1));
             }
         }
-
         System.out.println("combined pareto");
         for (Solution solution : combinedPareto) {
             System.out.println(copyArrayToListDouble(solution.getObjectives()));

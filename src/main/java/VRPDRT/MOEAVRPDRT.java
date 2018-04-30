@@ -23,7 +23,7 @@ import org.moeaframework.core.variable.Permutation;
 public class MOEAVRPDRT implements Problem {
 
     private Instance instance = new Instance();
-    private String path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+    private String path ;
 //    private String path = "/home/rmendes/VRPDRT/";
     private VRPDRT problem;
     private RankedList rankedList;
@@ -47,6 +47,26 @@ public class MOEAVRPDRT implements Problem {
                 .setAlphaV(0.55);
 
         problem = new VRPDRT(instance, path, rankedList);
+        problem.startSeed();
+        dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
+    }
+    
+    public MOEAVRPDRT(String path) {
+        this.path = path;
+        instance.setNumberOfRequests(50)
+                .setRequestTimeWindows(10)
+                .setInstanceSize("s")
+                .setNumberOfNodes(12)
+                .setNumberOfVehicles(250)
+                .setVehicleCapacity(4);
+
+        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+        rankedList.setAlphaD(0.20)
+                .setAlphaP(0.15)
+                .setAlphaT(0.10)
+                .setAlphaV(0.55);
+
+        problem = new VRPDRT(instance, this.path, rankedList);
         problem.startSeed();
         dataOutput = new DataOutput("MOEAVRPDRT", instance.getInstanceName());
     }

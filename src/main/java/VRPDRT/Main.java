@@ -51,11 +51,10 @@ public class Main {
 
         subProblem = new VRPDRT(instance, path, rankedList);
 
-        problem = new MOEAVRPDRT()
+        problem = new MOEAVRPDRT(path)
                 .setNumberOfObjectives(9)
                 .setNumberOfVariables(1)
-                .setNumberOfConstraints(0)
-                .setPath(path);
+                .setNumberOfConstraints(0);
     }
 
     private static List<Integer> copyArrayToListInteger(int[] array) {
@@ -90,7 +89,7 @@ public class Main {
 //        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
         path = "/home/rmendes/VRPDRT/";
         int reducedDimensionality = 3;
-        
+
         String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);
         new ScriptGenerator(composedName, composedName)
@@ -107,7 +106,7 @@ public class Main {
                 .setVehicleCapacity(4);
 
         List<NondominatedPopulation> result = new Executor()
-                .withProblemClass(MOEAVRPDRT.class)
+                .withProblemClass(MOEAVRPDRT.class, path)
                 .withAlgorithm("OnCLMOEAD")
                 .withMaxEvaluations(200000)
                 .withProperty("populationSize", 200)
