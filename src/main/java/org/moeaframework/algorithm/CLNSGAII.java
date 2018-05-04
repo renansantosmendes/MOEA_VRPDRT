@@ -88,7 +88,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         hc.reduce().getTransfomationList().forEach(System.out::println);
 
         //population.forEach(System.out::println);
-        population.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
+        population.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2, problem));
         //population.forEach(System.out::println);
 
         if (selection == null) {
@@ -139,7 +139,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         }
         evaluateAll(offspring);
         //offspring.forEach(System.out::println);
-        offspring.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2));
+        offspring.forEach(s -> s.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), 2,problem));
         //offspring.forEach(System.out::println);
         if (archive != null) {
             archive.addAll(offspring);
@@ -149,7 +149,7 @@ public class CLNSGAII extends AbstractEvolutionaryAlgorithm implements
         population.truncate(populationSize);
         
         //population.forEach(System.out::println);
-        population.forEach(s -> s.increaseNumberOfObjectives());
+        population.forEach(s -> s.increaseNumberOfObjectives(problem));
         //population.forEach(System.out::println);
     }
 

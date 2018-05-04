@@ -57,6 +57,18 @@ public class HierarchicalCluster {
         }
     }
 
+    public HierarchicalCluster(double[][] data, int numberOfClusters, CorrelationType corr) {
+        this.data = data;
+        this.numberOfClusters = numberOfClusters;
+        this.clusters = new ArrayList<>();
+        this.numberOfRows = this.data.length;
+        this.numberOfColumns = this.data[0].length;
+        this.correlationType = corr;
+        //createMatrix();
+        calculateSilimarity();
+        calculateDissilimarity();
+    }
+    
     public HierarchicalCluster(double[][] data, int numberOfClusters) {
         this.data = data;
         this.numberOfClusters = numberOfClusters;

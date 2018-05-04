@@ -88,7 +88,7 @@ public class Main {
     public static void main(String[] args) {
 //        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
         path = "/home/rmendes/VRPDRT/";
-        int reducedDimensionality = 3;
+        int reducedDimensionality = 4;
 
         String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);

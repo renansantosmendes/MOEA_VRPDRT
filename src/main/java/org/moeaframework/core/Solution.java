@@ -251,43 +251,33 @@ public class Solution implements Serializable {
         this.ps.setSolution((ProblemSolution) solution.clone());
     }
 
-    public void reduceNumberOfObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension) {
+    public void reduceNumberOfObjectives(Parameters parametersOriginal, List<List<Integer>> matrix, int newDimension, Problem problem) {
 
         List<Double> parameters = parametersOriginal.getParameters();
         double[] newObjectives = new double[newDimension];
 
-//        newObjectives[0] = parameters.get(0) * matrix.get(0).get(0) * ps.getTotalDistance()
-//                + parameters.get(1) * matrix.get(0).get(1) * ps.getTotalDeliveryDelay()
-//                + parameters.get(2) * matrix.get(0).get(2) * ps.getTotalRouteTimeChargeBanlance()
-//                + parameters.get(3) * matrix.get(0).get(3) * ps.getNumberOfNonAttendedRequests()
-//                + parameters.get(4) * matrix.get(0).get(4) * ps.getNumberOfVehicles()
-//                + parameters.get(5) * matrix.get(0).get(5) * ps.getTotalTravelTime()
-//                + parameters.get(6) * matrix.get(0).get(6) * ps.getTotalWaintingTime()
-//                + parameters.get(7) * matrix.get(0).get(7) * ps.getDeliveryTimeWindowAntecipation()
-//                + parameters.get(8) * matrix.get(0).get(8) * ps.getTotalOccupationRate();
-//
-//        newObjectives[1] = parameters.get(0) * matrix.get(1).get(0) * ps.getTotalDistance()
-//                + parameters.get(1) * matrix.get(1).get(1) * ps.getTotalDeliveryDelay()
-//                + parameters.get(2) * matrix.get(1).get(2) * ps.getTotalRouteTimeChargeBanlance()
-//                + parameters.get(3) * matrix.get(1).get(3) * ps.getNumberOfNonAttendedRequests()
-//                + parameters.get(4) * matrix.get(1).get(4) * ps.getNumberOfVehicles()
-//                + parameters.get(5) * matrix.get(1).get(5) * ps.getTotalTravelTime()
-//                + parameters.get(6) * matrix.get(1).get(6) * ps.getTotalWaintingTime()
-//                + parameters.get(7) * matrix.get(1).get(7) * ps.getDeliveryTimeWindowAntecipation()
-//                + parameters.get(8) * matrix.get(1).get(8) * ps.getTotalOccupationRate();
         for (int i = 0; i < newDimension; i++) {
             newObjectives[i] = 0;
-
-            for (int j = 0; j < ps.getObjectives().size(); j++) {
-                newObjectives[i] += parameters.get(j) * matrix.get(i).get(j) * ps.getObjectives().get(j);
+            if (problem.getName().equalsIgnoreCase("MOEAVRPDRT")) {
+                for (int j = 0; j < ps.getObjectives().size(); j++) {
+                    newObjectives[i] += parameters.get(j) * matrix.get(i).get(j) * ps.getObjectives().get(j);
+                }
+            } else {
+                for (int j = 0; j < getObjectives().length; j++) {
+                    newObjectives[i] += parameters.get(j) * matrix.get(i).get(j) * getObjectives()[j];
+                }
             }
         }
 
         this.objectives = newObjectives;
     }
 
-    public void increaseNumberOfObjectives() {
-        this.objectives = this.ps.getObjectivesArray();
+    public void increaseNumberOfObjectives(Problem problem) {
+        if (problem.getName().equalsIgnoreCase("MOEAVRPDRT")) {
+            this.objectives = this.ps.getObjectivesArray();
+        } else{
+            problem.evaluate(this);
+        }
     }
 
     public String toString() {

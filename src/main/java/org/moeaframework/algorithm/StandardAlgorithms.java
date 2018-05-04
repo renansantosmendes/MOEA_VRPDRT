@@ -727,6 +727,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
                 problem,
                 properties.getProperties().getProperty("instance"),
                 properties.getInt("clusters", 2),
+                properties.getInt("maxEvaluations", 25000),
                 properties.getProperties().getProperty("filePath"),
                 neighborhoodSize,
                 null,

@@ -130,12 +130,13 @@ public class OnCLMOEADTest {
             System.out.println(copyArrayToListDouble(solution.getObjectives()));
             solutionPopulation.add(convertSolution(solution));
         }
-        for (Solution solution : combinedPareto) {
-            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
-            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
-            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
-            System.out.println("solution = " + ps);
-        }
+//        for (Solution solution : combinedPareto) {
+//            int[] array = EncodingUtils.getPermutation(solution.getVariable(0));
+//            List<Integer> solutionRepresentation = copyArrayToListInteger(array);
+//            ProblemSolution ps = problem.getProblem().rebuildSolution(solutionRepresentation, problem.getProblem().getRequestListCopy());
+//            System.out.println("solution = " + ps);
+//            ps.getSetOfRoutes().forEach(r -> r.ge);
+//        }
         dataOutput.savePopulation(solutionPopulation);
     }
 

@@ -18,6 +18,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.commons.math3.util.MathArrays;
 import org.moeaframework.core.FrameworkException;
 import org.moeaframework.core.Initialization;
@@ -269,6 +272,7 @@ public class OnCLMOEAD extends AbstractAlgorithm {
     private RankedList rankedList;
     private String instanceName;
     private HierarchicalCluster hc;
+    private int maxNFE;
 
     /**
      * Constructs the MOEA/D algorithm with the specified components. This
@@ -286,10 +290,10 @@ public class OnCLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public OnCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OnCLMOEAD(Problem problem, String instance, int clusters, int maxNFE, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta, int updateUtility) {
-        this(problem, instance, clusters, path, neighborhoodSize, null, initialization, variation, delta,
+        this(problem, instance, clusters, maxNFE, path, neighborhoodSize, null, initialization, variation, delta,
                 eta, updateUtility);
     }
 
@@ -307,10 +311,10 @@ public class OnCLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public OnCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OnCLMOEAD(Problem problem, String instance, int clusters, int maxNFE, String path, int neighborhoodSize,
             Initialization initialization, Variation variation, double delta,
             double eta) {
-        this(problem, instance, clusters, path, neighborhoodSize, initialization, variation, delta, eta,
+        this(problem, instance, clusters, maxNFE, path, neighborhoodSize, initialization, variation, delta, eta,
                 -1);
     }
 
@@ -332,7 +336,7 @@ public class OnCLMOEAD extends AbstractAlgorithm {
      * values are updated; set to {@code 50} to use the recommended update
      * frequency or {@code -1} to disable utility-based search.
      */
-    public OnCLMOEAD(Problem problem, String instanceName, int clusters, String path, int neighborhoodSize,
+    public OnCLMOEAD(Problem problem, String instanceName, int clusters, int maxNFE, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta, int updateUtility) {
         super(problem);
@@ -353,20 +357,28 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         } else {
             useDE = false;
         }
-        this.instanceName = instanceName;
-        this.instance = new Instance(this.instanceName);
-        this.parameters = new Parameters(this.instance);
+
         this.numberOfReducedObjectives = clusters;
-        this.path = path;
-        instance.setNumberOfVehicles(250);
+        this.maxNFE = maxNFE;
 
-        RankedList rankedList = new RankedList(instance.getNumberOfNodes());
-        rankedList.setAlphaD(0.20)
-                .setAlphaP(0.15)
-                .setAlphaT(0.10)
-                .setAlphaV(0.55);
+        if (instanceName != null || instance != null) {
+            this.instanceName = instanceName;
+            this.instance = new Instance(this.instanceName);
+            this.parameters = new Parameters(this.instance);
 
-        problemTest = new VRPDRT(instance, path, rankedList);
+            this.path = path;
+            instance.setNumberOfVehicles(250);
+
+            RankedList rankedList = new RankedList(instance.getNumberOfNodes());
+            rankedList.setAlphaD(0.20)
+                    .setAlphaP(0.15)
+                    .setAlphaT(0.10)
+                    .setAlphaV(0.55);
+
+            problemTest = new VRPDRT(instance, path, rankedList);
+        } else {
+            //this.parameters = new Parameters();
+        }
     }
 
     /**
@@ -385,10 +397,10 @@ public class OnCLMOEAD extends AbstractAlgorithm {
      * neighborhood rather than the entire population
      * @param eta the maximum number of population slots a solution can replace
      */
-    public OnCLMOEAD(Problem problem, String instance, int clusters, String path, int neighborhoodSize,
+    public OnCLMOEAD(Problem problem, String instance, int clusters, int maxNFE, String path, int neighborhoodSize,
             WeightGenerator weightGenerator, Initialization initialization,
             Variation variation, double delta, double eta) {
-        this(problem, instance, clusters, path, neighborhoodSize, weightGenerator, initialization,
+        this(problem, instance, clusters, maxNFE, path, neighborhoodSize, weightGenerator, initialization,
                 variation, delta, eta, -1);
     }
 
@@ -397,6 +409,8 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         super.initialize();
 
         Solution[] initialSolutions = initialization.initialize();
+
+        initializeParameters(initialSolutions);
 
         initializePopulation(initialSolutions.length);
 
@@ -410,7 +424,7 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         hc.reduce().getTransfomationList().forEach(System.out::println);
 //        hc.printDissimilarity();
 
-        reduceDimensionOfInitialSolutions(initialSolutions);
+        reduceDimensionOfInitialSolutions(initialSolutions, problem);
         initializeIdealPoint();
 
         for (int i = 0; i < initialSolutions.length; i++) {
@@ -427,22 +441,28 @@ public class OnCLMOEAD extends AbstractAlgorithm {
 
     }
 
-    private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions) {
-        for (Solution solution : initialSolutions) {
-            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives);
+    private void initializeParameters(Solution[] initialSolutions) {
+        if (parameters == null) {
+            parameters = new Parameters(initialSolutions[0].getNumberOfObjectives());
         }
     }
 
-    private void reduceDimensionOfCurrentPopulation(List<OnCLMOEAD.Individual> population) {
+    private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions, Problem problem) {
+        for (Solution solution : initialSolutions) {
+            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives, problem);
+        }
+    }
+
+    private void reduceDimensionOfCurrentPopulation(List<OnCLMOEAD.Individual> population, Problem problem) {
         for (OnCLMOEAD.Individual individual : population) {
             individual.getSolution()
-                    .reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives);
+                    .reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives, problem);
         }
     }
 
     private void increaseDimension(List<OnCLMOEAD.Individual> population) {
         for (OnCLMOEAD.Individual individual : population) {
-            individual.getSolution().increaseNumberOfObjectives();
+            individual.getSolution().increaseNumberOfObjectives(problem);
         }
     }
 
@@ -703,11 +723,12 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         increaseDimension(population);
 
         hc = new HierarchicalCluster(getMatrixOfObjetivesFromIndividuals(population,
-                parameters.getParameters()), this.numberOfReducedObjectives);
-        hc.setCorrelation(CorrelationType.KENDALL);
+                parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
+        //hc.printDissimilarity();
+
         hc.reduce().getTransfomationList().forEach(System.out::println);
 
-        reduceDimensionOfCurrentPopulation(population);
+        reduceDimensionOfCurrentPopulation(population, problem);
 
         for (Integer index : indices) {
             List<Integer> matingIndices = getMatingIndices(index);
@@ -737,16 +758,28 @@ public class OnCLMOEAD extends AbstractAlgorithm {
 
             for (Solution child : offspring) {
                 evaluate(child);
-                child.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), numberOfReducedObjectives);
+                child.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), numberOfReducedObjectives, problem);
                 updateIdealPoint(child);
                 updateSolution(child, matingIndices);
             }
+
+            increaseDimensionInFinalIteration();
         }
 
         generation++;
 
         if ((updateUtility >= 0) && (generation % updateUtility == 0)) {
             updateUtility();
+        }
+    }
+
+    private void increaseDimensionInFinalIteration() {
+        if (this.maxNFE == this.numberOfEvaluations) {
+            if (!problem.getName().equalsIgnoreCase("MOEADVRPDRT")) {
+                for (OnCLMOEAD.Individual individual : population) {
+                    problem.evaluate(individual.getSolution());
+                }
+            }
         }
     }
 

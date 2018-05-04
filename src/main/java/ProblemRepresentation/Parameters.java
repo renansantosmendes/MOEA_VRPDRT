@@ -18,6 +18,13 @@ public class Parameters {
     private Instance instance;
     private List<Double> values = new ArrayList<>();
     
+    public Parameters(int numberOfParameters){
+        values.clear();
+        for (int i = 0; i < numberOfParameters; i++) {
+            values.add(1.0);
+        }
+    }
+    
     public Parameters(Instance instance) {
         this.instance = instance;
         this.calculate();

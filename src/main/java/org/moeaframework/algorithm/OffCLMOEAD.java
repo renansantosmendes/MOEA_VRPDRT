@@ -437,7 +437,7 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 
     private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions) {
         for (Solution solution : initialSolutions) {
-            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives);
+            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives,problem);
         }
     }
 
@@ -723,7 +723,7 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 
             for (Solution child : offspring) {
                 evaluate(child);
-                child.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), numberOfReducedObjectives);
+                child.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), numberOfReducedObjectives, problem);
                 updateIdealPoint(child);
                 updateSolution(child, matingIndices);
             }
