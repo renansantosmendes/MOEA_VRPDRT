@@ -86,8 +86,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-//        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-        path = "/home/rmendes/VRPDRT/";
+        path = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//        path = "/home/rmendes/VRPDRT/";
         int reducedDimensionality = 4;
 
         String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
@@ -108,8 +108,8 @@ public class Main {
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class, path)
                 .withAlgorithm("OnCLMOEAD")
-                .withMaxEvaluations(200000)
-                .withProperty("populationSize", 200)
+                .withMaxEvaluations(2000)
+                .withProperty("populationSize", 20)
                 .withProperty("operator", "2x+swap")
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)

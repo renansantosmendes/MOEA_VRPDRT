@@ -418,9 +418,9 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         initializeIdealPoint();
         evaluateAll(initialSolutions);
 
-        hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
-                parameters.getParameters()), this.numberOfReducedObjectives);
-        hc.setCorrelation(CorrelationType.KENDALL);
+        hc = new HierarchicalCluster(getMatrixOfObjetivesFromIndividuals(initialSolutions,
+                parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
+       // hc.setCorrelation(CorrelationType.KENDALL);
         hc.reduce().getTransfomationList().forEach(System.out::println);
 //        hc.printDissimilarity();
 
@@ -918,6 +918,19 @@ public class OnCLMOEAD extends AbstractAlgorithm {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 matrix[i][j] = population.get(i).getSolution().getObjectives()[j] * parameters.get(j);
+            }
+        }
+        return matrix;
+    }
+    
+    public double[][] getMatrixOfObjetivesFromIndividuals(Solution[] population, List<Double> parameters) {
+        int rows = population.length;
+        int columns = population[0].getObjectives().length;
+        double[][] matrix = new double[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrix[i][j] = population[i].getObjectives()[j] * parameters.get(j);
             }
         }
         return matrix;
