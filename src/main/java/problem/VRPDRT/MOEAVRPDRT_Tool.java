@@ -5,6 +5,7 @@
  */
 package problem.VRPDRT;
 
+import org.moeaframework.core.variable.PermutationMOEA;
 import InstanceReader.*;
 import ProblemRepresentation.*;
 import VRPDRT.VRPDRT;
@@ -106,7 +107,7 @@ public class MOEAVRPDRT_Tool implements Problem {
         //System.out.println(ps);
         int arraySize = ps.getLinkedRouteList().size();
         int[] array = copyListToArrayInteger(ps.getLinkedRouteList());
-        Permutation permutation = new Permutation(array);
+        PermutationMOEA permutation = new PermutationMOEA(array);
 
         Solution solution = new Solution(1, this.numberOfObjectives, this.numberOfConstraints);
         solution.setVariable(0, permutation);

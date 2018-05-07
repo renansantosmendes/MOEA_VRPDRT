@@ -21,13 +21,13 @@ import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Abstract class providing default implementations for several
- * {@link Algorithm} methods. All method extending this class must use the
+ * {@link AlgorithmMOEA} methods. All method extending this class must use the
  * {@link #evaluate} method to evaluate a solution. This is mandatory to ensure
  * the {@link #getNumberOfEvaluations()} method returns the correct result.
  * <p>
@@ -35,7 +35,7 @@ import org.moeaframework.core.Solution;
  * override the {@link #initialize()} and {@link #iterate()} methods
  * individually.
  */
-public abstract class AbstractAlgorithm implements Algorithm {
+public abstract class AbstractAlgorithm implements AlgorithmMOEA {
 
     /**
      * The problem being solved.

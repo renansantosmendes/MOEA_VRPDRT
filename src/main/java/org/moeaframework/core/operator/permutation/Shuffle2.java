@@ -14,7 +14,7 @@ import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.Variation;
 import org.moeaframework.core.variable.EncodingUtils;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 
 /**
  *
@@ -46,8 +46,8 @@ public class Shuffle2 implements Variation {
             Variable variable = result.getVariable(i);
 
             if ((PRNG.nextDouble() <= probability)
-                    && (variable instanceof Permutation)) {
-                evolve((Permutation) variable);
+                    && (variable instanceof PermutationMOEA)) {
+                evolve((PermutationMOEA) variable);
             }
         }
 
@@ -59,7 +59,7 @@ public class Shuffle2 implements Variation {
      *
      * @param permutation the permutation to be mutated
      */
-    public static void evolve(Permutation permutation) {
+    public static void evolve(PermutationMOEA permutation) {
         int i = PRNG.nextInt(permutation.size());
         int j = PRNG.nextInt(permutation.size() - 1);
 
@@ -86,7 +86,7 @@ public class Shuffle2 implements Variation {
         
         int[] newArray = copyListToArrayInteger(solutionRepresentation);
         
-        permutation = new Permutation(newArray);
+        permutation = new PermutationMOEA(newArray);
     }
 
     @Override

@@ -33,7 +33,7 @@ public interface TerminationCondition {
 	 * 
 	 * @param algorithm the algorithm
 	 */
-	public void initialize(Algorithm algorithm);
+	public void initialize(AlgorithmMOEA algorithm);
 	
 	/**
 	 * Invoked after every step to check if the algorithm should terminate.
@@ -42,6 +42,6 @@ public interface TerminationCondition {
 	 * @return {@code true} if the algorithm should terminate; {@code false}
 	 *         otherwise
 	 */
-	public boolean shouldTerminate(Algorithm algorithm); 
+	public boolean shouldTerminate(AlgorithmMOEA algorithm); 
 
 }

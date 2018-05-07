@@ -20,7 +20,7 @@ package org.moeaframework.util.progress;
 import java.io.Serializable;
 
 import org.moeaframework.Executor;
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * A progress report, including the percent complete, elapsed time, and
@@ -36,9 +36,9 @@ public class ProgressEvent implements Serializable {
 	private final Executor executor;
 
 	/**
-	 * The current {@link Algorithm} being run. 
+	 * The current {@link AlgorithmMOEA} being run. 
 	 */
-	private final Algorithm currentAlgorithm;
+	private final AlgorithmMOEA currentAlgorithm;
 	
 	/**
 	 * The current seed being evaluated, starting at 1.
@@ -110,7 +110,7 @@ public class ProgressEvent implements Serializable {
 	 * @param maxTime the maximum elapsed time per seed in seconds, or
 	 *        {@code -1} if not set
 	 */
-	public ProgressEvent(Executor executor, Algorithm algorithm, 
+	public ProgressEvent(Executor executor, AlgorithmMOEA algorithm, 
 			int currentSeed, int totalSeeds, boolean isSeedFinished, 
 			int currentNFE,	int maxNFE, double percentComplete,
 			double elapsedTime, double remainingTime, double maxTime) {
@@ -142,7 +142,7 @@ public class ProgressEvent implements Serializable {
 	 * 
 	 * @return the algorithm currently running
 	 */
-	public Algorithm getCurrentAlgorithm() {
+	public AlgorithmMOEA getCurrentAlgorithm() {
 		return currentAlgorithm;
 	}
 

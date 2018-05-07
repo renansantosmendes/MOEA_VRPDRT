@@ -17,7 +17,7 @@
  */
 package org.moeaframework.algorithm;
 
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * An exception that originated from an algorithm during initialization.
@@ -34,7 +34,7 @@ public class AlgorithmInitializationException extends AlgorithmException {
 	 * @param message the message describing this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmInitializationException(Algorithm algorithm,
+	public AlgorithmInitializationException(AlgorithmMOEA algorithm,
 			String message, Throwable cause) {
 		super(algorithm, message, cause);
 	}
@@ -46,7 +46,7 @@ public class AlgorithmInitializationException extends AlgorithmException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param message the message describing this exception
 	 */
-	public AlgorithmInitializationException(Algorithm algorithm, 
+	public AlgorithmInitializationException(AlgorithmMOEA algorithm, 
 			String message) {
 		super(algorithm, message);
 	}
@@ -58,7 +58,7 @@ public class AlgorithmInitializationException extends AlgorithmException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmInitializationException(Algorithm algorithm, 
+	public AlgorithmInitializationException(AlgorithmMOEA algorithm, 
 			Throwable cause) {
 		super(algorithm, cause);
 	}
@@ -69,7 +69,7 @@ public class AlgorithmInitializationException extends AlgorithmException {
 	 * 
 	 * @param algorithm the algorithm responsible for this exception
 	 */
-	public AlgorithmInitializationException(Algorithm algorithm) {
+	public AlgorithmInitializationException(AlgorithmMOEA algorithm) {
 		super(algorithm);
 	}
 

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.moeaframework.algorithm.PeriodicAction;
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Decorates an algorithm to periodically collect information about its runtime
@@ -48,7 +48,7 @@ public class InstrumentedAlgorithm extends PeriodicAction {
 	 * @param algorithm the algorithm to decorate
 	 * @param frequency the frequency, in evaluations, that data is collected
 	 */
-	public InstrumentedAlgorithm(Algorithm algorithm, int frequency) {
+	public InstrumentedAlgorithm(AlgorithmMOEA algorithm, int frequency) {
 		this(algorithm, frequency, FrequencyType.EVALUATIONS);
 	}
 	
@@ -60,7 +60,7 @@ public class InstrumentedAlgorithm extends PeriodicAction {
 	 * @param frequency the frequency that data is collected
 	 * @param frequencyType if frequency is defined by EVALUATIONS or STEPS
 	 */
-	public InstrumentedAlgorithm(Algorithm algorithm, int frequency,
+	public InstrumentedAlgorithm(AlgorithmMOEA algorithm, int frequency,
 			FrequencyType frequencyType) {
 		super(algorithm, frequency, frequencyType);
 		

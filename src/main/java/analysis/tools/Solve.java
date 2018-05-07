@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.moeaframework.algorithm.PeriodicAction;
 import org.moeaframework.analysis.sensitivity.ResultEntry;
 import org.moeaframework.analysis.sensitivity.ResultFileWriter;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.FrameworkException;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.PRNG;
@@ -39,12 +38,13 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.operator.RandomInitialization;
-import org.moeaframework.core.spi.AlgorithmFactory;
+import org.moeaframework.core.spi.AlgorithmFactoryMOEA;
 import org.moeaframework.core.spi.ProblemFactory;
 import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.problem.ExternalProblem;
 import org.moeaframework.util.CommandLineUtility;
 import org.moeaframework.util.io.FileUtils;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Command line utility for solving an optimization problem using any of the
@@ -593,7 +593,7 @@ public class Solve extends CommandLineUtility {
 
 		// open the resources and begin processing
 		Problem problem = null;
-		Algorithm algorithm = null;
+		AlgorithmMOEA algorithm = null;
 		ResultFileWriter writer = null;
 		File file = new File(commandLine.getOptionValue("output"));
 		
@@ -611,7 +611,7 @@ public class Solve extends CommandLineUtility {
 			}
 
 			try {
-				algorithm = AlgorithmFactory.getInstance().getAlgorithm(
+				algorithm = AlgorithmFactoryMOEA.getInstance().getAlgorithm(
 						commandLine.getOptionValue("algorithm"),
 						properties,
 						problem);
@@ -674,7 +674,7 @@ public class Solve extends CommandLineUtility {
 		 * @param writer the result file writer where the runtime information
 		 *        is stored
 		 */
-		public RuntimeCollector(Algorithm algorithm, int frequency,
+		public RuntimeCollector(AlgorithmMOEA algorithm, int frequency,
 				ResultFileWriter writer) {
 			super(algorithm, frequency, FrequencyType.EVALUATIONS);
 			this.writer = writer;

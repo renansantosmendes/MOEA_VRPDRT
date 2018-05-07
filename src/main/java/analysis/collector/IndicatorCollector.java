@@ -17,12 +17,12 @@
  */
 package org.moeaframework.analysis.collector;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.Indicator;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Collects performance indicator values from an {@link Algorithm}.
+ * Collects performance indicator values from an {@link AlgorithmMOEA}.
  */
 public class IndicatorCollector implements Collector {
 
@@ -35,7 +35,7 @@ public class IndicatorCollector implements Collector {
 	 * The algorithm instance used by this collector; or {@code null} if this 
 	 * collector has not yet been attached.
 	 */
-	private final Algorithm algorithm;
+	private final AlgorithmMOEA algorithm;
 	
 	/**
 	 * The &epsilon;-box dominance archive used to prune the approximation set
@@ -79,7 +79,7 @@ public class IndicatorCollector implements Collector {
 	 * @param algorithm the algorithm this collector records data from
 	 */
 	public IndicatorCollector(Indicator indicator, 
-			EpsilonBoxDominanceArchive archive, Algorithm algorithm) {
+			EpsilonBoxDominanceArchive archive, AlgorithmMOEA algorithm) {
 		super();
 		this.indicator = indicator;
 		this.archive = archive;
@@ -102,13 +102,12 @@ public class IndicatorCollector implements Collector {
 
 	@Override
 	public AttachPoint getAttachPoint() {
-		return AttachPoint.isSubclass(Algorithm.class).and(
-				AttachPoint.not(AttachPoint.isNestedIn(Algorithm.class)));
+		return AttachPoint.isSubclass(AlgorithmMOEA.class).and(AttachPoint.not(AttachPoint.isNestedIn(AlgorithmMOEA.class)));
 	}
 
 	@Override
 	public Collector attach(Object object) {
-		return new IndicatorCollector(indicator, archive, (Algorithm)object);
+		return new IndicatorCollector(indicator, archive, (AlgorithmMOEA)object);
 	}
 
 }

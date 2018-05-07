@@ -8,11 +8,13 @@ package VRPDRT;
 import InstanceReader.*;
 import ProblemRepresentation.*;
 import ReductionTechniques.HierarchicalCluster;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 
 
 
@@ -136,7 +138,7 @@ public class MOEAVRPDRT implements Problem {
         ProblemSolution ps = problem.buildRandomSolution();
 //        int arraySize = ps.getLinkedRouteList().size();
         int[] array = copyListToArrayInteger(ps.getLinkedRouteList());
-        Permutation permutation = new Permutation(array);
+        PermutationMOEA permutation = new PermutationMOEA(array);
 
         Solution solution = new Solution(1, this.numberOfObjectives, this.numberOfConstraints);
         solution.setVariable(0, permutation);

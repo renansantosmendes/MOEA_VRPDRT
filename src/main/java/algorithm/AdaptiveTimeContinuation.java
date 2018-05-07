@@ -49,8 +49,8 @@ import org.moeaframework.core.Variation;
  *       Algorithms."  In 3rd International Conference on Genetic Algorithms, 
  *       pp. 70-79, 1989.
  *   <li>Srivastava, R. P.  "Time Continuation in Genetic Algorithms."
- *       Technical report, Illinois Genetic Algorithm Laboratory, 2002.
- *   <li>Kollat, J. B., and Reed, P. M.  "Comparison of Multi-Objective 
+       Technical report, Illinois Genetic AlgorithmMOEA Laboratory, 2002.
+   <li>Kollat, J. B., and Reed, P. M.  "Comparison of Multi-Objective 
  *       Evolutionary Algorithms for Long-Term Monitoring Design."  Advances in
  *       Water Resources, 29(6):792-807, 2006.
  * </ol>

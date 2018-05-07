@@ -62,14 +62,14 @@ import jmetal.util.comparators.FPGAFitnessComparator;
 import jmetal.util.comparators.FitnessComparator;
 
 import org.moeaframework.analysis.sensitivity.EpsilonHelper;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Problem;
-import org.moeaframework.core.spi.AlgorithmProvider;
+import org.moeaframework.core.spi.AlgorithmProviderMOEA;
 import org.moeaframework.core.spi.ProviderNotFoundException;
 import org.moeaframework.util.TypedProperties;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Algorithm provider for JMetal algorithms. Supports the following algorithms:
+ * AlgorithmMOEA provider for JMetal algorithms. Supports the following algorithms:
  * <p>
  * <table width="100%" border="1" cellpadding="3" cellspacing="0">
  * <tr class="TableHeadingColor">
@@ -195,7 +195,7 @@ import org.moeaframework.util.TypedProperties;
  * </tr>
  * </table>
  */
-public class JMetalAlgorithms extends AlgorithmProvider {
+public class JMetalAlgorithms extends AlgorithmProviderMOEA {
 
     /**
      * Constructs a JMetal algorithm provider.
@@ -205,7 +205,7 @@ public class JMetalAlgorithms extends AlgorithmProvider {
     }
 
     @Override
-    public Algorithm getAlgorithm(String name, Properties properties,
+    public AlgorithmMOEA getAlgorithm(String name, Properties properties,
             Problem problem) {
         TypedProperties typedProperties = new TypedProperties(properties);
         JMetalProblemAdapter adapter = new JMetalProblemAdapter(problem);

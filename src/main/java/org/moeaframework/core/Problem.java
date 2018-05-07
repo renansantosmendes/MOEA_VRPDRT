@@ -18,61 +18,61 @@
 package org.moeaframework.core;
 
 /**
- * Interface for defining optimization problems.  All methods must be thread
+ * Interface for defining optimization problems. All methods must be thread
  * safe.
  */
 public interface Problem {
 
-	/**
-	 * Returns the user-friendly name for this problem.
-	 * 
-	 * @return the user-friendly name for this problem
-	 */
-	public String getName();
+    /**
+     * Returns the user-friendly name for this problem.
+     *
+     * @return the user-friendly name for this problem
+     */
+    public String getName();
 
-	/**
-	 * Returns the number of decision variables defined by this problem.
-	 * 
-	 * @return the number of decision variables defined by this problem
-	 */
-	public int getNumberOfVariables();
+    /**
+     * Returns the number of decision variables defined by this problem.
+     *
+     * @return the number of decision variables defined by this problem
+     */
+    public int getNumberOfVariables();
 
-	/**
-	 * Returns the number of objectives defined by this problem.
-	 * 
-	 * @return the number of objectives defined by this problem
-	 */
-	public int getNumberOfObjectives();
+    /**
+     * Returns the number of objectives defined by this problem.
+     *
+     * @return the number of objectives defined by this problem
+     */
+    public int getNumberOfObjectives();
 
-	/**
-	 * Returns the number of constraints defined by this problem.
-	 * 
-	 * @return the number of constraints defined by this problem
-	 */
-	public int getNumberOfConstraints();
+    /**
+     * Returns the number of constraints defined by this problem.
+     *
+     * @return the number of constraints defined by this problem
+     */
+    public int getNumberOfConstraints();
 
-	/**
-	 * Evaluates the solution, updating the solution's objectives in place.
-	 * Algorithms must explicitly call this method when appropriate to evaluate
-	 * new solutions or reevaluate modified solutions.
-	 * 
-	 * @param solution the solution to be evaluated
-	 */
-	public void evaluate(Solution solution);
+    /**
+     * Evaluates the solution, updating the solution's objectives in place.
+     * Algorithms must explicitly call this method when appropriate to evaluate
+     * new solutions or reevaluate modified solutions.
+     *
+     * @param solution the solution to be evaluated
+     */
+    public void evaluate(Solution solution);
 
-	/**
-	 * Returns a new solution for this problem. Implementations must initialize
-	 * the variables so that the valid range of values is defined, but may leave
-	 * the actual value at a default or undefined state.
-	 * 
-	 * @return a new solution for this problem
-	 */
-	public Solution newSolution();
-	
-	/**
-	 * Closes any underlying resources used by this problem.  Once closed,
-	 * further invocations of any methods on this problem may throw exceptions.
-	 */
-	public void close();
+    /**
+     * Returns a new solution for this problem. Implementations must initialize
+     * the variables so that the valid range of values is defined, but may leave
+     * the actual value at a default or undefined state.
+     *
+     * @return a new solution for this problem
+     */
+    public Solution newSolution();
+
+    /**
+     * Closes any underlying resources used by this problem. Once closed,
+     * further invocations of any methods on this problem may throw exceptions.
+     */
+    public void close();
 
 }

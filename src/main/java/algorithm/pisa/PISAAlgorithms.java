@@ -20,17 +20,17 @@ package org.moeaframework.algorithm.pisa;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Settings;
 import org.moeaframework.core.Variation;
-import org.moeaframework.core.spi.AlgorithmProvider;
+import org.moeaframework.core.spi.AlgorithmProviderMOEA;
 import org.moeaframework.core.spi.OperatorFactory;
 import org.moeaframework.core.spi.ProviderLookupException;
 import org.moeaframework.core.spi.ProviderNotFoundException;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Algorithm provider for PISA selectors. In order to make a PISA selector
+ * AlgorithmMOEA provider for PISA selectors. In order to make a PISA selector
  * available for this provider, two steps are required. First, the PISA selector
  * must be downloaded and, if necessary, compiled. Second, the configuration
  * file (typically {@code global.properties}) must be updated with the new
@@ -70,10 +70,10 @@ import org.moeaframework.core.spi.ProviderNotFoundException;
  * change the algorithm parameters.  Once completed, the PISA selector can be
  * used with:
  * <pre>
- *   Algorithm algorithm = AlgorithmFactory.getInstance().getAlgorithm("hype", properties, problem);
- * </pre>
+   AlgorithmMOEA algorithm = AlgorithmFactory.getInstance().getAlgorithm("hype", properties, problem);
+ </pre>
  */
-public class PISAAlgorithms extends AlgorithmProvider {
+public class PISAAlgorithms extends AlgorithmProviderMOEA {
 
 	/**
 	 * Constructs an algorithm provider for PISA selectors.
@@ -99,7 +99,7 @@ public class PISAAlgorithms extends AlgorithmProvider {
 	}
 
 	@Override
-	public Algorithm getAlgorithm(String name, Properties properties,
+	public AlgorithmMOEA getAlgorithm(String name, Properties properties,
 			Problem problem) {
 		//lookup the case-sensitive version of the PISA algorithm name to 
 		//generate the correct property keys

@@ -25,7 +25,7 @@ import org.moeaframework.core.Variable;
 /**
  * Decision variable for permutations.
  */
-public class Permutation implements Variable {
+public class PermutationMOEA implements Variable {
 
     private static final long serialVersionUID = 5690584295426235286L;
 
@@ -39,7 +39,7 @@ public class Permutation implements Variable {
      *
      * @param size the number of elements in the permutation
      */
-    public Permutation(int size) {
+    public PermutationMOEA(int size) {
         super();
 
         permutation = new int[size];
@@ -56,7 +56,7 @@ public class Permutation implements Variable {
      * @throws IllegalArgumentException if the permutation array is not a valid
      * permutation
      */
-    public Permutation(int[] permutation) {
+    public PermutationMOEA(int[] permutation) {
         super();
         this.permutation = permutation;
 
@@ -65,8 +65,8 @@ public class Permutation implements Variable {
     }
 
     @Override
-    public Permutation copy() {
-        return new Permutation(permutation);
+    public PermutationMOEA copy() {
+        return new PermutationMOEA(permutation);
     }
 
     /**
@@ -196,7 +196,7 @@ public class Permutation implements Variable {
         } else if ((obj == null) || (obj.getClass() != getClass())) {
             return false;
         } else {
-            Permutation rhs = (Permutation) obj;
+            PermutationMOEA rhs = (PermutationMOEA) obj;
 
             return new EqualsBuilder().append(permutation, rhs.permutation)
                     .isEquals();

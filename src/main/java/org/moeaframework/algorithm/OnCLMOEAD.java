@@ -775,7 +775,8 @@ public class OnCLMOEAD extends AbstractAlgorithm {
 
     private void increaseDimensionInFinalIteration() {
         if (this.maxNFE == this.numberOfEvaluations) {
-            if (!problem.getName().equalsIgnoreCase("MOEADVRPDRT")) {
+//            System.out.println("Problem Name = " + problem.getName());
+            if (!problem.getName().equalsIgnoreCase("MOEAVRPDRT")) {
                 for (OnCLMOEAD.Individual individual : population) {
                     problem.evaluate(individual.getSolution());
                 }

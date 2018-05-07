@@ -50,7 +50,7 @@ import org.moeaframework.core.spi.OperatorProvider;
 import org.moeaframework.core.spi.ProviderLookupException;
 import org.moeaframework.core.variable.BinaryVariable;
 import org.moeaframework.core.variable.Grammar;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 import org.moeaframework.core.variable.Program;
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.core.variable.Subset;
@@ -129,19 +129,19 @@ import org.moeaframework.util.TypedProperties;
  *   </tr>
  *   <tr>
  *     <td>{@link PMX}</td>
- *     <td>Permutation</td>
+ *     <td>PermutationMOEA</td>
  *     <td>{@code pmx}</td>
  *     <td>{@code pmx.rate}</td>
  *   </tr>
  *   <tr>
  *     <td>{@link Insertion}</td>
- *     <td>Permutation</td>
+ *     <td>PermutationMOEA</td>
  *     <td>{@code insertion}</td>
  *     <td>{@code insertion.rate}</td>
  *   </tr>
  *   <tr>
  *     <td>{@link Swap}</td>
- *     <td>Permutation</td>
+ *     <td>PermutationMOEA</td>
  *     <td>{@code swap}</td>
  *     <td>{@code swap.rate}</td>
  *   </tr>
@@ -240,7 +240,7 @@ public class StandardOperators extends OperatorProvider {
 			return "pm";
 		} else if (BinaryVariable.class.isAssignableFrom(type)) {
 			return "bf";
-		} else if (Permutation.class.isAssignableFrom(type)) {
+		} else if (PermutationMOEA.class.isAssignableFrom(type)) {
 			return "insertion+swap";
 		} else if (Grammar.class.isAssignableFrom(type)) {
 			return "gm";
@@ -278,7 +278,7 @@ public class StandardOperators extends OperatorProvider {
 			return "sbx+pm";
 		} else if (BinaryVariable.class.isAssignableFrom(type)) {
 			return "hux+bf";
-		} else if (Permutation.class.isAssignableFrom(type)) {
+		} else if (PermutationMOEA.class.isAssignableFrom(type)) {
 			return "pmx+insertion+swap";
 		} else if (Grammar.class.isAssignableFrom(type)) {
 			return "gx+gm";

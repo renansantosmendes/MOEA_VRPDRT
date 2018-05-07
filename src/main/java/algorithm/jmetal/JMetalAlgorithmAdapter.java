@@ -21,16 +21,16 @@ import java.io.NotSerializableException;
 import java.io.Serializable;
 
 import org.moeaframework.algorithm.AlgorithmException;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Adapter for JMetal algorithms. This allows JMetal algorithms to be used
- * within the MOEA Framework as an {@link Algorithm}.
+ * within the MOEA Framework as an {@link AlgorithmMOEA}.
  */
-public class JMetalAlgorithmAdapter implements Algorithm {
+public class JMetalAlgorithmAdapter implements AlgorithmMOEA {
 
 	/**
 	 * The JMetal algorithm.

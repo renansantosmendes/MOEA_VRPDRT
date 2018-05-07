@@ -24,7 +24,7 @@ import org.moeaframework.core.PRNG;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.Variation;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 
 /**
  * Partially mapped crossover (PMX) operator.  PMX is similar to two-point
@@ -69,7 +69,7 @@ public class PMX implements Variation {
 	 * @param p2 the second permutation
 	 * @throws VariationException if the permutations are not the same size
 	 */
-	public static void evolve(Permutation p1, Permutation p2) {
+	public static void evolve(PermutationMOEA p1, PermutationMOEA p2) {
 		int n = p1.size();
 
 		if (n != p2.size()) {
@@ -145,9 +145,9 @@ public class PMX implements Variation {
 			Variable variable2 = result2.getVariable(i);
 
 			if ((PRNG.nextDouble() <= probability)
-					&& (variable1 instanceof Permutation)
-					&& (variable2 instanceof Permutation)) {
-				evolve((Permutation)variable1, (Permutation)variable2);
+					&& (variable1 instanceof PermutationMOEA)
+					&& (variable2 instanceof PermutationMOEA)) {
+				evolve((PermutationMOEA)variable1, (PermutationMOEA)variable2);
 			}
 		}
 

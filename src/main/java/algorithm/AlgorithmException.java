@@ -17,8 +17,8 @@
  */
 package org.moeaframework.algorithm;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.FrameworkException;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * An exception that originated from an algorithm.
@@ -30,7 +30,7 @@ public class AlgorithmException extends FrameworkException {
 	/**
 	 * The algorithm responsible for this exception.
 	 */
-	private final Algorithm algorithm;
+	private final AlgorithmMOEA algorithm;
 	
 	/**
 	 * Constructs an algorithm exception originating from the specified
@@ -38,7 +38,7 @@ public class AlgorithmException extends FrameworkException {
 	 * 
 	 * @param algorithm the algorithm responsible for this exception
 	 */
-	public AlgorithmException(Algorithm algorithm) {
+	public AlgorithmException(AlgorithmMOEA algorithm) {
 		this(algorithm, null, null);
 	}
 	
@@ -49,7 +49,7 @@ public class AlgorithmException extends FrameworkException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmException(Algorithm algorithm, Throwable cause) {
+	public AlgorithmException(AlgorithmMOEA algorithm, Throwable cause) {
 		this(algorithm, cause.getMessage(), cause);
 	}
 	
@@ -60,7 +60,7 @@ public class AlgorithmException extends FrameworkException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param message the message describing this exception
 	 */
-	public AlgorithmException(Algorithm algorithm, String message) {
+	public AlgorithmException(AlgorithmMOEA algorithm, String message) {
 		this(algorithm, message, null);
 	}
 	
@@ -72,7 +72,7 @@ public class AlgorithmException extends FrameworkException {
 	 * @param message the message describing this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmException(Algorithm algorithm, String message, 
+	public AlgorithmException(AlgorithmMOEA algorithm, String message, 
 			Throwable cause) {
 		super(message, cause);
 		this.algorithm = algorithm;
@@ -83,7 +83,7 @@ public class AlgorithmException extends FrameworkException {
 	 * 
 	 * @return the algorithm responsible for this exception
 	 */
-	public Algorithm getAlgorithm() {
+	public AlgorithmMOEA getAlgorithm() {
 		return algorithm;
 	}
 

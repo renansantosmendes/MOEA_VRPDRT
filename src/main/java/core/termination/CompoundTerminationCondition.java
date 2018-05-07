@@ -17,8 +17,8 @@
  */
 package org.moeaframework.core.termination;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.TerminationCondition;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Terminates a run when one or more termination conditions are satisfied.
@@ -42,14 +42,14 @@ public class CompoundTerminationCondition implements TerminationCondition {
 	}
 
 	@Override
-	public void initialize(Algorithm algorithm) {
+	public void initialize(AlgorithmMOEA algorithm) {
 		for (TerminationCondition condition : conditions) {
 			condition.initialize(algorithm);
 		}
 	}
 
 	@Override
-	public boolean shouldTerminate(Algorithm algorithm) {
+	public boolean shouldTerminate(AlgorithmMOEA algorithm) {
 		boolean shouldTerminate = false;
 		
 		for (TerminationCondition condition : conditions) {

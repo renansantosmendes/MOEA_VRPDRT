@@ -17,7 +17,7 @@
  */
 package org.moeaframework.analysis.collector;
 
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Collects the elapsed execution time of an algorithm.
@@ -48,8 +48,7 @@ public class ElapsedTimeCollector implements Collector {
 
 	@Override
 	public AttachPoint getAttachPoint() {
-		return AttachPoint.isSubclass(Algorithm.class).and(
-				AttachPoint.not(AttachPoint.isNestedIn(Algorithm.class)));
+		return AttachPoint.isSubclass(AlgorithmMOEA.class).and(AttachPoint.not(AttachPoint.isNestedIn(AlgorithmMOEA.class)));
 	}
 
 	@Override

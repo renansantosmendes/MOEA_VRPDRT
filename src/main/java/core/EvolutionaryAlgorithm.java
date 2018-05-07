@@ -22,7 +22,7 @@ package org.moeaframework.core;
  * characterized by their use of a <em>population</em> and inspiration from
  * biological and other natural processes.
  */
-public interface EvolutionaryAlgorithm extends Algorithm {
+public interface EvolutionaryAlgorithm extends AlgorithmMOEA {
 
 	/**
 	 * Returns the current population of this evolutionary algorithm.

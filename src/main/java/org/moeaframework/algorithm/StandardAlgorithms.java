@@ -32,7 +32,6 @@ import org.moeaframework.algorithm.single.RepeatedSingleObjective;
 import org.moeaframework.algorithm.single.SelfAdaptiveNormalVariation;
 
 import org.moeaframework.analysis.sensitivity.EpsilonHelper;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.FitnessEvaluator;
 import org.moeaframework.core.FrameworkException;
@@ -57,7 +56,7 @@ import org.moeaframework.core.operator.UniformSelection;
 import org.moeaframework.core.operator.real.DifferentialEvolutionSelection;
 import org.moeaframework.core.operator.real.DifferentialEvolutionVariation;
 import org.moeaframework.core.operator.real.UM;
-import org.moeaframework.core.spi.AlgorithmProvider;
+import org.moeaframework.core.spi.AlgorithmProviderMOEA;
 import org.moeaframework.core.spi.OperatorFactory;
 import org.moeaframework.core.spi.ProviderLookupException;
 import org.moeaframework.core.spi.ProviderNotFoundException;
@@ -66,6 +65,7 @@ import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.util.TypedProperties;
 import org.moeaframework.util.Vector;
 import org.moeaframework.util.weights.RandomGenerator;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * A provider of standard algorithms. The following table contains all available
@@ -239,7 +239,7 @@ import org.moeaframework.util.weights.RandomGenerator;
  * the single-objective genetic algorithm ({@code GA}) multiple times. The
  * {@code instances} property controls the number of repeated runs.
  */
-public class StandardAlgorithms extends AlgorithmProvider {
+public class StandardAlgorithms extends AlgorithmProviderMOEA {
 
     /**
      * Constructs the standard algorithm provider.
@@ -249,7 +249,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
     }
 
     @Override
-    public Algorithm getAlgorithm(String name, Properties properties,
+    public AlgorithmMOEA getAlgorithm(String name, Properties properties,
             Problem problem) {
         TypedProperties typedProperties = new TypedProperties(properties);
 
@@ -365,7 +365,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code eMOEA} instance
      */
-    private Algorithm neweMOEA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA neweMOEA(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         Initialization initialization = new RandomInitialization(problem,
@@ -399,7 +399,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code NSGAII} instance
      */
-    private Algorithm newNSGAII(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newNSGAII(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         Initialization initialization = new RandomInitialization(problem,
@@ -423,7 +423,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
                 initialization);
     }
 
-    private Algorithm newCLNSGAII(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newCLNSGAII(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         Initialization initialization = new RandomInitialization(problem,
@@ -456,7 +456,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code NSGAIII} instance
      */
-    private Algorithm newNSGAIII(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newNSGAIII(TypedProperties properties, Problem problem) {
         int divisionsOuter = 4;
         int divisionsInner = 0;
 
@@ -575,7 +575,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @return a new {@code MOEAD} instance
      * @throws FrameworkException if the decision variables are not real valued
      */
-    private Algorithm newMOEAD(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newMOEAD(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         //enforce population size lower bound
@@ -627,7 +627,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
         return algorithm;
     }
 
-    private Algorithm newOffCLMOEAD(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newOffCLMOEAD(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         //enforce population size lower bound
@@ -683,7 +683,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
         return algorithm;
     }
     
-    private Algorithm newOnCLMOEAD(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newOnCLMOEAD(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         //enforce population size lower bound
@@ -749,7 +749,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @return a new {@code GDE3} instance
      * @throws FrameworkException if the decision variables are not real valued
      */
-    private Algorithm newGDE3(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newGDE3(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -782,7 +782,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code eNSGAII} instance
      */
-    private Algorithm neweNSGAII(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA neweNSGAII(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         Initialization initialization = new RandomInitialization(problem,
@@ -829,7 +829,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code CMAES} instance
      */
-    private Algorithm newCMAES(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newCMAES(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -876,7 +876,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code SPEA2} instance
      */
-    private Algorithm newSPEA2(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newSPEA2(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
         int offspringSize = (int) properties.getDouble("offspringSize", 100);
         int k = (int) properties.getDouble("k", 1);
@@ -898,7 +898,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code PAES} instance
      */
-    private Algorithm newPAES(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newPAES(TypedProperties properties, Problem problem) {
         int archiveSize = (int) properties.getDouble("archiveSize", 100);
         int bisections = (int) properties.getDouble("bisections", 8);
 
@@ -918,7 +918,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code PESA2} instance
      */
-    private Algorithm newPESA2(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newPESA2(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
         int archiveSize = (int) properties.getDouble("archiveSize", 100);
         int bisections = (int) properties.getDouble("bisections", 8);
@@ -940,7 +940,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code OMOPSO} instance
      */
-    private Algorithm newOMOPSO(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newOMOPSO(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -968,7 +968,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code SMPSO} instance
      */
-    private Algorithm newSMPSO(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newSMPSO(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -992,7 +992,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code IBEA} instance
      */
-    private Algorithm newIBEA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newIBEA(TypedProperties properties, Problem problem) {
         if (problem.getNumberOfConstraints() > 0) {
             throw new ProviderNotFoundException("IBEA",
                     new ProviderLookupException("constraints not supported"));
@@ -1030,7 +1030,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code SMSEMOA} instance
      */
-    private Algorithm newSMSEMOA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newSMSEMOA(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
         double offset = properties.getDouble("offset", 100.0);
         String indicator = properties.getString("indicator", "hypervolume");
@@ -1059,7 +1059,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code VEGA} instance
      */
-    private Algorithm newVEGA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newVEGA(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         Initialization initialization = new RandomInitialization(problem,
@@ -1079,7 +1079,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code DBEA} instance
      */
-    private Algorithm newDBEA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newDBEA(TypedProperties properties, Problem problem) {
         int divisionsOuter = 4;
         int divisionsInner = 0;
 
@@ -1139,7 +1139,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code RVEA} instance
      */
-    private Algorithm newRVEA(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newRVEA(TypedProperties properties, Problem problem) {
         int divisionsOuter = 4;
         int divisionsInner = 0;
 
@@ -1223,7 +1223,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code RandomSearch} instance
      */
-    private Algorithm newRandomSearch(TypedProperties properties,
+    private AlgorithmMOEA newRandomSearch(TypedProperties properties,
             Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
@@ -1251,7 +1251,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code MSOPS} instance
      */
-    private Algorithm newMSOPS(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newMSOPS(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -1288,7 +1288,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code RepeatedSingleObjective} instance
      */
-    private Algorithm newRSO(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newRSO(TypedProperties properties, Problem problem) {
         String algorithmName = properties.getString("algorithm", "GA");
         int instances = (int) properties.getDouble("instances", 100);
 
@@ -1308,7 +1308,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code GeneticAlgorithm} instance
      */
-    private Algorithm newGeneticAlgorithm(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newGeneticAlgorithm(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
         double[] weights = properties.getDoubleArray("weights", new double[]{1.0});
         String method = properties.getString("method", "linear");
@@ -1340,7 +1340,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code EvolutionaryStrategy} instance
      */
-    private Algorithm newEvolutionaryStrategy(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newEvolutionaryStrategy(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }
@@ -1374,7 +1374,7 @@ public class StandardAlgorithms extends AlgorithmProvider {
      * @param problem the problem
      * @return a new {@code DE/rand/1/bin} instance
      */
-    private Algorithm newDifferentialEvolution(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newDifferentialEvolution(TypedProperties properties, Problem problem) {
         if (!checkType(RealVariable.class, problem)) {
             throw new FrameworkException("unsupported decision variable type");
         }

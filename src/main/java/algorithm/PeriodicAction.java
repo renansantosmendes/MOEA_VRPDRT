@@ -20,10 +20,10 @@ package org.moeaframework.algorithm;
 import java.io.NotSerializableException;
 import java.io.Serializable;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Decorates an algorithm to perform some action periodically throughout the
@@ -31,7 +31,7 @@ import org.moeaframework.core.Solution;
  * of the algorithm, the action may be invoked less frequently than requested
  * or not at all.
  */
-public abstract class PeriodicAction implements Algorithm {
+public abstract class PeriodicAction implements AlgorithmMOEA {
 	
 	/**
 	 * Defines the type of frequency.
@@ -40,12 +40,14 @@ public abstract class PeriodicAction implements Algorithm {
 		
 		/**
 		 * The frequency measures the number of objective function evaluations.
+		 *//**
+		 * The frequency measures the number of objective function evaluations.
 		 */
 		EVALUATIONS,
 		
 		/**
 		 * The frequency measures the number of invocations of 
-		 * {@link Algorithm#step()}.
+		 * {@link AlgorithmMOEA#step()}.
 		 */
 		STEPS
 		
@@ -54,7 +56,7 @@ public abstract class PeriodicAction implements Algorithm {
 	/**
 	 * The underlying algorithm being decorated.
 	 */
-	protected final Algorithm algorithm;
+	protected final AlgorithmMOEA algorithm;
 	
 	/**
 	 * The frequency that the {@link #doAction()} method is invoked.
@@ -67,7 +69,7 @@ public abstract class PeriodicAction implements Algorithm {
 	protected final FrequencyType frequencyType;
 	
 	/**
-	 * The number of invocations of the {@link Algorithm#step()} method.  Only
+	 * The number of invocations of the {@link AlgorithmMOEA#step()} method.  Only
 	 * used if the frequency type is {@code STEPS}.
 	 */
 	protected int iteration;
@@ -85,7 +87,7 @@ public abstract class PeriodicAction implements Algorithm {
 	 * @param frequency the frequency the {@link #doAction()} method is invoked
 	 * @param frequencyType the type of frequency
 	 */
-	public PeriodicAction(Algorithm algorithm, int frequency, 
+	public PeriodicAction(AlgorithmMOEA algorithm, int frequency, 
 			FrequencyType frequencyType) {
 		super();
 		this.algorithm = algorithm;

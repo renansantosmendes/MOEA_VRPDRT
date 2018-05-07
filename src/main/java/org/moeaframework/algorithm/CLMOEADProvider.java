@@ -6,26 +6,26 @@
 package org.moeaframework.algorithm;
 
 import java.util.Properties;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Initialization;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.Variation;
 import org.moeaframework.core.operator.RandomInitialization;
-import org.moeaframework.core.spi.AlgorithmProvider;
+import org.moeaframework.core.spi.AlgorithmProviderMOEA;
 import org.moeaframework.core.spi.OperatorFactory;
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.util.TypedProperties;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  *
  * @author renansantos
  */
-public class CLMOEADProvider extends AlgorithmProvider {
+public class CLMOEADProvider extends AlgorithmProviderMOEA {
 
     @Override
-    public Algorithm getAlgorithm(String name, Properties properties, Problem problem) {
+    public AlgorithmMOEA getAlgorithm(String name, Properties properties, Problem problem) {
 
         TypedProperties typedProperties = new TypedProperties(properties);
         if (name.equalsIgnoreCase("CLMOEAD") || name.equalsIgnoreCase("CLMOEA/D")) {
@@ -36,7 +36,7 @@ public class CLMOEADProvider extends AlgorithmProvider {
 
     }
 
-    private Algorithm newCLMOEAD(TypedProperties properties, Problem problem) {
+    private AlgorithmMOEA newCLMOEAD(TypedProperties properties, Problem problem) {
         int populationSize = (int) properties.getDouble("populationSize", 100);
 
         //enforce population size lower bound

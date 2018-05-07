@@ -17,7 +17,7 @@
  */
 package org.moeaframework.algorithm;
 
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * An exception that originated from an algorithm during termination.
@@ -34,7 +34,7 @@ public class AlgorithmTerminationException extends AlgorithmException {
 	 * @param message the message describing this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmTerminationException(Algorithm algorithm, String message,
+	public AlgorithmTerminationException(AlgorithmMOEA algorithm, String message,
 			Throwable cause) {
 		super(algorithm, message, cause);
 	}
@@ -46,7 +46,7 @@ public class AlgorithmTerminationException extends AlgorithmException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param message the message describing this exception
 	 */
-	public AlgorithmTerminationException(Algorithm algorithm, String message) {
+	public AlgorithmTerminationException(AlgorithmMOEA algorithm, String message) {
 		super(algorithm, message);
 	}
 
@@ -57,7 +57,7 @@ public class AlgorithmTerminationException extends AlgorithmException {
 	 * @param algorithm the algorithm responsible for this exception
 	 * @param cause the cause of this exception
 	 */
-	public AlgorithmTerminationException(Algorithm algorithm, Throwable cause) {
+	public AlgorithmTerminationException(AlgorithmMOEA algorithm, Throwable cause) {
 		super(algorithm, cause);
 	}
 
@@ -67,7 +67,7 @@ public class AlgorithmTerminationException extends AlgorithmException {
 	 * 
 	 * @param algorithm the algorithm responsible for this exception
 	 */
-	public AlgorithmTerminationException(Algorithm algorithm) {
+	public AlgorithmTerminationException(AlgorithmMOEA algorithm) {
 		super(algorithm);
 	}
 

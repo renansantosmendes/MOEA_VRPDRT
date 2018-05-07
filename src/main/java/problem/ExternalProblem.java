@@ -32,7 +32,7 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.variable.BinaryVariable;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 import org.moeaframework.core.variable.RealVariable;
 import org.moeaframework.util.io.RedirectStream;
 
@@ -278,8 +278,8 @@ public abstract class ExternalProblem implements Problem {
 			for (int i=0; i<bv.getNumberOfBits(); i++) {
 				sb.append(bv.get(i) ? "1" : "0");
 			}
-		} else if (variable instanceof Permutation) {
-			Permutation p = (Permutation)variable;
+		} else if (variable instanceof PermutationMOEA) {
+			PermutationMOEA p = (PermutationMOEA)variable;
 
 			for (int i=0; i<p.size(); i++) {
 				if (i > 0) {

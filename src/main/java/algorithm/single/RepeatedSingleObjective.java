@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Properties;
 
 import org.moeaframework.algorithm.AbstractAlgorithm;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
-import org.moeaframework.core.spi.AlgorithmFactory;
+import org.moeaframework.core.spi.AlgorithmFactoryMOEA;
 import org.moeaframework.util.TypedProperties;
 import org.moeaframework.util.weights.RandomGenerator;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Instantiates and runs several instances of a single objective algorithm.
@@ -65,7 +65,7 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 	/**
 	 * A list of the instantiated algorithms.
 	 */
-	private final List<Algorithm> algorithms;
+	private final List<AlgorithmMOEA> algorithms;
 
 	/**
 	 * Constructs a new instance of the Many-Once algorithm, which runs many
@@ -84,7 +84,7 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 		// setup the algorithm instances		
 		List<double[]> weights = new RandomGenerator(
 				problem.getNumberOfObjectives(), instances).generate();
-		algorithms = new ArrayList<Algorithm>();
+		algorithms = new ArrayList<AlgorithmMOEA>();
 		
 		for (double[] weight : weights) {
 			algorithms.add(createInstance(weight));
@@ -95,7 +95,7 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 	public int getNumberOfEvaluations() {
 		int evaluations = 0;
 		
-		for (Algorithm algorithm : algorithms) {
+		for (AlgorithmMOEA algorithm : algorithms) {
 			evaluations += algorithm.getNumberOfEvaluations();
 		}
 		
@@ -106,7 +106,7 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 	public NondominatedPopulation getResult() {
 		NondominatedPopulation result = new NondominatedPopulation();
 		
-		for (Algorithm algorithm : algorithms) {
+		for (AlgorithmMOEA algorithm : algorithms) {
 			result.addAll(algorithm.getResult());
 		}
 		
@@ -123,7 +123,7 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 
 	@Override
 	protected void iterate() {
-		for (Algorithm algorithm : algorithms) {
+		for (AlgorithmMOEA algorithm : algorithms) {
 			algorithm.step();
 		}
 	}
@@ -135,13 +135,13 @@ public class RepeatedSingleObjective extends AbstractAlgorithm {
 	 * @param weights the weights
 	 * @return the new algorithm instance
 	 */
-	protected Algorithm createInstance(double[] weights) {
+	protected AlgorithmMOEA createInstance(double[] weights) {
 		TypedProperties typedProperties = new TypedProperties(
 				new Properties(properties));
 		
 		typedProperties.setDoubleArray("weights", weights);
 		
-		return AlgorithmFactory.getInstance().getAlgorithm(
+		return AlgorithmFactoryMOEA.getInstance().getAlgorithm(
 				algorithmName, typedProperties.getProperties(), problem);
 	}
 

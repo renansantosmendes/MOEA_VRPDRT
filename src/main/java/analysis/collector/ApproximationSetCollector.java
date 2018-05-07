@@ -20,12 +20,12 @@ package org.moeaframework.analysis.collector;
 import java.util.ArrayList;
 
 import org.moeaframework.analysis.sensitivity.EpsilonHelper;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Collects approximation sets from an {@link Algorithm}.
+ * Collects approximation sets from an {@link AlgorithmMOEA}.
  */
 public class ApproximationSetCollector implements Collector {
 	
@@ -33,7 +33,7 @@ public class ApproximationSetCollector implements Collector {
 	 * The algorithm instance used by this collector; or {@code null} if this 
 	 * collector has not yet been attached.
 	 */
-	private final Algorithm algorithm;
+	private final AlgorithmMOEA algorithm;
 	
 	/**
 	 * The &epsilon;-values used when collecting only the &epsilon;-dominant
@@ -78,7 +78,7 @@ public class ApproximationSetCollector implements Collector {
 	 *        &epsilon;-dominant solutions; or {@code null} if regular Pareto
 	 *        dominance is used
 	 */
-	public ApproximationSetCollector(Algorithm algorithm, double[] epsilon) {
+	public ApproximationSetCollector(AlgorithmMOEA algorithm, double[] epsilon) {
 		super();
 		this.algorithm = algorithm;
 		this.epsilon = epsilon;
@@ -86,13 +86,12 @@ public class ApproximationSetCollector implements Collector {
 
 	@Override
 	public AttachPoint getAttachPoint() {
-		return AttachPoint.isSubclass(Algorithm.class).and(
-				AttachPoint.not(AttachPoint.isNestedIn(Algorithm.class)));
+		return AttachPoint.isSubclass(AlgorithmMOEA.class).and(AttachPoint.not(AttachPoint.isNestedIn(AlgorithmMOEA.class)));
 	}
 
 	@Override
 	public Collector attach(Object object) {
-		return new ApproximationSetCollector((Algorithm)object, epsilon);
+		return new ApproximationSetCollector((AlgorithmMOEA)object, epsilon);
 	}
 
 	@Override

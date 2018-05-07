@@ -19,8 +19,8 @@ package org.moeaframework.core.spi;
 
 import java.util.Properties;
 
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Problem;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Defines an SPI for algorithms. Algorithms are identified by a unique name and
@@ -31,10 +31,10 @@ import org.moeaframework.core.Problem;
  * instantiation, the provider may throw a {@link ProviderNotFoundException}
  * along with the details causing the exception.
  * <p>
- * To provide a custom {@code AlgorithmProvider}, first extend this class and
+ * To provide a custom {@code AlgorithmProviderMOEA}, first extend this class and
  * implement the abstract method. Next, build a JAR file containing the custom
  * provider. Within the JAR file, create the file
- * {@code META-INF/services/org.moeaframework.core.spi.AlgorithmProvider}
+ * {@code META-INF/services/org.moeaframework.core.spi.AlgorithmProviderMOEA}
  * containing on a single line the class name of the custom provider. Lastly,
  * add this JAR file to the classpath. Once these steps are completed, the
  * algorithms(s) are now accessible via the
@@ -45,12 +45,12 @@ import org.moeaframework.core.Problem;
  * that names match the following regular expression:  
  * {@code ^[a-zA-Z0-9()\-,]+$}.
  */
-public abstract class AlgorithmProvider {
+public abstract class AlgorithmProviderMOEA {
 
 	/**
 	 * Constructs an algorithm provider.
 	 */
-	public AlgorithmProvider() {
+	public AlgorithmProviderMOEA() {
 		super();
 	}
 
@@ -66,7 +66,7 @@ public abstract class AlgorithmProvider {
 	 * @return the algorithm with the specified name, or {@code null} if this
 	 *         provider does not support the algorithm
 	 */
-	public abstract Algorithm getAlgorithm(String name, Properties properties,
+	public abstract AlgorithmMOEA getAlgorithm(String name, Properties properties,
 			Problem problem);
 
 }

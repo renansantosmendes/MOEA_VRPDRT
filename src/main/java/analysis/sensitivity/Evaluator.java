@@ -25,18 +25,18 @@ import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.FrameworkException;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.PRNG;
 import org.moeaframework.core.PopulationIO;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.indicator.QualityIndicator;
-import org.moeaframework.core.spi.AlgorithmFactory;
+import org.moeaframework.core.spi.AlgorithmFactoryMOEA;
 import org.moeaframework.core.spi.ProblemFactory;
 import org.moeaframework.problem.TimingProblem;
 import org.moeaframework.util.CommandLineUtility;
 import org.moeaframework.util.TypedProperties;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Command line utility for evaluating an algorithm using many 
@@ -328,7 +328,7 @@ public class Evaluator extends CommandLineUtility {
 		// instrument the problem to record timing information
 		TimingProblem timingProblem = new TimingProblem(problem);
 
-		Algorithm algorithm = AlgorithmFactory.getInstance().getAlgorithm(
+		AlgorithmMOEA algorithm = AlgorithmFactoryMOEA.getInstance().getAlgorithm(
 				algorithmName, properties, timingProblem);
 
 		// find the maximum NFE to run

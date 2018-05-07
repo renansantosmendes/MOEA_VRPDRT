@@ -25,38 +25,38 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import org.moeaframework.algorithm.StandardAlgorithms;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.Problem;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Factory for creating algorithm instances. See {@link AlgorithmProvider} for
+ * Factory for creating algorithm instances. See {@link AlgorithmProviderMOEA} for
  * details on adding new providers.
  * <p>
  * This class is thread safe.
  */
-public class AlgorithmFactory {
+public class AlgorithmFactoryMOEA {
 
     /**
      * The static service loader for loading algorithm providers.
      */
-    private static final ServiceLoader<AlgorithmProvider> PROVIDERS;
+    private static final ServiceLoader<AlgorithmProviderMOEA> PROVIDERS;
 
     /**
      * The default algorithm factory.
      */
-    private static AlgorithmFactory instance;
+    private static AlgorithmFactoryMOEA instance;
 
     /**
      * Collection of providers that have been manually added.
      */
-    private List<AlgorithmProvider> customProviders;
+    private List<AlgorithmProviderMOEA> customProviders;
 
     /**
      * Instantiates the static {@code PROVIDERS} and {@code instance} objects.
      */
     static {
-        PROVIDERS = ServiceLoader.load(AlgorithmProvider.class);
-        instance = new AlgorithmFactory();
+        PROVIDERS = ServiceLoader.load(AlgorithmProviderMOEA.class);
+        instance = new AlgorithmFactoryMOEA();
     }
 
     /**
@@ -64,7 +64,7 @@ public class AlgorithmFactory {
      *
      * @return the default algorithm factory
      */
-    public static synchronized AlgorithmFactory getInstance() {
+    public static synchronized AlgorithmFactoryMOEA getInstance() {
         return instance;
     }
 
@@ -73,17 +73,17 @@ public class AlgorithmFactory {
      *
      * @param instance the default algorithm factory
      */
-    public static synchronized void setInstance(AlgorithmFactory instance) {
-        AlgorithmFactory.instance = instance;
+    public static synchronized void setInstance(AlgorithmFactoryMOEA instance) {
+        AlgorithmFactoryMOEA.instance = instance;
     }
 
     /**
      * Constructs a new algorithm factory.
      */
-    public AlgorithmFactory() {
+    public AlgorithmFactoryMOEA() {
         super();
 
-        customProviders = new ArrayList<AlgorithmProvider>();
+        customProviders = new ArrayList<AlgorithmProviderMOEA>();
     }
 
     /**
@@ -93,12 +93,12 @@ public class AlgorithmFactory {
      *
      * @param provider the new algorithm provider
      */
-    public void addProvider(AlgorithmProvider provider) {
+    public void addProvider(AlgorithmProviderMOEA provider) {
         customProviders.add(provider);
     }
 
     /**
-     * Searches through all discovered {@code AlgorithmProvider} instances,
+     * Searches through all discovered {@code AlgorithmProviderMOEA} instances,
      * returning an instance of the algorithm with the registered name. The
      * algorithm is initialized using implementation-specific properties. This
      * method must throw an {@link ProviderNotFoundException} if no suitable
@@ -111,13 +111,13 @@ public class AlgorithmFactory {
      * @throws ProviderNotFoundException if no provider for the algorithm is
      * available
      */
-    public synchronized Algorithm getAlgorithm(String name,
+    public synchronized AlgorithmMOEA getAlgorithm(String name,
             Properties properties, Problem problem) {
         boolean hasStandardAlgorithms = false;
 
         // loop over all providers that have been manually added
-        for (AlgorithmProvider provider : customProviders) {
-            Algorithm algorithm = instantiateAlgorithm(provider, name,
+        for (AlgorithmProviderMOEA provider : customProviders) {
+            AlgorithmMOEA algorithm = instantiateAlgorithm(provider, name,
                     properties, problem);
 
             if (provider.getClass() == StandardAlgorithms.class) {
@@ -130,11 +130,11 @@ public class AlgorithmFactory {
         }
 
         // loop over all providers available via the SPI
-        Iterator<AlgorithmProvider> iterator = PROVIDERS.iterator();
+        Iterator<AlgorithmProviderMOEA> iterator = PROVIDERS.iterator();
 
         while (iterator.hasNext()) {
-            AlgorithmProvider provider = iterator.next();
-            Algorithm algorithm = instantiateAlgorithm(provider, name,
+            AlgorithmProviderMOEA provider = iterator.next();
+            AlgorithmMOEA algorithm = instantiateAlgorithm(provider, name,
                     properties, problem);
 
             if (provider.getClass() == StandardAlgorithms.class) {
@@ -149,7 +149,7 @@ public class AlgorithmFactory {
         // always ensure we check the standard algorithms
         System.out.println("has standard algorithm = " + hasStandardAlgorithms);
         if (!hasStandardAlgorithms) {
-            Algorithm algorithm = instantiateAlgorithm(
+            AlgorithmMOEA algorithm = instantiateAlgorithm(
                     new StandardAlgorithms(), name, properties, problem);
 
             if (algorithm != null) {
@@ -170,7 +170,7 @@ public class AlgorithmFactory {
      * @return an instance of the algorithm with the registered name; or
      * {@code null} if the provider does not implement the algorithm
      */
-    private Algorithm instantiateAlgorithm(AlgorithmProvider provider,
+    private AlgorithmMOEA instantiateAlgorithm(AlgorithmProviderMOEA provider,
             String name, Properties properties, Problem problem) {
         try {
             return provider.getAlgorithm(name, properties, problem);

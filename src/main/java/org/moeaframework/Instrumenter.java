@@ -38,7 +38,6 @@ import org.moeaframework.analysis.collector.EpsilonProgressCollector;
 import org.moeaframework.analysis.collector.IndicatorCollector;
 import org.moeaframework.analysis.collector.InstrumentedAlgorithm;
 import org.moeaframework.analysis.collector.PopulationSizeCollector;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.EpsilonBoxDominanceArchive;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
@@ -52,6 +51,7 @@ import org.moeaframework.core.indicator.R2Indicator;
 import org.moeaframework.core.indicator.R3Indicator;
 import org.moeaframework.core.indicator.Spacing;
 import org.moeaframework.core.spi.ProblemFactory;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Instruments algorithms with {@link Collector}s which record information about
@@ -676,7 +676,7 @@ public class Instrumenter extends ProblemBuilder {
      * @throws IllegalArgumentException if no reference set is available or
      * could not be loaded
      */
-    public InstrumentedAlgorithm instrument(Algorithm algorithm) {
+    public InstrumentedAlgorithm instrument(AlgorithmMOEA algorithm) {
         List<Collector> collectors = new ArrayList<Collector>();
 
         if (includeHypervolume || includeGenerationalDistance

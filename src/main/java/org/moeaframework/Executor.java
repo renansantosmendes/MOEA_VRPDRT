@@ -27,12 +27,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.moeaframework.algorithm.Checkpoints;
-import org.moeaframework.core.Algorithm;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.TerminationCondition;
-import org.moeaframework.core.spi.AlgorithmFactory;
+import org.moeaframework.core.spi.AlgorithmFactoryMOEA;
 import org.moeaframework.core.spi.ProblemFactory;
 import org.moeaframework.core.termination.CompoundTerminationCondition;
 import org.moeaframework.core.termination.MaxElapsedTime;
@@ -42,6 +41,7 @@ import org.moeaframework.util.distributed.DistributedProblem;
 import org.moeaframework.util.io.FileUtils;
 import org.moeaframework.util.progress.ProgressHelper;
 import org.moeaframework.util.progress.ProgressListener;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * Configures and executes algorithms while hiding the underlying boilerplate
@@ -121,7 +121,7 @@ public class Executor extends ProblemBuilder {
      * The algorithm provider for creating algorithm instances; or {@code null}
      * if the default algorithm factory should be used.
      */
-    private AlgorithmFactory algorithmFactory;
+    private AlgorithmFactoryMOEA algorithmFactory;
 
     /**
      * The instrumenter used to record information about the runtime behavior of
@@ -208,7 +208,7 @@ public class Executor extends ProblemBuilder {
      * @param algorithmFactory the algorithm factory
      * @return a reference to this executor
      */
-    public Executor usingAlgorithmFactory(AlgorithmFactory algorithmFactory) {
+    public Executor usingAlgorithmFactory(AlgorithmFactoryMOEA algorithmFactory) {
         this.algorithmFactory = algorithmFactory;
 
         return this;
@@ -768,7 +768,7 @@ public class Executor extends ProblemBuilder {
         }
 
         Problem problem = null;
-        Algorithm algorithm = null;
+        AlgorithmMOEA algorithm = null;
         ExecutorService executor = null;
 
         try {
@@ -786,7 +786,7 @@ public class Executor extends ProblemBuilder {
 
                 try {
                     if (algorithmFactory == null) {
-                        algorithm = AlgorithmFactory.getInstance().getAlgorithm(
+                        algorithm = AlgorithmFactoryMOEA.getInstance().getAlgorithm(
                                 algorithmName,
                                 properties.getProperties(),
                                 problem);

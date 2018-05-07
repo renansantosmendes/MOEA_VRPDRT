@@ -27,22 +27,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
- * Decorates an {@link Algorithm} to periodically save checkpoint files from
+ * Decorates an {@link AlgorithmMOEA} to periodically save checkpoint files from
  * which the algorithm can resume itself if unexpectedly terminated.
  * <p>
  * <pre>
- * File stateFile = new File("last.state");
- * 
- * //if last.state exists, algorithm will be restored to last state
- * Algorithm algorithm = new Checkpoints(new NSGAII(...), stateFile, 100);
- * 
- * while (!algorithm.isTerminated()) {
- *   algorithm.step(); //periodically saves state to last.state
- * }
- * </pre>
+ File stateFile = new File("last.state");
+ 
+ //if last.state exists, algorithm will be restored to last state
+ AlgorithmMOEA algorithm = new Checkpoints(new NSGAII(...), stateFile, 100);
+ 
+ while (!algorithm.isTerminated()) {
+   algorithm.step(); //periodically saves state to last.state
+ }
+ </pre>
  */
 public class Checkpoints extends PeriodicAction {
 
@@ -60,7 +60,7 @@ public class Checkpoints extends PeriodicAction {
 	 * @param checkpointFrequency the number of objective function evaluations
 	 *        between checkpoints
 	 */
-	public Checkpoints(Algorithm algorithm, File stateFile,
+	public Checkpoints(AlgorithmMOEA algorithm, File stateFile,
 			int checkpointFrequency) {
 		super(algorithm, checkpointFrequency, FrequencyType.EVALUATIONS);
 		this.stateFile = stateFile;

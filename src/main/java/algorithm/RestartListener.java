@@ -18,7 +18,7 @@
 package org.moeaframework.algorithm;
 
 import java.util.EventListener;
-import org.moeaframework.core.Algorithm;
+import org.moeaframework.core.AlgorithmMOEA;
 
 /**
  * The listener interface for receiving time continuation (restart) events. The

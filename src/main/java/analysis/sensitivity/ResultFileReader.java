@@ -39,7 +39,7 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.Variable;
 import org.moeaframework.core.variable.BinaryVariable;
-import org.moeaframework.core.variable.Permutation;
+import org.moeaframework.core.variable.PermutationMOEA;
 import org.moeaframework.core.variable.RealVariable;
 
 /**
@@ -281,8 +281,8 @@ Iterable<ResultEntry> {
 			}
 			
 			return bv;
-		} else if (variable instanceof Permutation) {
-			Permutation p = (Permutation)variable;
+		} else if (variable instanceof PermutationMOEA) {
+			PermutationMOEA p = (PermutationMOEA)variable;
 			String[] tokens = string.split(",");
 			int[] array = new int[tokens.length];
 			

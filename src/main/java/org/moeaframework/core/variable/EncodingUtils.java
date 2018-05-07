@@ -284,8 +284,8 @@ public class EncodingUtils {
 	 * @param length the number of items in the permutation
 	 * @return a new permutation with the specified number of items
 	 */
-	public static Permutation newPermutation(int length) {
-		return new Permutation(length);
+	public static PermutationMOEA newPermutation(int length) {
+		return new PermutationMOEA(length);
 	}
 	
 	/**
@@ -412,11 +412,11 @@ public class EncodingUtils {
 	 * @param variable the decision variable
 	 * @return the value stored in a permutation decision variable
 	 * @throws IllegalArgumentException if the decision variable is not of type
-	 *         {@link Permutation}
+	 *         {@link PermutationMOEA}
 	 */
 	public static int[] getPermutation(Variable variable) {
-		if (variable instanceof Permutation) {
-			return ((Permutation)variable).toArray();
+		if (variable instanceof PermutationMOEA) {
+			return ((PermutationMOEA)variable).toArray();
 		} else {
 			throw new IllegalArgumentException(NOT_PERMUTATION);
 		}
@@ -779,13 +779,13 @@ public class EncodingUtils {
 	 * @param variable the decision variable
 	 * @param values the permutation to assign the permutation decision variable
 	 * @throws IllegalArgumentException if the decision variable is not of type
-	 *         {@link Permutation}
+	 *         {@link PermutationMOEA}
 	 * @throws IllegalArgumentException if {@code values} is not a valid
 	 *         permutation
 	 */
 	public static void setPermutation(Variable variable, int[] values) {
-		if (variable instanceof Permutation) {
-			((Permutation)variable).fromArray(values);
+		if (variable instanceof PermutationMOEA) {
+			((PermutationMOEA)variable).fromArray(values);
 		} else {
 			throw new IllegalArgumentException(NOT_PERMUTATION);
 		}

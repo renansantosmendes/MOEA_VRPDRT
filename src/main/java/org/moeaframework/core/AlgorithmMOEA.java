@@ -29,7 +29,7 @@ import org.moeaframework.algorithm.AlgorithmException;
  * may completely solve a problem in one step or may require hundreds of
  * thousands of steps.
  */
-public interface Algorithm {
+public interface AlgorithmMOEA {
 
     /**
      * Returns the problem being solved by this algorithm.
