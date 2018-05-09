@@ -109,14 +109,15 @@ public class Main {
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class, path)
                 .withAlgorithm("OnCLMOEAD")
-                .withMaxEvaluations(200000)
+                .withMaxEvaluations(200)
                 .withProperty("operator", "2x+swap")
+                .withProperty("populationSize", 20)
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
                 .withProperty("clusters", reducedDimensionality)
                 .withProperty("filePath", path)
-                .runSeeds(30);
+                .runSeeds(3);
 
         DataOutput dataOutput = new DataOutput(composedName, instance.getInstanceName());
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
@@ -140,5 +141,6 @@ public class Main {
 //            System.out.println("solution = " + ps);
         }
         dataOutput.savePopulation(solutionPopulation);
+        dataOutput.saveListOfNondominatedPopulation(result);
     }
 }

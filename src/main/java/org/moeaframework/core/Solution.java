@@ -275,7 +275,7 @@ public class Solution implements Serializable {
     public void increaseNumberOfObjectives(Problem problem) {
         if (problem.getName().equalsIgnoreCase("MOEAVRPDRT")) {
             this.objectives = this.ps.getObjectivesArray();
-        } else{
+        } else {
             problem.evaluate(this);
         }
     }
@@ -300,6 +300,22 @@ public class Solution implements Serializable {
             obj.add(this.objectives[i]);
         }
         return obj;
+    }
+
+    public String getObjectivesListForCsvFile() {
+        ps.getStringWithAllNonReducedObjectivesForCSVFile();
+        String objectivesString = "";
+        for (int i = 0; i < this.objectives.length; i++) {
+            objectivesString += this.objectives[i];
+            if (i == this.objectives.length - 1) {
+                objectivesString += "\n";
+            } else {
+                objectivesString += ",";
+            }
+        }
+
+//        return objectivesString;
+        return ps.getStringWithAllNonReducedObjectivesForCSVFile();
     }
 
     /**
