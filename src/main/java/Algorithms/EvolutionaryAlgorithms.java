@@ -242,7 +242,7 @@ public class EvolutionaryAlgorithms {
                     for (ProblemSolution s : fileWithSolutions) {
                         saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
                         //saida3.print("\t" + s.getAggregatedObjective1Normalized() + "\t" + s.getAggregatedObjective2Normalized() + "\n");
-                        saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                        saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                     }
                     saida1.print("\n\n");
                     saida2.print(fileWithSolutions.size() + "\n");
@@ -251,7 +251,7 @@ public class EvolutionaryAlgorithms {
                 }
 
                 for (ProblemSolution s : fileWithSolutions) {
-                    saida4.print(s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                    saida4.print(s.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                 }
 
                 offspring.clear();
@@ -268,7 +268,7 @@ public class EvolutionaryAlgorithms {
             for (ProblemSolution individual : finalPareto) {
                 printStreamForCombinedPareto.print(individual + "\n");
                 printStreamForObjectiveFunctionOfCombinedPareto.print(individual.getStringWithObjectives() + "\n");
-                printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                 printStreamForAllObjectives2.print(individual.getAggregatedObjective1() + "\t" + individual.getAggregatedObjective2() + "\n");
             }
 
@@ -442,7 +442,7 @@ public class EvolutionaryAlgorithms {
 
                     for (ProblemSolution s : fileWithSolutions) {
                         saida1.print("\t" + s.getAggregatedObjective1() + "\t" + s.getAggregatedObjective2() + "\n");
-                        saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                        saida3.print("\t" + s.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                     }
                     saida1.print("\n\n");
                     saida2.print(fileWithSolutions.size() + "\n");
@@ -451,7 +451,7 @@ public class EvolutionaryAlgorithms {
                 }
 
                 for (ProblemSolution s : fileWithSolutions) {
-                    saida4.print(s.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                    saida4.print(s.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                 }
 
                 offspring.clear();
@@ -468,7 +468,7 @@ public class EvolutionaryAlgorithms {
             for (ProblemSolution individual : finalPareto) {
                 printStreamForCombinedPareto.print(individual + "\n");
                 printStreamForObjectiveFunctionOfCombinedPareto.print(individual.getStringWithObjectives() + "\n");
-                printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+                printStreamForAllObjectives.print(individual.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
                 printStreamForAllObjectives2.print(individual.getAggregatedObjective1() + "\t" + individual.getAggregatedObjective2() + "\n");
             }
 
@@ -525,7 +525,7 @@ public class EvolutionaryAlgorithms {
                 + "-Population_" + actualGeneration + ".csv");
 
         for (ProblemSolution individual : population) {
-            printStreamForCombinedPareto.print(individual.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+            printStreamForCombinedPareto.print(individual.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
         }
 
     }

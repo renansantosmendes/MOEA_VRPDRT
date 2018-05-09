@@ -303,7 +303,7 @@ public class Solution implements Serializable {
     }
 
     public String getObjectivesListForCsvFile() {
-        ps.getStringWithAllNonReducedObjectivesForCSVFile();
+        ps.getStringWithAllNonReducedObjectivesForCsvFile();
         String objectivesString = "";
         for (int i = 0; i < this.objectives.length; i++) {
             objectivesString += this.objectives[i];
@@ -315,7 +315,7 @@ public class Solution implements Serializable {
         }
 
 //        return objectivesString;
-        return ps.getStringWithAllNonReducedObjectivesForCSVFile();
+        return ps.getStringWithAllNonReducedObjectivesForCsvFile();
     }
 
     /**

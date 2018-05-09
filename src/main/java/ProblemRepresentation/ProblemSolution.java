@@ -725,7 +725,7 @@ public class ProblemSolution implements Comparable<ProblemSolution> {
         return stringWithObjectives;
     }
 
-    public String getStringWithAllNonReducedObjectivesForCSVFile() {
+    public String getStringWithAllNonReducedObjectivesForCsvFile() {
 
         String stringWithObjectives = totalDistance + ","
                 + totalDeliveryDelay + "," + totalRouteTimeChargeBanlance + "," + numberOfNonAttendedRequests + ","

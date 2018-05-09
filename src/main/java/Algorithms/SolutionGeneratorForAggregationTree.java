@@ -116,7 +116,7 @@ public class SolutionGeneratorForAggregationTree {
                     numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList, loadIndexList, timeBetweenNodes,
                     distanceBetweenNodes, timeWindows));
             //System.out.println(solution1);
-            printStreamForObjectives.print(solution1.getStringWithAllNonReducedObjectivesForCSVFile() + "\n");
+            printStreamForObjectives.print(solution1.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");
             printStreamForSolutions.print(solution1 + "\n");
         }
     }

@@ -88,7 +88,7 @@ public class Main {
 
     public static void main(String[] args) {
         path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-//        path = "/home/rmendes/VRPDRT/"; 
+        path = "/home/rmendes/VRPDRT/"; 
         int reducedDimensionality = 4;
 
         String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
@@ -104,22 +104,22 @@ public class Main {
                 .setInstanceSize("s")
                 .setNumberOfNodes(12)
                 .setNumberOfVehicles(250)
-                .setVehicleCapacity(4);
+                .setVehicleCapacity(3);
 
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class, path)
                 .withAlgorithm("OnCLMOEAD")
-                .withMaxEvaluations(200)
+                .withMaxEvaluations(200000)
                 .withProperty("operator", "2x+swap")
-                .withProperty("populationSize", 20)
+                .withProperty("populationSize", 200)
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
                 .withProperty("clusters", reducedDimensionality)
                 .withProperty("filePath", path)
-                .runSeeds(3);
+                .runSeeds(30);
 
-        DataOutput dataOutput = new DataOutput(composedName, instance.getInstanceName());
+        DataOutput dataOutput = new DataOutput(composedName, instance.getInstanceName(), path);
         NondominatedPopulation combinedPareto = new NondominatedPopulation();
         List<ProblemSolution> solutionPopulation = new ArrayList<>();
 
