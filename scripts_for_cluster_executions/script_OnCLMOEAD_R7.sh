@@ -2,4 +2,4 @@
 #SBATCH --qos=part2d
 #SBATCH --partition=large
 module load jdk8_32
-java -jar OnCLMOEAD_R4.jar
+java -jar OnCLMOEAD_R7.jar

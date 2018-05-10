@@ -406,8 +406,8 @@ public class OffCLMOEAD extends AbstractAlgorithm {
         evaluateAll(initialSolutions);
 
         hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
-                parameters.getParameters()), this.numberOfReducedObjectives);
-        hc.setCorrelation(CorrelationType.KENDALL);
+                parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
+//        hc.setCorrelation(CorrelationType.KENDALL);
         hc.reduce().getTransfomationList().forEach(System.out::println);
 //        hc.printDissimilarity();
 
@@ -694,7 +694,7 @@ public class OffCLMOEAD extends AbstractAlgorithm {
     public void iterate() {
         System.out.println("Generation = " + generation);
         List<Integer> indices = getSubproblemsToSearch();
-
+        hc.reduce().getTransfomationList().forEach(System.out::println);
         for (Integer index : indices) {
             List<Integer> matingIndices = getMatingIndices(index);
 

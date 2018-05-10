@@ -89,7 +89,7 @@ public class Main {
     public static void main(String[] args) {
         path = "/home/renansantos/Área de Trabalho/Excel Instances/";
         path = "/home/rmendes/VRPDRT/"; 
-        int reducedDimensionality = 4;
+        int reducedDimensionality = 7;
 
         String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);
@@ -104,7 +104,7 @@ public class Main {
                 .setInstanceSize("s")
                 .setNumberOfNodes(12)
                 .setNumberOfVehicles(250)
-                .setVehicleCapacity(3);
+                .setVehicleCapacity(4);
 
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class, path)
