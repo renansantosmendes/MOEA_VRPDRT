@@ -405,12 +405,11 @@ public class OffCLMOEAD extends AbstractAlgorithm {
         initializeIdealPoint();
         evaluateAll(initialSolutions);
 
-        hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
-                parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
-//        hc.setCorrelation(CorrelationType.KENDALL);
-        hc.reduce().getTransfomationList().forEach(System.out::println);
-//        hc.printDissimilarity();
-
+        if (hc == null) {
+            hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
+                    parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
+            hc.reduce().getTransfomationList().forEach(System.out::println);
+        }
         reduceDimensionOfInitialSolutions(initialSolutions);
         initializeIdealPoint();
 
@@ -437,7 +436,7 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 
     private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions) {
         for (Solution solution : initialSolutions) {
-            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives,problem);
+            solution.reduceNumberOfObjectives(parameters, hc.getTransfomationList(), this.numberOfReducedObjectives, problem);
         }
     }
 

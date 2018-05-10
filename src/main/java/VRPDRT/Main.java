@@ -88,10 +88,10 @@ public class Main {
 
     public static void main(String[] args) {
         path = "/home/renansantos/Área de Trabalho/Excel Instances/";
-        path = "/home/rmendes/VRPDRT/"; 
-        int reducedDimensionality = 7;
+//        path = "/home/rmendes/VRPDRT/"; 
+        int reducedDimensionality = 6;
 
-        String composedName = "OnCLMOEAD" + "_R" + reducedDimensionality;
+        String composedName = "OffCLMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);
         new ScriptGenerator(composedName, composedName)
                 .generate("2d", "large");
@@ -108,10 +108,10 @@ public class Main {
 
         List<NondominatedPopulation> result = new Executor()
                 .withProblemClass(MOEAVRPDRT.class, path)
-                .withAlgorithm("OnCLMOEAD")
-                .withMaxEvaluations(200000)
+                .withAlgorithm("OffCLMOEAD")
+                .withMaxEvaluations(2000)
                 .withProperty("operator", "2x+swap")
-                .withProperty("populationSize", 200)
+                .withProperty("populationSize", 20)
                 .withProperty("swap.rate", 0.1)
                 .withProperty("2x.rate", 0.7)
                 .withProperty("instance", instance.getFullInstanceName())
