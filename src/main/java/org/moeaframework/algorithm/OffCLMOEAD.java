@@ -13,6 +13,7 @@ import ReductionTechniques.HierarchicalCluster;
 import VRPDRT.VRPDRT;
 import java.io.NotSerializableException;
 import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -406,9 +407,12 @@ public class OffCLMOEAD extends AbstractAlgorithm {
         evaluateAll(initialSolutions);
 
         if (hc == null) {
-            hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
-                    parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
-            hc.reduce().getTransfomationList().forEach(System.out::println);
+//            hc = new HierarchicalCluster(getMatrixOfObjetives(getSolutionListFromSolutionArray(initialSolutions),
+//                    parameters.getParameters()), this.numberOfReducedObjectives, CorrelationType.KENDALL);
+//            hc.reduce().getTransfomationList().forEach(System.out::println);
+            hc = new HierarchicalCluster();
+            hc.setTransformationList(this.createPreDefinedTransformationList());
+
         }
         reduceDimensionOfInitialSolutions(initialSolutions);
         initializeIdealPoint();
@@ -432,6 +436,376 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 //        population.forEach(s -> s.getSolution().reduceNumberOfObjectives(parameters,
 //                hc.getTransfomationList(), numberOfReducedObjectives));
         //this.problem.setHierarchicalCluster(hc);
+    }
+
+    private List<List<Integer>> createPreDefinedTransformationList() {
+        List<List<Integer>> listOfLists = new ArrayList<>();
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+        List<Integer> list3 = new ArrayList<>();
+        List<Integer> list4 = new ArrayList<>();
+        List<Integer> list5 = new ArrayList<>();
+        List<Integer> list6 = new ArrayList<>();
+        List<Integer> list7 = new ArrayList<>();
+
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        list3.add(0);
+//        list3.add(0);
+//        listOfLists.add(list3);
+//        
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(1);
+//        list4.add(0);
+//        listOfLists.add(list4);
+//        
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(1);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        listOfLists.add(list5);
+//        
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(1);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        listOfLists.add(list6);
+//        
+//        list7.add(1);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        listOfLists.add(list7);
+        
+        // R3 -----------------------------------------------------------------------------------
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        listOfLists.add(list3);
+
+        // R4 -----------------------------------------------------------------------------------
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        listOfLists.add(list3);
+//        
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(1);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        listOfLists.add(list4);
+// R5 -----------------------------------------------------------------------------------
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        listOfLists.add(list3);
+//        
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(1);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        listOfLists.add(list4);
+//
+//        list5.add(0);
+//        list5.add(1);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        listOfLists.add(list5);
+////    
+
+// R6 -----------------------------------------------------------------------------------
+
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(1);
+//        list1.add(0);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        listOfLists.add(list3);
+//        
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(1);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        listOfLists.add(list4);
+//
+//        list5.add(0);
+//        list5.add(1);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        listOfLists.add(list5);
+//
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(1);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        listOfLists.add(list6);
+////     r7 -----------------------------------------------------------------------------------------
+
+        list1.add(1);
+        list1.add(0);
+        list1.add(0);
+        list1.add(0);
+        list1.add(0);
+        list1.add(1);
+        list1.add(0);
+        list1.add(0);
+        list1.add(0);
+        listOfLists.add(list1);
+
+        list2.add(0);
+        list2.add(0);
+        list2.add(1);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        listOfLists.add(list2);
+
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(1);
+        listOfLists.add(list3);
+        
+        list4.add(0);
+        list4.add(0);
+        list4.add(0);
+        list4.add(1);
+        list4.add(0);
+        list4.add(0);
+        list4.add(0);
+        list4.add(0);
+        list4.add(0);
+        listOfLists.add(list4);
+
+        list5.add(0);
+        list5.add(1);
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        list5.add(0);
+        listOfLists.add(list5);
+
+        list6.add(0);
+        list6.add(0);
+        list6.add(0);
+        list6.add(0);
+        list6.add(1);
+        list6.add(0);
+        list6.add(0);
+        list6.add(0);
+        list6.add(0);
+        listOfLists.add(list6);
+
+        list7.add(0);
+        list7.add(0);
+        list7.add(0);
+        list7.add(0);
+        list7.add(0);
+        list7.add(0);
+        list7.add(1);
+        list7.add(1);
+        list7.add(0);
+        listOfLists.add(list7);
+        return listOfLists;
     }
 
     private void reduceDimensionOfInitialSolutions(Solution[] initialSolutions) {
@@ -693,7 +1067,8 @@ public class OffCLMOEAD extends AbstractAlgorithm {
     public void iterate() {
         System.out.println("Generation = " + generation);
         List<Integer> indices = getSubproblemsToSearch();
-        hc.reduce().getTransfomationList().forEach(System.out::println);
+//        hc.reduce().getTransfomationList().forEach(System.out::println);
+        hc.printTransformationList();
         for (Integer index : indices) {
             List<Integer> matingIndices = getMatingIndices(index);
 

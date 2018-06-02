@@ -9,10 +9,12 @@ import static Algorithms.Algorithms.generateRandomSolutionsUsingPerturbation;
 import static Algorithms.Algorithms.greedyConstructive;
 import static Algorithms.Algorithms.perturbation;
 import static Algorithms.Methods.readProblemData;
+import static Algorithms.Methods.readProblemUsingExcelData;
 import ProblemRepresentation.Request;
 import ProblemRepresentation.ProblemSolution;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jxl.read.biff.BiffException;
 
 /**
  *
@@ -30,7 +35,7 @@ public class SolutionGeneratorForAggregationTree {
 
     private String vehicleCapacities[] = {"4"};//"11""16""13" -> removed
     private String nodesDistance[] = {"s"};//m l
-    private String numberOfRequests[] = {"100"};//100,150,200,250
+    private String numberOfRequests[] = {"050","100","150","200","250"};//100,150,200,250
     private String timeWindows[] = {"10"};//05 "03"-> removed
     private String numberOfNodes = "12";
     private int numberOfInstances;
@@ -42,16 +47,16 @@ public class SolutionGeneratorForAggregationTree {
                 * this.numberOfRequests.length * this.timeWindows.length;
         this.numberOfSolutionsPerInstance = 10000 / this.numberOfInstances + 1;
 
-        String folder = "RandomSolutionsForAggregationTree";
+        String folder = "RandomSolutionsForAggregationTreeTest";
         boolean success = (new File(folder)).mkdirs();
         String destinationFileForObjectives = folder + "/Random_Solutions_AT_Objectives.txt";
         String destinationFileForSolutions = folder + "/Random_Solutions_AT_Solutions.txt";
 
         PrintStream printStreamForObjectives = new PrintStream(destinationFileForObjectives);
         PrintStream printStreamForSolutions = new PrintStream(destinationFileForSolutions);
-        
+
         System.out.println("Number of solutions per instance = " + this.numberOfSolutionsPerInstance);
-        
+
         for (int i = 0; i < vehicleCapacities.length; i++) {
             for (int j = 0; j < nodesDistance.length; j++) {
                 for (int k = 0; k < numberOfRequests.length; k++) {
@@ -96,24 +101,33 @@ public class SolutionGeneratorForAggregationTree {
         String instanceName = requestsInstance;
         String nodesData = nodesInstance;
         String adjacenciesData = adjacenciesInstance;
-        final Integer numberOfVehicles = 50;
+        final Integer numberOfVehicles = 250;
         final Integer vehicleCapacity = vehicleCapacityForInstance;
-
-        numberOfNodes = readProblemData(instanceName, nodesData, adjacenciesData, listOfRequests, distanceBetweenNodes,
-                timeBetweenNodes, Pmais, Pmenos, requestsWichBoardsInNode, requestsWichLeavesInNode, setOfNodes,
-                numberOfNodes, loadIndexList);
+        String filePath = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//        numberOfNodes = readProblemData(instanceName, nodesData, adjacenciesData, listOfRequests, distanceBetweenNodes,
+//                timeBetweenNodes, Pmais, Pmenos, requestsWichBoardsInNode, requestsWichLeavesInNode, setOfNodes,
+//                numberOfNodes, loadIndexList);
+        try {
+            numberOfNodes = readProblemUsingExcelData(filePath, instanceName, nodesData, adjacenciesData, requestList, distanceBetweenNodes,
+                    timeBetweenNodes, Pmais, Pmenos, requestsWichBoardsInNode, requestsWichLeavesInNode, setOfNodes,
+                    numberOfNodes, loadIndexList);
+        } catch (IOException ex) {
+            Logger.getLogger(SolutionGeneratorForAggregationTree.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BiffException ex) {
+            Logger.getLogger(SolutionGeneratorForAggregationTree.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         Methods.initializeFleetOfVehicles(setOfVehicles, numberOfVehicles);
 
-        ProblemSolution solution = greedyConstructive(0.2, 0.15, 0.55, 0.1, listOfRequests, requestsWichBoardsInNode,
-                requestsWichLeavesInNode, numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList,
+        ProblemSolution solution = greedyConstructive(0.2, 0.15, 0.55, 0.1, requestList, requestsWichBoardsInNode,
+                requestsWichLeavesInNode, numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, listOfRequests,
                 loadIndexList, timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
 
         ProblemSolution solution1 = new ProblemSolution();
 
         for (int i = 0; i < numberOfSolutionsPerInstance; i++) {//numberOfSolutionsPerInstance
-            solution1.setSolution(perturbation(parameters, solution, listOfRequests, requestsWichBoardsInNode, requestsWichLeavesInNode,
-                    numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList, loadIndexList, timeBetweenNodes,
+            solution1.setSolution(perturbation(parameters, solution,requestList , requestsWichBoardsInNode, requestsWichLeavesInNode,
+                    numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, listOfRequests, loadIndexList, timeBetweenNodes,
                     distanceBetweenNodes, timeWindows));
             //System.out.println(solution1);
             printStreamForObjectives.print(solution1.getStringWithAllNonReducedObjectivesForCsvFile() + "\n");

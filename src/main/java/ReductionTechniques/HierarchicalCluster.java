@@ -57,6 +57,12 @@ public class HierarchicalCluster {
         }
     }
 
+    public HierarchicalCluster() {
+        
+    }
+    
+    
+
     public HierarchicalCluster(double[][] data, int numberOfClusters, CorrelationType corr) {
         this.data = data;
         this.numberOfClusters = numberOfClusters;
@@ -112,12 +118,18 @@ public class HierarchicalCluster {
     }
 
     public void printTransformationList() {
-        System.out.println(this.transformationList);
+        this.transformationList.forEach(System.out::println);
+        //System.out.println(this.transformationList);
     }
 
     public HierarchicalCluster setCorrelation(CorrelationType correlationType) {
         this.correlationType = correlationType;
         return this;
+    }
+    
+    public void setTransformationList(List<List<Integer>>  list){
+        this.transformationList = new ArrayList<>();
+        this.transformationList = list;
     }
 
     private List<List<Double>> readData() throws FileNotFoundException, IOException {

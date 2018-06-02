@@ -50,8 +50,8 @@ public class VRPDRT_Main {
 
     public static void main(String[] args) throws ApiException, InterruptedException, IOException, BiffException {
         String directionsApiKey = "AIzaSyD9W0em7H723uVOMD6QFe_1Mns71XAi5JU";
-//        String filePath = "/home/renansantos/Área de Trabalho/Excel Instances/";
-        String filePath = "/home/rmendes/VRPDRT/";
+        String filePath = "/home/renansantos/Área de Trabalho/Excel Instances/";
+//        String filePath = "/home/rmendes/VRPDRT/";
 
         int numberOfRequests = 50;
         int requestTimeWindows = 10;
@@ -105,31 +105,31 @@ public class VRPDRT_Main {
         System.out.println("Instance Name = " + instanceName);
 
         
-        ProblemSolution solution = greedyConstructive(0.2, 0.15, 0.55, 0.10, requests,  requestsWhichBoardsInNode, requestsWhichLeavesInNode,
-                numberOfNodes,  vehicleCapacity, setOfVehicles,  listOfNonAttendedRequests,  requestList, loadIndexList,
-                timeBetweenNodes,  distanceBetweenNodes, timeWindows,  currentTime,  lastNode);
-        System.out.println(solution);
-        List<Integer> sequence = new ArrayList<>();
-        sequence.addAll(solution.getLinkedRouteList());
-        Collections.swap(sequence, 0, 4);
-        System.out.println("new sequence = " + sequence);
-        System.out.println(
-        rebuildSolution(parameters, sequence, requests, new ArrayList<>(), setOfVehicles, listOfNonAttendedRequests, 
-                requestsWhichBoardsInNode, requestsWhichLeavesInNode, timeBetweenNodes, distanceBetweenNodes, numberOfNodes,
-                vehicleCapacity, timeWindows));
-        
-        
-        CL_NSGAII(instanceName, parameters, nadirPoint, populationSize, maximumNumberOfGenerations, maximumNumberOfExecutions, probabilityOfMutation, probabilityOfCrossover,
-                requests, requestsWhichBoardsInNode, requestsWhichLeavesInNode, numberOfNodes, vehicleCapacity, setOfVehicles,
-                listOfNonAttendedRequests, requestList, loadIndexList, timeBetweenNodes, distanceBetweenNodes,
-                timeWindows, currentTime, lastNode);
+//        ProblemSolution solution = greedyConstructive(0.2, 0.15, 0.55, 0.10, requests,  requestsWhichBoardsInNode, requestsWhichLeavesInNode,
+//                numberOfNodes,  vehicleCapacity, setOfVehicles,  listOfNonAttendedRequests,  requestList, loadIndexList,
+//                timeBetweenNodes,  distanceBetweenNodes, timeWindows,  currentTime,  lastNode);
+//        System.out.println(solution);
+//        List<Integer> sequence = new ArrayList<>();
+//        sequence.addAll(solution.getLinkedRouteList());
+//        Collections.swap(sequence, 0, 4);
+//        System.out.println("new sequence = " + sequence);
+//        System.out.println(
+//        rebuildSolution(parameters, sequence, requests, new ArrayList<>(), setOfVehicles, listOfNonAttendedRequests, 
+//                requestsWhichBoardsInNode, requestsWhichLeavesInNode, timeBetweenNodes, distanceBetweenNodes, numberOfNodes,
+//                vehicleCapacity, timeWindows));
+//        
+//        
+//        CL_NSGAII(instanceName, parameters, nadirPoint, populationSize, maximumNumberOfGenerations, maximumNumberOfExecutions, probabilityOfMutation, probabilityOfCrossover,
+//                requests, requestsWhichBoardsInNode, requestsWhichLeavesInNode, numberOfNodes, vehicleCapacity, setOfVehicles,
+//                listOfNonAttendedRequests, requestList, loadIndexList, timeBetweenNodes, distanceBetweenNodes,
+//                timeWindows, currentTime, lastNode);
 
 //        SPEA2(instanceName, parameters, nadirPoint, populationSize, fileSize, maximumNumberOfGenerations, maximumNumberOfExecutions,
 //                probabilityOfMutation, probabilityOfCrossover, requests, requestsWhichBoardsInNode, requestsWhichLeavesInNode,
 //                numberOfNodes, vehicleCapacity, setOfVehicles, listOfNonAttendedRequests, requestList, loadIndexList,
 //                timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
         //new GoogleStaticMap(new NodeDAO(nodesData).getListOfNodes(), adjacenciesData, nodesData).getStaticMapForInstance();
-//        new SolutionGeneratorForAggregationTree().generateSolutionsForAggregationTree(parameters);
+        new SolutionGeneratorForAggregationTree().generateSolutionsForAggregationTree(parameters);
     }
 
 }
