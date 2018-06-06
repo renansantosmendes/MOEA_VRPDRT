@@ -526,38 +526,38 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 //        listOfLists.add(list7);
         
         // R3 -----------------------------------------------------------------------------------
-//        list1.add(1);
-//        list1.add(1);
-//        list1.add(0);
-//        list1.add(1);
-//        list1.add(1);
-//        list1.add(1);
-//        list1.add(1);
-//        list1.add(1);
-//        list1.add(0);
-//        listOfLists.add(list1);
-//
-//        list2.add(0);
-//        list2.add(0);
-//        list2.add(1);
-//        list2.add(0);
-//        list2.add(0);
-//        list2.add(0);
-//        list2.add(0);
-//        list2.add(0);
-//        list2.add(0);
-//        listOfLists.add(list2);
-//
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(0);
-//        list3.add(1);
-//        listOfLists.add(list3);
+        list1.add(1);
+        list1.add(1);
+        list1.add(0);
+        list1.add(1);
+        list1.add(1);
+        list1.add(1);
+        list1.add(1);
+        list1.add(1);
+        list1.add(0);
+        listOfLists.add(list1);
+
+        list2.add(0);
+        list2.add(0);
+        list2.add(1);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        list2.add(0);
+        listOfLists.add(list2);
+
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(0);
+        list3.add(1);
+        listOfLists.add(list3);
 
         // R4 -----------------------------------------------------------------------------------
 //        list1.add(1);
@@ -729,82 +729,82 @@ public class OffCLMOEAD extends AbstractAlgorithm {
 //        listOfLists.add(list6);
 ////     r7 -----------------------------------------------------------------------------------------
 
-        list1.add(1);
-        list1.add(0);
-        list1.add(0);
-        list1.add(0);
-        list1.add(0);
-        list1.add(1);
-        list1.add(0);
-        list1.add(0);
-        list1.add(0);
-        listOfLists.add(list1);
-
-        list2.add(0);
-        list2.add(0);
-        list2.add(1);
-        list2.add(0);
-        list2.add(0);
-        list2.add(0);
-        list2.add(0);
-        list2.add(0);
-        list2.add(0);
-        listOfLists.add(list2);
-
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(0);
-        list3.add(1);
-        listOfLists.add(list3);
-        
-        list4.add(0);
-        list4.add(0);
-        list4.add(0);
-        list4.add(1);
-        list4.add(0);
-        list4.add(0);
-        list4.add(0);
-        list4.add(0);
-        list4.add(0);
-        listOfLists.add(list4);
-
-        list5.add(0);
-        list5.add(1);
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        list5.add(0);
-        listOfLists.add(list5);
-
-        list6.add(0);
-        list6.add(0);
-        list6.add(0);
-        list6.add(0);
-        list6.add(1);
-        list6.add(0);
-        list6.add(0);
-        list6.add(0);
-        list6.add(0);
-        listOfLists.add(list6);
-
-        list7.add(0);
-        list7.add(0);
-        list7.add(0);
-        list7.add(0);
-        list7.add(0);
-        list7.add(0);
-        list7.add(1);
-        list7.add(1);
-        list7.add(0);
-        listOfLists.add(list7);
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(1);
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+//        listOfLists.add(list1);
+//
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(1);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        list2.add(0);
+//        listOfLists.add(list2);
+//
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(0);
+//        list3.add(1);
+//        listOfLists.add(list3);
+//        
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(1);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        list4.add(0);
+//        listOfLists.add(list4);
+//
+//        list5.add(0);
+//        list5.add(1);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        list5.add(0);
+//        listOfLists.add(list5);
+//
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(1);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        list6.add(0);
+//        listOfLists.add(list6);
+//
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(0);
+//        list7.add(1);
+//        list7.add(1);
+//        list7.add(0);
+//        listOfLists.add(list7);
         return listOfLists;
     }
 

@@ -35,7 +35,7 @@ public class SolutionGeneratorForAggregationTree {
 
     private String vehicleCapacities[] = {"4"};//"11""16""13" -> removed
     private String nodesDistance[] = {"s"};//m l
-    private String numberOfRequests[] = {"050","100","150","200","250"};//100,150,200,250
+    private String numberOfRequests[] = {"050","100","150","200"};//100,150,200,250
     private String timeWindows[] = {"10"};//05 "03"-> removed
     private String numberOfNodes = "12";
     private int numberOfInstances;
@@ -45,12 +45,12 @@ public class SolutionGeneratorForAggregationTree {
     public void generateSolutionsForAggregationTree(List<Double> parameters) throws FileNotFoundException {
         this.numberOfInstances = this.vehicleCapacities.length * this.nodesDistance.length
                 * this.numberOfRequests.length * this.timeWindows.length;
-        this.numberOfSolutionsPerInstance = 10000 / this.numberOfInstances + 1;
+        this.numberOfSolutionsPerInstance = idealNumberOfSolutions / this.numberOfInstances + 1;
 
         String folder = "RandomSolutionsForAggregationTreeTest";
         boolean success = (new File(folder)).mkdirs();
-        String destinationFileForObjectives = folder + "/Random_Solutions_AT_Objectives.txt";
-        String destinationFileForSolutions = folder + "/Random_Solutions_AT_Solutions.txt";
+        String destinationFileForObjectives = folder + "/Random_Solutions_AT_Objectives_"+idealNumberOfSolutions+".txt";
+        String destinationFileForSolutions = folder + "/Random_Solutions_AT_Solutions_"+idealNumberOfSolutions+".txt";
 
         PrintStream printStreamForObjectives = new PrintStream(destinationFileForObjectives);
         PrintStream printStreamForSolutions = new PrintStream(destinationFileForSolutions);

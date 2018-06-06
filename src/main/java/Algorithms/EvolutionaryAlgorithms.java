@@ -346,13 +346,11 @@ public class EvolutionaryAlgorithms {
                         requestList, loadIndexList, timeBetweenNodes, distanceBetweenNodes, timeWindows, currentTime, lastNode);
 
                 int numberOfClusters = 2;
-                HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters);
-                hc.setCorrelation(CorrelationType.KENDALL).reduce()
-                        .getTransfomationList().forEach(System.out::println);
-
-//                HierarchicalCluster inicialHC = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters);
-//                inicialHC.reduce();
-//                inicialHC.getTransfomationList().forEach(System.out::println);
+                HierarchicalCluster hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters, CorrelationType.PEARSON);
+                hc.reduce();
+//                hc.getTransfomationList().forEach(System.out::println);
+                hc.setTransformationList(createTransformationList());
+                hc.getTransfomationList().forEach(System.out::println);
                 //normalizeObjectiveFunctionsValues(population);
                 //normalizeObjectiveFunctions(population);
                 normalizeObjectiveFunctionsForSolutions(population);
@@ -401,11 +399,10 @@ public class EvolutionaryAlgorithms {
                     dominanceAlgorithm(offspring, nonDominatedSolutions);
                     fileWithSolutions.addAll(nonDominatedSolutions);
 
-//                    if (actualGeneration % 5 == 0) {
-//                        hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters);
-//                        hc.setCorrelation(CorrelationType.KENDALL).reduce()
-//                                .getTransfomationList().forEach(System.out::println);
-//                    }
+//                    hc = new HierarchicalCluster(getMatrixOfObjetives(population, parameters), numberOfClusters, CorrelationType.PEARSON);
+//                    hc.reduce();
+//                    hc.getTransfomationList().forEach(System.out::println);
+
                     nonDominatedFrontiersSortingAlgorithm(offspring, nonDominatedFronts);
                     fitnessEvaluationForMultiObjectiveOptimization(offspring);
                     parentsAndOffspring.clear();
@@ -472,7 +469,7 @@ public class EvolutionaryAlgorithms {
                 printStreamForAllObjectives2.print(individual.getAggregatedObjective1() + "\t" + individual.getAggregatedObjective2() + "\n");
             }
 
-            new ResultsGraphicsForParetoCombinedSet(finalPareto, "ResultGraphics", "CombinedParetoSet");
+            //new ResultsGraphicsForParetoCombinedSet(finalPareto, "ResultGraphics", "CombinedParetoSet");
             hypervolume = smetric(finalPareto, nadirPoint);
             //hypervolume = smetric(finalPareto);
             System.out.println("S-Metric = " + hypervolume);
@@ -493,6 +490,34 @@ public class EvolutionaryAlgorithms {
         return hypervolume;
     }
 
+    public static List<List<Integer>> createTransformationList(){
+        List<List<Integer>> transformationList = new ArrayList<>();
+        List<Integer> line1 = new ArrayList<>();
+        List<Integer> line2 = new ArrayList<>();
+        
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(1);
+        line1.add(0);
+        transformationList.add(line1);
+        
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(0);
+        line2.add(1);
+        transformationList.add(line2);
+        return transformationList;
+    }
     public static double[][] getMatrixOfObjetives(List<ProblemSolution> population) {
         int rows = population.size();
         int columns = population.get(0).getObjectives().size();
@@ -551,7 +576,7 @@ public class EvolutionaryAlgorithms {
             hypervolumeConvergence.add(average);
         }
 
-        showHypervolumeConvergence(hypervolumeConvergence);
+        //showHypervolumeConvergence(hypervolumeConvergence);
     }
 
     private static void showHypervolumeConvergence(List<Double> hypervolumeConvergence) throws IOException {

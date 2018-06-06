@@ -89,7 +89,7 @@ public class Main {
     public static void main(String[] args) {
         path = "/home/renansantos/Área de Trabalho/Excel Instances/";
         path = "/home/rmendes/VRPDRT/"; 
-        int reducedDimensionality = 7;
+        int reducedDimensionality = 3;
 
         String composedName = "OffATMOEAD" + "_R" + reducedDimensionality;
         System.out.println("Algorithm = " + composedName);
@@ -99,7 +99,7 @@ public class Main {
         initializeData();
 
         Instance instance = new Instance();
-        instance.setNumberOfRequests(100)
+        instance.setNumberOfRequests(200)
                 .setRequestTimeWindows(10)
                 .setInstanceSize("s")
                 .setNumberOfNodes(12)
